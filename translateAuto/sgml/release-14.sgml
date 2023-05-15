@@ -1,0 +1,2741 @@
+<!-- doc/src/sgml/release-14.sgml -->
+<!-- See header comment in release.sgml about typical markup -->
+
+ <sect1 id="release-13-8-23.1">
+  <title>Release 13.8-23.1</title>
+     <formalpara>
+      <title>Release date:</title>
+      <para>2023-03-30</para>
+     </formalpara>
+  <sect2>
+  <title>New feature</title>
+    <itemizedlist>
+
+    <listitem>
+     <para>
+     Out of memory problems occur when memory is allocated, add detail and hint hints.
+     </para>
+    </listitem>
+  
+    <listitem>
+     <para>
+     <productname>LightDB</productname> supports kubernetes(K8S) HA deployment,.
+     The core modules include <literal>LightDB-patroni</literal> image and <literal>LightDB-operator</literal> image.
+     LightDB-patroni image contains <productname>LightDB</productname> and <productname>Patroni</productname> for support HA deployment in container.
+     LightDB-operator image are used to manage <productname>LightDB</productname> cluster in kubernetes.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Added guc parameter <literal>lightdb_server_version_num</literal>
+     to identify the <productname>LightDB</productname> version number.
+     This value cannot be modified at the session level,
+     in the <literal>lightdb.conf</literal> configuration file.
+     see <link linkend="sql-show">SHOW</link>.
+     </para>
+
+    <para>
+   Show lightdb server version number:
+<programlisting>
+SHOW lightdb_server_version_num;
+ lightdb_server_version_num 
+----------------------------
+ 220400
+(1 row)
+</programlisting>
+  </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Added extension <literal>lt_sql_inspect</literal> to define transaction hours,
+     as well as intercept and audit execution of dangerous SQL and commands during trading hours.
+     see <link linkend="lt_sql_inspect">lt_sql_inspect</link>.
+     </para>
+    </listitem>
+    </itemizedlist>
+  </sect2>
+
+  <sect2>
+  <title>Optimize</title>
+
+     <para>
+     lt_probackup supports distributed optimization.
+     see <link linkend="lt_distributed_probackup">lt_distributed_probackup</link>.
+     </para>
+     <itemizedlist>
+       <listitem>
+        <para>
+        Added distributed backup ids in the script.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        You can view the overall status of backups by distributed backup id.
+        </para>
+       </listitem>
+    </itemizedlist>
+  </sect2>
+
+  <sect2>
+  <title>Compatibility</title>
+
+  <sect3>
+  <title><productname>MySQL</productname> compatible</title>
+    <itemizedlist>  
+
+    <listitem>
+     <para>
+     Supports functions <literal>substr</literal> and <literal>substring</literal>.
+     see <link linkend="functions">function</link>.
+     </para>
+     <para>
+     for example:
+<programlisting>
+lightdb@postgres=# create database test_createdb_mysql with lightdb_syntax_compatible_type mysql;
+CREATE DATABASE
+lightdb@postgres=# \c test_createdb_mysql
+You are now connected to database "test_createdb_mysql" as user "lightdb".
+lightdb@test_createdb_mysql=# select substr('sadadertyui',-3,3) FROM DUAL;
+ substr 
+--------
+ yui
+(1 row)
+</programlisting>
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Support <productname>MySQL</productname> division, including integer division by integer, division by 0 operation, etc
+     see <link linkend="myfce">myfce</link>.
+     </para>
+     <para>
+     for example:
+<programlisting>
+lightdb@test_createdb_mysql=# select 4/0;
+WARNING:  division by zero
+ ?column? 
+----------
+         
+(1 row)
+lightdb@test_createdb_mysql=# select 4/1;
+      ?column?      
+--------------------
+ 4.0000000000000000
+(1 row)
+</programlisting>
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Support for <literal>str_to_date</literal> function.
+     see <link linkend="myfce">myfce</link>.
+     </para>
+     <itemizedlist>
+       <listitem>
+        <para>
+        Perpare statements are not supported for variable binding.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Due to the use of <literal>Julian</literal> days to express time,
+        it is impossible to express the illegal date of 1999-00-00.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        The <literal>lightdb_sql_mode</literal> value is <literal>no_zero_date</literal>,
+        and the return value is an empty string, not NULL.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        Illegal date error is reported, using <productname>LightDB</productname> error reporting logic.
+        </para>
+       </listitem>
+      </itemizedlist>
+     <para>
+     for example: 
+<programlisting>
+select str_to_date('2022/09/10 11,13,13', '%Y/%m/%d %h,%i,%s');
+      str_to_date     
+---------------------
+  2022-09-10 11:13:13
+(1 row)
+</programlisting>
+     </para>
+    </listitem>
+
+   <listitem>
+     <para>
+     Support for @ variables.
+     see <link linkend="syntax-user-variable">User Variable</link>.
+     </para>
+     <itemizedlist>
+       <listitem>
+        <para>
+        If the variable is not initialized, the type of the variable is <literal>text</literal>.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        If the variable type is <literal>float</literal>, <literal>float8</literal>,
+        the storage type is <literal>float8</literal>.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        If the value of the variable is an <literal>integer</literal> type
+        (<literal>smallint</literal>, <literal>bigint</literal>, <literal>int</literal>),
+        the storage type is <literal>bigint</literal>
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        If the type of the variable is <literal>numeric</literal>,
+        the storage type is <literal>numeric</literal>.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        If the variable type is another type, the variable type is <literal>text</literal>.
+        </para>
+       </listitem>
+      </itemizedlist>
+   <para>
+   User variables are written as @var_name, where the variable name var_name must be an Identifiers or an Key Words. 
+   If you quote it identifier，var_name will be treated as a column name (for example, @"my-var").
+   @var_name and @ var_name are different. @var_name is a user variable expression, @ var_name is the absolute value of the column var_name.
+<programlisting>
+lightdb@test=# select @c1 := 5;
+ @c1 
+-----
+   5
+(1 row)
+
+lightdb@test=# SELECT c1, @c1, @ c1 FROM t;
+ c1 | @c1 | ?column? 
+----+-----+----------
+  0 |   5 |        0
+  1 |   5 |        1
+(2 rows)
+</programlisting>
+   </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Support specifying indexes when querying, only syntax support.
+     <literal>force index</literal> enforces the use of the specified index;
+     <literal>ignore index</literal> discards the specified index.
+     see <link linkend="sql-select">SELECT</link>.
+     </para>
+
+   <programlisting>
+    -- multiple index
+    select * from lt_test_mysql_ddl use index(pk_lt_test_mysql_ddl,uk_lt_test_mysql_ddl);
+    select * from lt_test_mysql_ddl force index(pk_lt_test_mysql_ddl,uk_lt_test_mysql_ddl);
+    select * from lt_test_mysql_ddl ignore index(pk_lt_test_mysql_ddl,uk_lt_test_mysql_ddl);
+
+    -- multiple table join
+    select * from lt_test_mysql_ddl a use index for order by(primary) join b using(id);
+    select * from lt_test_mysql_ddl a force index for order by(pk_lt_test_mysql_ddl) join b using(id);
+    select * from lt_test_mysql_ddl a ignore index for order by(primary,pk_lt_test_mysql_ddl) join b using(id);
+    select * from lt_test_mysql_ddl a ignore index for order by(pk_lt_test_mysql_ddl) join b using(id);
+   </programlisting>
+    </listitem>
+
+    <listitem>
+     <para>
+     Support specifying <literal>engine</literal>, <literal>collate</literal>,
+     <literal>character set</literal>, <literal>comment</literal> and other attributes when creating a table,
+     among which <literal>engine</literal> and <literal>comment</literal> are only supported syntaxally.
+     Compatible with backquotes ('') and <literal>tinyint</literal> type compatible.
+     see <link linkend="datatype-int">Integer Types</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Support <literal>duplicate key update</literal> syntax,
+     when the <literal>PRIMARY KEY</literal> or <literal>UNIQU</literal> constraint is violated,
+     update the operation, and vice versa.
+     see <link linkend="sql-on-duplicate-key-update">ON DUPLICATE KEY UPDATE</link>.
+     </para>
+      <programlisting>
+INSERT INTO t1 (a,b,c) VALUES (1,2,3) ON DUPLICATE KEY UPDATE c=t1.c+1;
+
+UPDATE t1 SET c=c+1 WHERE a=1;
+      </programlisting>
+    </listitem>
+
+    <listitem>
+     <para>
+     Support <literal>replace into</literal> syntax,
+     when the <literal>PRIMARY KEY</literal> or <literal>UNIQU</literal> constraint is violated,
+     delete the old tuple first,
+     and then insert the new tuple.
+     see <link linkend="sql-replace-into">REPLACE INTO</link>.
+     </para>
+<programlisting>
+lightdb@testdb=# REPLACE INTO test VALUES (1, 'Old name', '18');
+INSERT 0 1
+
+lightdb@testdb=# REPLACE INTO test VALUES (1, 'New name');
+INSERT 0 1
+
+lightdb@testdb=# SELECT * FROM test;
+ id |       name       | age 
+----+------------------+-----
+  1 | New name         |   0
+(1 row)
+</programlisting>
+    </listitem>
+
+    </itemizedlist> 
+  </sect3>
+
+  <sect3>
+  <title><productname>Oracle</productname> compatible</title>
+    <itemizedlist>  
+
+    <listitem>
+     <para>
+     Added <literal>no_unnest</literal> and <literal>pq_distribute</literal> optimization prompts.
+     see <link linkend="pghint_plan">lt_hint_plan</link>.
+     </para>
+     <para>
+     no_unnest optimization prompts.
+ <programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where exists(select * from test2 where test1.key1=test2.key1);
+               QUERY PLAN               
+----------------------------------------
+ Hash Join
+   Hash Cond: (test1.key1 = test2.key1)
+   ->  Seq Scan on test1
+   ->  Hash
+         ->  HashAggregate
+               Group Key: test2.key1
+               ->  Seq Scan on test2
+(7 rows)
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where exists(select/*+no_unnest*/ * from test2 where test1.key1=test2.key1);
+                       QUERY PLAN                        
+---------------------------------------------------------
+ Seq Scan on test1 @"lt#1"
+   Filter: (alternatives: SubPlan 1 or hashed SubPlan 2)
+   SubPlan 1
+     ->  Seq Scan on test2 @"lt#0"
+           Filter: (test1.key1 = key1)
+   SubPlan 2
+     ->  Seq Scan on test2 test2_1 @"lt#0"
+(7 rows)
+</programlisting>
+     </para>
+     <para>
+     pq_distribute optimization prompts.
+<programlisting>
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+lightdb@lt_test-# EXPLAIN (COSTS false) SELECT /*+ leading(t1 t2) hashjoin(t1 t2)*/ * FROM t1 join t2 on t1.id=t2.id;
+                    QUERY PLAN                     
+---------------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Parallel Hash Join
+         Hash Cond: (t1.id = t2.id)
+         ->  Parallel Seq Scan on t1 @"lt#0"
+         ->  Parallel Hash
+               ->  Parallel Seq Scan on t2 @"lt#0"
+(7 rows)
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+lightdb@lt_test-# EXPLAIN (COSTS false) select/*+leading(t1 t2) hashjoin(t1 t2) pq_distribute(t2 none broadcast)*/ * from t1 join t2 on t1.id=t2.id;
+                 QUERY PLAN                  
+---------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Hash Join
+         Hash Cond: (t1.id = t2.id)
+         ->  Parallel Seq Scan on t1 @"lt#0"
+         ->  Hash
+               ->  Seq Scan on t2 @"lt#0"
+(7 rows)
+</programlisting>
+    </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Support <productname>Oracle</productname> to <literal>create user</literal> (<link linkend="sql-createuser">CREATE USER</link>)syntax;
+     Supports cascading <literal>drop</literal> of users (<link linkend="sql-dropuser">DROP USER</link>)
+     and <literal>grant</literal> statements
+     (see <link linkend="sql-grant-examples">Examples</link>).
+     </para>
+     <para>
+     for example:
+<programlisting>
+   CREATE USER user_name IDENTIFIED BY passwd DEFAULT TABLESPACE dt_space TEMPORARY TABLESPACE tt_space;
+   DROP USER user_name CASCADE;
+   GRANT CONNECT TO HS_SES;
+   GRANT RESOURCE TO HS_SES;
+   GRANT UNLIMITED TABLESPACE TO HS_SES;
+</programlisting>
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Support global temporary tables.
+     see <link linkend="sql-createtable-compatibility">Compatibility</link>.
+     </para>
+     <itemizedlist>
+       <listitem>
+        <para>
+        Support Oracle global temporary session tables.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Support Oracle global temporary transaction tables.
+        </para>
+       </listitem>
+      </itemizedlist>
+  <para>
+  Create a session-level global temporary table.
+  <programlisting>
+  CREATE GLOBAL TEMPORARY TABLE gtt_session(id number,ename varchar(15)) ON COMMIT PRESERVE ROWS;
+  </programlisting>
+  </para>
+  <para>
+  Create a transaction-level global temporary table.
+  <programlisting>
+  CREATE GLOBAL TEMPORARY TABLE gtt_transaction(id number,ename varchar(15)) ON COMMIT DELETE ROWS;
+  </programlisting>
+  </para>
+    </listitem>
+
+   <listitem>
+     <para>
+     Automatically create a user with the same name as the database,
+     and the automatically created user with the same name has <literal>create</literal>,
+     <literal>connect</literal>, <literal>temporary</literal>,
+     <literal>login</literal> permissions in the created database,
+     and this function cannot be used in distributed systems.
+     see <link linkend="sql-createdatabase">CREATE DATABASE</link>.
+     </para>
+<programlisting>
+lightdb@postgres=# create database testdb with lightdb_syntax_compatible_type oracle;
+NOTICE:  auto create user "testdb" success
+CREATE DATABASE
+</programlisting>
+    </listitem>
+
+    <listitem>
+     <para>
+     When the length of the variable type declaration can be supported,
+     it can be supported in characters or bytes, and when the unit is currently characters,
+     only syntax is supported.
+     see <link linkend="orafce">orafce</link>.
+     </para>
+   <programlisting>
+    create table hs_es(id int, name varchar2(10 byte));
+    create table hs_lt(id int, name varchar2(10 char));
+   </programlisting>
+    </listitem>
+
+    <listitem>
+     <para>
+     Added import tool <literal>ltldr</literal>, compatible with <literal>sqlldr</literal> tool.
+     By importing data from a specified table into the database through a control file,
+     multiple tables can be imported at the same time.
+     For businesses that use sqlldr tools to import data,
+     there are innate advantages.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Compatible with <literal>DBMS_UTILITY</literal> built-in package <literal>format_error_backtrace</literal> function,
+     only record the latest record of the PlorasSQL execution error,
+     use this function to view the location of the error.
+     see <link linkend="plorasql-format-error-backtrace">support DBMS_UTILITY built-in package format_error_backtrace</link>.
+    </para>
+    <para>
+     Use function of DBMS_UTILITY.format_error_backtrace, for example:
+    <programlisting>
+create or replace procedure pr_error_code_test1 is
+    v_backtrace    varchar(1000);
+    v_error        varchar(1000); 
+begin
+
+    INSERT INTO test_error_stack values (2);
+    INSERT INTO test_error_stack values (1);
+    commit;
+    exception when others then
+    insert into t_errlog(operate_error_msg) select to_char(DBMS_UTILITY.format_error_backtrace);
+    commit;
+    rollback;
+    end pr_error_code_test1;
+/
+
+select select to_char(DBMS_UTILITY.format_error_backtrace)
+    </programlisting>
+    </para>
+    </listitem>
+
+    <listitem>
+     <para>
+      <productname>PloraSQL</productname> supports stored procedures to use both return parameters with out decoration and return returns as null.
+     The return null function is to abort the stored procedure.
+     see <link linkend="plorasql-statements-returning-procedure">Returning from a Procedure</link>.
+     </para>
+<programlisting>
+create or replace procedure p_fmt_post_update_cash
+(
+  p_src_system  varchar2 DEFAULT '0',
+  p_init_date   number DEFAULT 0, 
+  p_company_no  varchar2 DEFAULT '0',
+  o_return_msg  out varchar2, 
+  o_return_code out integer
+) as
+  v_init_date         int := 0;
+begin
+  if v_init_date = 0 then
+    o_return_code := 1;
+    o_return_msg  := '请输入正确的校验日期';
+	return;
+  end if;
+ end;
+/
+</programlisting>
+    </listitem>
+    </itemizedlist> 
+  </sect3>
+  </sect2>
+  </sect1>
+
+ <sect1 id="release-13-8-22-4">
+  <title>Release 13.8-22.4</title>
+     <formalpara>
+      <title>Release date:</title>
+      <para>2022-12-27</para>
+     </formalpara>
+    <itemizedlist>
+
+    <listitem>
+     <para>
+     Add the guc parameter <literal>lightdb_arch_mode</literal>, and there are two values.
+     <literal>classic</literal> means that the current data system is not a distributed architecture.
+     <literal>dist</literal> means that the current data system is a distributed architecture,
+     under this architecture, the table created with <literal>create table</literal> defaults to a distributed table.
+     see <link linkend="sql-createtable-compatibility">Compatibility</link>.
+     </para>
+    </listitem>
+  
+    <listitem>
+     <para>
+     <literal>lt_check</literal> is a <productname>LightDB</productname> check sha256sum tool.
+     Ensure that the files in the <productname>LightDB</productname> installation directory are complete.
+     see <link linkend="app-lt_check">lt_check</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Added detection for unconditional and pageless queries.
+     see <link linkend="dml-check">LightDB DML Specification Check</link>.
+     </para>
+
+     <para>
+     In the following scenarios, a prompt message is printed indicating that the user should use pagination/where:
+     </para>
+     <itemizedlist>
+       <listitem>
+        <para>
+        <literal>select</literal> does not specify <literal>limit</literal>, <literal>offset</literal> or <literal>where</literal>.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        <literal>update</literal> does not specify <literal>where</literal>.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        <literal>delete</literal> does not specify <literal>where</literal>.
+        </para>
+       </listitem>
+      </itemizedlist>
+      <para>
+      for example:
+<programlisting>
+lightdb@lt_test=# set lightdb_best_practice_level to 'warn';
+SET
+lightdb@lt_test=# set lightdb_best_practice_mode to 'no_paging';
+SET
+lightdb@lt_test=# create table dc_np_t1(c_a int primary key, c_b varchar, gmt_create timestamp null, gmt_modified timestamp null);
+CREATE TABLE
+lightdb@lt_test=# SELECT * from dc_np_t1;
+WARNING:  LightDB DML check warning! select sql not where/limit/offset clause!
+ c_a | c_b | gmt_create | gmt_modified 
+-----+-----+------------+--------------
+(0 rows)
+</programlisting>
+      </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Check the correctness of each item in the checklist.
+     It can be used to detect whether there are risks in operating system parameters,
+     <productname>LightDB</productname> installation file sha256sum,
+     <productname>LightDB</productname> version number, etc.
+     If there are risks, give a risk report.
+     see <link linkend="app-check_list">check_list</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Support <literal>database()</literal> functions can be used in both oracle and postgres modes.
+     The <literal>database()</literal> function is placed in the extension <literal>ltfce</literal>.
+     see <link linkend="ltfce">ltfce</link>.
+     </para>
+     <para>
+     for example:
+<programlisting>
+lightdb@postgres=# select database();
+ database 
+----------
+ public
+(1 row)
+lightdb@postgres=# \c test_createdb_oracle
+You are now connected to database "test_createdb_oracle" as user "lightdb".
+lightdb@test_createdb_oracle=# show lightdb_dblevel_syntax_compatible_type;
+ lightdb_dblevel_syntax_compatible_type 
+----------------------------------------
+ Oracle
+(1 row)
+lightdb@test_createdb_oracle=#  select database();
+ database 
+----------
+ public
+(1 row)
+</programlisting>
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Archive log cleaning optimization.
+     see <link linkend="guc-lightdb-archive-dir">lightdb_archive_dir</link>.
+     </para>
+     <itemizedlist>
+       <listitem>
+        <para>
+        Remove the settings for the cleanup logic in <literal>archive_command</literal> from the installer script.
+        Set <literal>lightdb_archive_dir</literal> at the same time.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        When starting <productname>LightDB</productname>, check <literal>archive_command</literal>,
+        <literal>lightdb_archive_retion_size</literal> and <literal>lightdb_archive_dir</literal>
+        when <literal>archive_mode</literal> is on.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        Adjustment parameters:
+        <itemizedlist>
+         <listitem>
+          <para>
+           <literal>lightdb_archive_retion_size</literal> can only be set at startup.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           <literal>lightdb_archive_dir</literal> can only be set at startup.
+          </para>
+         </listitem>
+        </itemizedlist>
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        Ensure that fewer wal logs are deleted in the archive than are retained in the <literal>lt_wal</literal> directory.
+        </para>
+       </listitem>
+
+      </itemizedlist>
+    </listitem>
+
+    <listitem>
+     <para>
+     Add <literal>walminer</literal> extension to mine all the useful information of wal logs to provide <productname>LightDB</productname> data recovery support.
+     The database log level configuration needs to be greater than <literal>minimal</literal>.
+     see <link linkend="ltwalminer">lt_walminer</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Supports single-instance multi-mode.
+     see <link linkend="sql-createdatabase">CREATE DATABASE</link>.
+     </para>
+     <para>
+     for example:
+<programlisting>
+lightdb@postgres=# create database test_createdb_oracle with lightdb_syntax_compatible_type oracle;
+CREATE DATABASE
+lightdb@postgres=# \c test_createdb_oracle
+You are now connected to database "test_createdb_oracle" as user "lightdb".
+lightdb@test_createdb_oracle=# show lightdb_dblevel_syntax_compatible_type;
+ lightdb_dblevel_syntax_compatible_type 
+----------------------------------------
+ Oracle
+(1 row)
+</programlisting>
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Add the <literal>lightdb_aborted_rollback</literal> parameter to support the error reporting of the current statement
+     in the transaction and rollback the entire transaction.
+     see <link linkend="guc-lightdb_aborted_rollback">lightdb_aborted_rollback</link>.
+     </para>
+     <para>
+     Before adding this feature,for example:
+<programlisting>
+lightdb@lt_test=# begin;
+BEGIN
+lightdb@lt_test=*# create table aborted_rollback(name varchar(100));
+CREATE TABLE
+lightdb@lt_test=*# insert into aborted_rollback1 values(1);
+ERROR:  relation "aborted_rollback1" does not exist
+LINE 1: insert into aborted_rollback1 values(1);
+                    ^
+lightdb@lt_test=!# insert into aborted_rollback1 values(1);
+ERROR:  current transaction is aborted, commands ignored until end of transaction block
+lightdb@lt_test=!# commit;
+ROLLBACK
+</programlisting>
+     </para>
+     <para>
+     After adding this feature,for example:
+<programlisting>
+lightdb@lt_test=# set lightdb_aborted_rollback to on;
+SET
+lightdb@lt_test=# begin;
+BEGIN
+lightdb@lt_test=*# create table aborted_rollback(name varchar(100));
+CREATE TABLE
+lightdb@lt_test=*# insert into aborted_rollback1 values(1);
+ERROR:  relation "aborted_rollback1" does not exist
+LINE 1: insert into aborted_rollback1 values(1);
+                    ^
+ERROR:  current transaction is aborted, "insert into aborted_rollback1 values(1);" causes transaction rollback.
+</programlisting>
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Solve the problem of type mismatch when the <literal>unknown</literal> type participates in the operation.
+     see <link linkend="op-resol-exact-unknown-number">optional</link>.
+     </para>
+     <para>
+     for example: 
+<programlisting>
+lightdb@lt_test=# select '1'+1;
+ ?column? 
+----------
+        2
+(1 row)
+</programlisting>
+     </para>
+     <para>
+     Note: Operator overloading may affect the return value of the expression.
+     For example, for an expression such as select '1' * 1, it previously returned an int type, but now it returns a numeric type.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     The problem of high CPU usage in optimizing the <literal>lt_cron</literal> process.
+     see <link linkend="pgcron">lt_cron</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Add an option <literal>table_exists_action</literal>,
+     to tell <literal>lt_restore</literal> what to do if the table it is tring to create already exists.
+     <literal>table_exists_action</literal> has four options: <literal>skip</literal>,<literal>append</literal>,
+     <literal>truncate</literal> or <literal>replace</literal>.
+     see <link linkend="app-pgrestore">lt_restore</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     <literal>lt_upgrade</literal> supports package upgrade.
+     see <link linkend="pgupgrade">lt_upgrade</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     Statement level rollback optimization, This feature is supported in both Oracle and MySQL modes.
+     Statement level rollback is enabled, and the performance loss is about 5%.
+     see <link linkend="guc-lt_statement_rollback_enable">lt_statement_rollback_enable</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     <literal>ltdts_ora</literal> is a data synchronization tool for synchronizing Oracle data to LightDB.
+     see <link linkend="app-ltdts-ora">ltdts_ora</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     <literal>ltdts_mysql</literal> is a data synchronization tool for synchronizing MySQL|MariaDB data to LightDB.
+     see <link linkend="app-ltdts-mysql">ltdts_mysql</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     <literal>lt_patch</literal> enhancements, and many of new parameters shown below have been added.
+     see <link linkend="app-lt_patch">lt_patch</link>.
+     </para>
+     <itemizedlist>
+       <listitem>
+        <para>
+        Support automatic execution of SQL scripts.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Added <literal>lt_patch</literal> table to save patch information.
+        The <literal>apply_type</literal> and <literal>apply_version</literal> attributes are added to the patch description information.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        Add the patch dependency directory.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        Solve the half state problem in the patch success process.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+        More stringent verification and other details optimization.
+        </para>
+       </listitem>
+
+      </itemizedlist>
+    </listitem>
+
+    <listitem>
+     <para>
+     Use <literal>lt_dump</literal> and <literal>lt_restore</literal> tools to implement backup and recovery of distributed clusters:
+     </para>
+     <itemizedlist>
+       <listitem>
+        <para>
+        Use <literal>lt_dump</literal> tools to implement backup of distributed clusters.
+        see <link linkend="app-lt_distributed_dump">lt_distributed_dump</link>.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Use <literal>lt_restore</literal> tools to implement recovery of distributed clusters.
+        see <link linkend="app-lt_distributed_restore">lt_distributed_restore</link>.
+        </para>
+       </listitem>
+      </itemizedlist>
+    </listitem>
+
+    <listitem>
+     <para>
+     Use <literal>lt_probackup</literal> tools to implement backup and recovery of distributed clusters.
+     see <link linkend="app-lt_distributed_probackup">lt_distributed_probackup</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     <literal>Oracle</literal> compatibility enhancements, and many of new features shown below have been added.
+     </para>
+     <itemizedlist>
+       <listitem>
+       <para>
+       Online change from common table to partitioned table.
+       see <link linkend="sql-altertable">ALTER TABLE</link>.
+       </para>
+       <para>
+       for example:
+<programlisting>
+lightdb@test_createdb_oracle=# CREATE TABLE lt_oracle_partition_range5
+lightdb@test_createdb_oracle-# (
+lightdb@test_createdb_oracle(# a int,
+lightdb@test_createdb_oracle(# b float,
+lightdb@test_createdb_oracle(# c date,
+lightdb@test_createdb_oracle(# d timestamp
+lightdb@test_createdb_oracle(# )PARTITION BY RANGE (c)
+lightdb@test_createdb_oracle-# (
+lightdb@test_createdb_oracle(# PARTITION p1 VALUES LESS THAN(to_date('2022-01-01', 'yyyy-mm-dd')),
+lightdb@test_createdb_oracle(#     PARTITION p2 VALUES LESS THAN(to_date('2022-02-01', 'yyyy-mm-dd')),
+lightdb@test_createdb_oracle(#     PARTITION p3 VALUES LESS THAN(to_date('2022-03-01', 'yyyy-mm-dd'))
+lightdb@test_createdb_oracle(# );
+CREATE TABLE
+lightdb@test_createdb_oracle=# 
+lightdb@test_createdb_oracle=# \d+ lt_oracle_partition_range5
+                            Partitioned table "public.lt_oracle_partition_range5"
+ Column |            Type             | Collation | Nullable | Default | Storage | Stats target | Description 
+--------+-----------------------------+-----------+----------+---------+---------+--------------+-------------
+ a      | integer                     |           |          |         | plain   |              | 
+ b      | double precision            |           |          |         | plain   |              | 
+ c      | date                        |           |          |         | plain   |              | 
+ d      | timestamp without time zone |           |          |         | plain   |              | 
+Partition key: RANGE (c)
+Partitions: lt_oracle_partition_range5_1_prt_p1 FOR VALUES FROM (MINVALUE) TO ('2022-01-01'),
+            lt_oracle_partition_range5_1_prt_p2 FOR VALUES FROM ('2022-01-01') TO ('2022-02-01'),
+            lt_oracle_partition_range5_1_prt_p3 FOR VALUES FROM ('2022-02-01') TO ('2022-03-01')
+</programlisting>
+       </para>
+      </listitem>
+
+      <listitem>
+       <para>
+       Support oracle <literal>cardinality</literal> and <literal>ordered_predicates</literal> hint.
+       see <link linkend="pghint_plan">lt_hint_plan</link>.
+       </para>
+       <para>
+       for example:
+<programlisting>
+lightdb@postgres=# explain select /*+ cardinality(b 1000)use_nl(a b) leading(a b)*/* from t1 a , t2 b where a.key1=b.key1;
+                                    QUERY PLAN                                    
+----------------------------------------------------------------------------------
+ Nested Loop  (cost=0.15..433.43 rows=1000 width=16)
+   ->  Seq Scan on t1 a @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+   ->  Index Scan using t2_pkey on t2 b @"lt#0"  (cost=0.15..0.18 rows=1 width=8)
+         Index Cond: (key1 = a.key1)
+(4 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select /*+ordered_predicates*/* from test1 where mod(key1,10)=2 and key2=2;
+                   QUERY PLAN                   
+------------------------------------------------
+ Seq Scan on test1 @"lt#0"
+   Filter: ((mod(key1, 10) = 2) AND (key2 = 2))
+(2 rows)
+</programlisting>
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+       alter table modify,
+       default values and not null attributes can swap locations.
+       see <link linkend="sql-altertable">ALTER TABLE</link>.
+       </para>
+       <para>
+       for example:
+<programlisting>
+lightdb@lt_test=# create table aborted_rollback(name varchar(100));
+CREATE TABLE
+lightdb@lt_test=# alter table aborted_rollback modify name text not null default 1;
+ALTER TABLE
+</programlisting>
+       </para>
+      </listitem>
+
+      <listitem>
+       <para>
+       New export tool <literal>ltuldr</literal> (compatible with oracle <literal>sqluldr2</literal> tool).
+       see <link linkend="app-ltuldr">ltuldr</link>.
+       </para>
+      </listitem>
+
+    <listitem>
+     <para>
+     Support <literal>connect by</literal> hierarchical query.
+     see <link linkend="sql-connect-by">CONNECT BY Clause</link>.
+     </para>
+      <para>
+      for example:
+<programlisting>
+lightdb@test_createdb_oracle=# SELECT id, manager_id from t_tab CONNECT BY prior id =  manager_id order by id;
+ id | manager_id 
+----+------------
+  1 |          0
+  2 |          1
+  2 |          1
+  3 |          2
+  3 |          2
+  3 |          2
+(6 rows)
+</programlisting>
+      </para>
+    </listitem>
+
+    <listitem>
+     <para>
+      <literal>orafce</literal> Enhancements,see <link linkend="orafce">orafce</link>.
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        <literal>varchar2</literal> calculates the length in characters.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+        Support <literal>raw</literal> type.
+       </para>
+      </listitem>
+     </itemizedlist>
+      <para>
+      for example:
+<programlisting>
+lightdb@test_createdb_oracle=# create table test_type(name varchar2(100), id raw);
+CREATE TABLE
+lightdb@test_createdb_oracle=# \d test_type
+                Table "public.test_type"
+ Column |     Type      | Collation | Nullable | Default 
+--------+---------------+-----------+----------+---------
+ name   | varchar2(100) |           |          | 
+ id     | raw           |           |          | 
+</programlisting>
+      </para>
+    </listitem>
+     </itemizedlist>
+     </listitem>
+</itemizedlist>
+ </sect1>
+
+ <sect1 id="release-13-8-22-3">
+  <title>Release 13.8-22.3</title>
+     <para>
+     LightDB 13.8-22.3 is based on PostgreSQL 13.8 and contains a variety of fixes and new feature from LightDB 13.3-22.2.
+     </para>
+     <formalpara>
+      <title>Release date:</title>
+      <para>2022-09-30</para>
+     </formalpara>
+    <itemizedlist>
+    
+    <listitem>
+    <para>
+      Support q escape. for example:
+      <programlisting language="sql">
+select q'!name LIKE '%DBMS_%%'!';
+       ?column?       
+----------------------
+ name LIKE '%DBMS_%%'
+(1 row)
+      </programlisting>
+      see <link linkend="sql-syntax-q-quoting">Q-Quoted String Constants</link>.
+    </para>
+    </listitem>
+    
+    <listitem>
+    <para>
+     Rownum performance optimization. Like oracle, support count stop key to improve rownum performance.
+<programlisting language="sql">
+lightdb@lt_test=# explain select * from public.test where rownum &lt; 3;
+                      QUERY PLAN                           
+----------------------------------------------------------------
+Count StopKey  (cost=0.00..0.03 rows=2 width=4)
+  ->  Seq Scan on test  (cost=0.00..159.75 rows=11475 width=4)
+(2 rows)
+</programlisting>
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+    <link linkend="libpq-PQlightdbserverVersion">libpq</link> supports getting LightDB version number.
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+     <literal>listagg</literal> supports for analytic functions. 
+     There is a description of <literal>listagg</literal> in the <link linkend="orafce">orafce</link> chapter.
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+     <link linkend="functions-nvl-nvl2">NVL</link> function parameters support 
+     more parameter combinations such as strings and numbers.
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+     Modify the default database to <literal>lt_test</literal>,
+     Replace the original default database <literal>postgres</literal>.
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+     <literal>lt_upgrade</literal> supports upgrading LightDB from version 22.2 to version 22.3
+     (lt_upgrade will check the consistency of <varname>lightdb_syntax_compatible_type</varname>
+     while upgrading, notice that if the value are both 'oracle', lt_upgrade is not recommended).
+     see <link linkend="pgupgrade"><application>lt_upgrade</application></link>.
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+      Add new GUC parameters <varname>nls_date_format</varname>
+      and <varname>nls_timestamp_format</varname> for Oracle time function compatibility,
+      see <xref linkend="guc-nls_date_format-config"/> and
+      <xref linkend="guc-nls_timestamp_format-config"/> for more details.
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+     <literal>search_path</literal> contains <literal>lt_catalog</literal> by default.
+     see <link linkend="ddl-schemas-path">Search Path</link>.
+     </para>
+    <para>
+     schema <literal>oracle</literal> and <literal>mysql</literal> are processed specially, 
+     can only be set when they are consistent with the <literal>lightdb_syntax_compatible_type</literal>.
+    </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+     Support for non-reserved keywords as column aliases
+     (When there is no keyword <literal>as</literal> and no quotation marks).
+     see <link linkend="sql-keywords-appendix">Key Words</link>.
+     <programlisting language="sql">
+select 3 type;
+ type 
+------
+    3
+(1 row)
+     </programlisting>
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+     when <link linkend="guc-lightdb-enable-default-tablespace">lightdb_enable_default_tablespace</link> is enabled, add the default tablespace <literal>lt_users</literal>.
+     The <literal>lt_users</literal> is the default tablespace of 
+     other databases created by ourselves.
+     (unless overridden by a TABLESPACE clause in CREATE DATABASE).
+     Its storage path is in the same level directory of the instance path.
+     This can ensure that the amount of data under the instance path is not too large.
+     see <link linkend="manage-ag-tablespaces">Tablespaces</link>.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     <literal>lightdb_service.py</literal> supports any single node start stop.
+     </para>
+     </listitem>
+
+     <listitem>
+     <para>
+     Fixed <literal>lt_probackup</literal> recovery failure for the amount of data exceeds 2G.
+     </para>
+     </listitem>
+
+    <listitem>
+     <para>
+      Support for modifying column by <literal>modify column clause</literal> like oracle.
+      see <xref linkend="sql-altertable"/> for details. 
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+      Support the drop priamry key clause when alter table.
+      see <xref linkend="sql-altertable"/> for details. 
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+      Add function and table for modifying tables that have view dependencies.
+      see <link linkend="orafce">orafce</link> for details. 
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+      Remove read-only table related features.
+     </para>
+    </listitem>
+
+    <listitem>
+     <para>
+     <literal>lt_dump</literal> enhancements, and many of new parameters shown below have been added.
+     see <link linkend="app-pgdump">lt_dump</link>.
+     </para>
+     <itemizedlist>
+       <listitem>
+        <para>
+        Add parameter <literal>--lt-exclude-lightdb-objects</literal> and 
+        parameter <literal>--lt-dump-lightdb-tables</literal>, 
+        To solve the problem of database object conflicts created by 
+        the LightDB built-in plug-in during export and import and
+        to solve the problem of overwriting the table created by 
+        the LightDB built-in plug-in during import.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Add parameter <literal>--lt-disable-auto-analyze</literal>,
+        To solve the problem of <literal>lt_restore</literal> multithreaded import deadlock.
+        </para>
+       </listitem>
+      </itemizedlist>
+    </listitem>
+    
+    <listitem>
+     <para>
+     <literal>PL/oraSQL</literal> enhancements, and many of new features shown below have been added.
+     </para>
+      <itemizedlist>
+       <listitem>
+        <para>
+        <literal>Package</literal> supports backup using <literal>lt_dump</literal>.
+        see <link linkend="app-pgdump">lt_dump</link>.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        <literal>Package</literal> supports associative arrays.
+        see <link linkend="plorasql-Collections">Section 42.8</link>.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Support <literal>table function</literal>.
+        see <link linkend="plorasql-tablefunction">Table function</link>.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Support <literal>nested table</literal>.
+        see <link linkend="plorasql-Nested-Tables">Nested Tables</link>.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Support <literal>error handling</literal>.
+        see <link linkend="plorasql-error-handling">Error Handling</link>.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Support stored procedure(including stored procedure in <literal>package</literal>) and anonymous block
+        after opening the cursor. in the transaction block, 
+        you can continue the fetch operation after 
+        <literal>commit</literal> or <literal>rollback</literal>.
+        see <link linkend="plorasql-operations-cursor-with-transcations">cursor-with-transcations</link>.
+        </para>
+       </listitem>
+       
+       <listitem>
+        <para>
+        Fix open cursor parameter is inconsistent with the defined cursor parameter.
+        see <link linkend="plorasql-cursor-default-values">cursor-default-values</link>.
+        </para>
+       </listitem>
+      </itemizedlist>
+    </listitem>
+    
+    <listitem>
+     <para>
+      <literal>orafce</literal> Enhancements:
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+        Add new oracle's Built-in package:
+        <literal>dbms_metadata</literal>, <literal>dbms_job</literal>, <literal>dbms_lock</literal>,
+        <literal>dbms_obfuscation_toolkit</literal>, <literal>utl_url</literal>, <literal>utl_encode</literal>,
+        <literal>utl_raw</literal> and <literal>dbms_snapshot</literal>.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+        Improve the original built-in package:
+        <literal>dbms_application_info</literal>, <literal>dbms_utility</literal> and <literal>dbms_lob</literal>.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+        Add new oracle's system view like <literal>[DBA/ALL/USER]_TABLES</literal>, 
+        <literal>[DBA/ALL/USER]_TAB_COLUMNS</literal> and <literal>[DBA/ALL/USER]_INDEXES</literal>.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+        Add new oracle's function: <literal>BIN_TO_NUM</literal>, 
+        <literal>BITOR/BITXOR</literal>, <literal>REMAINDER</literal>, 
+        <literal>ROUND_TIES_TO_EVEN</literal>, <literal>INSTRB</literal>, 
+        <literal>REGEXP_INSTR/REGEXP_REPLACE</literal>, <literal>REPLACE</literal>, 
+        <literal>SOUNDEX</literal>, <literal>MONTHS_BETWEEN</literal>, 
+        <literal>TZ_OFFSET</literal>, <literal>CONVERT</literal>, <literal>NUMTOYMINTERVAL</literal>, 
+        <literal>TO_BLOB</literal>, <literal>NLS_CHARSET_ID /NLS_CHARSET_NAME</literal>, 
+        <literal>SYS_CONTEXT/USERENV</literal>, <literal>EMPTY_CLOB</literal>, 
+        <literal>ORA_HASH</literal> and <literal>VSIZE</literal>.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+        Add new oracle's agg function: <literal>ANY_VALUE</literal>, <literal>BIT_AND_AGG/BIT_OR_AGG/BIT_XOR_AGG</literal>, <literal>KURTOSIS_POP/KURTOSIS_SAMP</literal>
+        and <literal>SKEWNESS_POP/SKEWNESS_SAMP</literal>.
+       </para>
+      </listitem>
+     </itemizedlist>
+     <para>
+      see <link linkend="orafce">orafce</link> for details. 
+     </para>
+    </listitem>
+    
+    <listitem>
+     <para>
+     Oracle compatibility enhancements, and many of new features shown below have been added.
+     </para>
+     <itemizedlist>
+      <listitem>
+       <para>
+       Support Oracle partition syntax. 
+       see <link linkend="sql-createtable">CREATE TABLE</link> and
+       <link linkend="sql-altertable">ALTER TABLE</link>.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+       Support statement rollback. 
+       see <link linkend="guc-lt_statement_rollback_enable">lt_statement_rollback_enable</link>.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+       Support <literal>raise_application_error()</literal> function.
+       see <link linkend="plorasql-Associative-Arrays">Section 42.8</link>.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+       <literal>listagg</literal> supports analysis functions.
+       the <link linkend="orafce">orafce</link> chapter.
+       </para>
+      </listitem>
+
+      <listitem>
+       <para>
+      Enhance compatibility between empty string and NULL.
+      see <link linkend="guc-lightdb-syntax-compatible-type">Section 17.11</link>.
+       </para>
+      </listitem>
+      
+     </itemizedlist>
+     </listitem>
+     
+     <listitem>
+     <para>
+     MySQL compatibility enhancements, and many of new features shown below have been added.
+     </para>
+     <itemizedlist>
+     <listitem>
+     <para>
+     Support <literal>year()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>day()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>date_format()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>str_to_date()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>from_unixtime()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>unix_timestamp()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>ifnull()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Add <literal>interval</literal> constant compatibility.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>date_add()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>date_sub()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>dayofweek()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>weekofyear()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Add <literal>cast</literal> type conversion.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>compress()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>uncompress()</literal> function.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Support <literal>timestamp</literal> and <literal>string</literal> comparison.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Fix <literal>smallint error when using 'is true' or '= true'</literal>.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Fix <literal>select and group by field inconsistent report error</literal>.
+     </para>
+     </listitem>
+     
+     <listitem>
+     <para>
+     Fix <literal>distinct and order by field inconsistent report error</literal>.
+     </para>
+     </listitem>
+     </itemizedlist>
+     <para>
+     see the <link linkend="myfce">myfce</link> chapter for for details.
+     </para>
+     </listitem>
+     
+     
+     
+
+     <listitem>
+     <para>
+     JDBC driver library, We fixed some of the issues and enhanced data type compatibility:
+     <itemizedlist>
+      <listitem>
+       <para>
+       Support <literal>numeric</literal> data type convert to Java Integer.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+       Add connection param extendSchema, The default value is 'lt_catalog,oracle' 
+       when currentSchema is set, extendSchema will automatic append to currentSchema's value.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+       Remove expiration time limit.
+       </para>
+      </listitem>
+      
+      <listitem>
+       <para>
+       Support MySQL <literal>SQL_CALC_FOUND_ROWS</literal> and 
+       <literal>SELECT FOUND_ROWS()</literal> feature，only when they are executed sequentially.
+       </para>
+      </listitem>
+     </itemizedlist>
+     </para>
+     </listitem>
+    
+</itemizedlist>
+ </sect1>
+
+ <sect1 id="release-13-3-22-2">
+  <title>Release 13.3-22.2</title>
+     <formalpara>
+      <title>Release date:</title>
+      <para>2022-06-30</para>
+     </formalpara>
+    <itemizedlist>
+  <listitem>
+    <para>
+      Support patch for quick upgrade, see
+      <link linkend="app-lt_patch">lt_patch</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Add <literal>PL/oraSQL</literal> loadable procedural language, see
+      <link linkend="plorasql">plorasql</link>
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      <link linkend="pghint_plan">lt_hint_plan</link> Enhancements
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Add three new hints:
+          <literal>use_hash</literal>,<literal>use_nl</literal>,<literal>full</literal>,
+          semantics are consistent with Oracle.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The table name in hint is case-insensitive.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Hint <literal>parallel</literal> default is hard and supports
+          no table specification.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Hints can be applied to the tables of the subquery when the
+          subquery has only one table.
+        </para>
+        <programlisting language="sql">
+EXPLAIN (COSTS false) select /*+use_hash(t1 y)*/* from t1,(select * from t2) y where t1.id=y.id;
+
+         QUERY PLAN             
+------------------------------------
+Hash Join
+Hash Cond: (t1.id = t2.id)
+-&gt;  Seq Scan on t1 @&quot;lt#0&quot;
+-&gt;  Hash
+        -&gt;  Seq Scan on t2 @&quot;lt#1&quot;
+(5 rows)
+</programlisting>
+      </listitem>
+    </itemizedlist>
+  </listitem>
+  <listitem>
+    <para>
+      Support User-defined type priority for better function and
+      operator match, see <link linkend="type-compatible-mode">type
+      compatible</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Support <literal>CREATE TABLE  DISTRIBUTED BY</literal> to create
+      distribute table(depends on extension <literal>canopy</literal>),
+      see <link linkend="sql-createtable">CREATE TABLE</link>.
+    </para>
+    <programlisting language="sql">
+create table dist1(a int, b int) distributed by hash(a) shard_count(4);
+</programlisting>
+  </listitem>
+  <listitem>
+    <para>
+      <link linkend="auto-explain">Auto-explain</link> execution plan
+      logs are printed in a separate log file (*.slow) using JSON
+      format.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Add extension <link linkend="wal2sql">wal2sql</link> to support
+      Real-time synchronization to Oracle.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      <literal>lt_dump</literal> support
+      <literal>--recreate-schema</literal> to generate drop schema(use
+      <literal>CASCADE</literal> mode) command for better performance,
+      see <link linkend="app-pgdump">lt_dump</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      <link linkend="reference-client">Client Applications</link> and
+      <link linkend="libpq">libpq</link> Support
+      <link linkend="libpq-envars">LightDB environment variables</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      <literal>sysdate</literal>and <literal>systimestamp</literal>
+      indicates the statement start time.
+    </para>
+    <programlisting language="sql">
+lightdb@postgres=# begin;
+BEGIN
+lightdb@postgres=*# select sysdate from dual;
+    sysdate       
+---------------------
+2022-06-28 19:44:15
+(1 row)
+
+lightdb@postgres=*# select sysdate from dual;
+    sysdate       
+---------------------
+2022-06-28 19:44:16
+(1 row)
+
+lightdb@postgres=*# end;
+COMMIT
+</programlisting>
+    <para>
+      For details, see
+      <link linkend="functions-datetime">datetime</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      When install with <link linkend="high-availability">high
+      availability</link>, enable
+      <link linkend="streaming-replication-slots">replication
+      slot</link> default.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Support Order-Preserving Encryption ,see
+      <link linkend="ltope">lt_ope</link>
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      The following platform support is added:
+    </para>
+    <informaltable>
+      <tgroup cols="2">
+        <colspec colwidth="45*" align="center" />
+        <colspec colwidth="54*" align="center" />
+        <thead>
+          <row>
+            <entry>
+              Architecture
+            </entry>
+            <entry>
+              OS
+            </entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>
+              <ulink url="https://www.loongson.cn/">LoongArch</ulink>
+            </entry>
+            <entry>
+              <ulink url="https://www.kylinos.cn/">Kylin
+              V10(SP1)</ulink>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              x86_64
+            </entry>
+            <entry>
+              <ulink url="https://rockylinux.org/">rockylinux</ulink>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              aarch64
+            </entry>
+            <entry>
+              <ulink url="https://rockylinux.org/">rockylinux</ulink>
+            </entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+  </listitem>
+  <listitem>
+    <para>
+      Add cluster control tool <literal>lightdb_service.py</literal> to
+      facilitate the overall start and stop of services in high
+      availability and distributed environments.
+    </para>
+    <para>
+      start cluster:
+    </para>
+    <programlisting>
+lightdb_service.py -c start
+</programlisting>
+    <para>
+      stop cluster:
+    </para>
+    <programlisting>
+lightdb_service.py -c stop
+</programlisting>
+  </listitem>
+  <listitem>
+    <para>
+      The value 0 in PWR is display as empty, for details, see
+      <link linkend="pgprofile">lt_profile</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      In non-distributed installation, the <literal>canopy</literal>
+      extension not installed.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      When <link linkend="tool-keepalived">keepalived</link> and
+      <literal>ltcluster</literal> are restarted, new log files are
+      generated to avoid confusion with old logs.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      <link linkend="app-lt_initdb">lt_initdb</link> does not restrict
+      the order of options.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Fix
+      <literal>cannot assign XIDs during a parallel operation</literal>
+      error occurs occasionally during parallel query in
+      <link linkend="pg-show-plans">lt_show_plans</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Release the JDBC driver library based on PostgreSQL.
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          maven repository
+        </para>
+        <programlisting language="xml">
+&lt;dependency&gt;
+    &lt;groupId&gt;io.github.hslightdb&lt;/groupId&gt;
+    &lt;artifactId&gt;lightdb-jdbc&lt;/artifactId&gt;
+    &lt;version&gt;42.2.30&lt;/version&gt;
+&lt;/dependency&gt;
+</programlisting>
+      </listitem>
+    </itemizedlist>
+    <para>
+      We fixed some of the issues and enhanced data type compatibility:
+    </para>
+    <itemizedlist spacing="compact">
+      <listitem>
+        <para>
+          fix：fetchSize does not take effect in automatic commit mode,
+          causing the whole data to be loaded into the memory and
+          causing out-of-memory problem.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          support oracle anonymous blocks syntax (see
+          <link linkend="plorasql">plorasql</link> ).
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          support <literal>to_number()</literal> function compatible
+          with oracle.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          support <literal>numeric</literal> data type convert to Java
+          Long.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          support <literal>char(1)</literal> data type convert to Java
+          Character.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          fix loss of precision when Java setDouble operates on
+          <literal>numeric</literal> field.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </listitem>
+  <listitem>
+    <para>
+      <link linkend="pgcron">lt_cron</link> supports linux command.
+    </para>
+    <programlisting language="sql">
+SELECT cron.schedule('dayly-touch', '59 23 * * *', 'rm -rf $LTDATA/log/*', 'next', '8', 'linux');
+</programlisting>
+  </listitem>
+  <listitem>
+    <para>
+      Built-in tool application <link linkend="tool-lvs">lvs</link> for
+      load balancing in distributed environment wiith multi-CN.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Built-in tool application
+      <link linkend="tool-postgrest">postgresrest</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Changed file naming rules in the installation directory and
+      instance directory.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      The extension objects in <literal>public</literal> schema are all
+      moved to the <literal>lt_catalog</literal> schema.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      RPM dependencies are built into the installation package.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Support <link linkend="sql-merge">merge into</link> in distributed
+      environment.
+    </para>
+  </listitem>
+</itemizedlist>
+ </sect1>
+
+ <sect1 id="release-13-3-22-1">
+  <title>Release 13.3-22.1</title>
+     <formalpara>
+      <title>Release date:</title>
+      <para>2022-04-06</para>
+     </formalpara>
+
+    <para>
+     This release contains a variety of changes from LightDB 13.3-21.3.
+    </para>
+
+    <itemizedlist>
+       <listitem>
+        <para>
+         Oracle compatibility enhancements, and many of new features shown below have been added.
+        </para>
+
+        <itemizedlist>
+         <listitem>
+          <para>
+           If only one subquery is used in the SELECT FROM clause, you do not need to use the as clause
+           to explicitly specify an alias for the subquery. See <xref linkend="sql-select"/> for more details.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           You can use ROWNUM as the filter condition in the WHERE clause of UPDATE and DELETE statements
+           to specify the updated or deleted rows, for example:
+
+           <programlisting>
+            UPDATE mytable SET column = value WHERE ROWNUM = rownum;
+            DELETE FROM mytable WHERE ROWNUM = rownum;
+           </programlisting>
+
+           You can also use ROWNUM to assign unique values to each row of a table, as in this example:
+
+           <programlisting>
+            UPDATE mytable SET column = ROWNUM;
+           </programlisting>
+
+           To use this feature, you need to set <xref linkend="guc-lightdb-syntax-compatible-type"/> to
+           oracle, for example:
+
+           <programlisting>
+            SET lightdb_syntax_compatible_type = 'oracle';
+           </programlisting>
+
+           See <xref linkend="queries-ROWNUM"/> for more details.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+            Support <command>MERGE</command> syntax, <command>MERGE</command> performs actions
+            that modify rows in the <replaceable class="parameter">target_table_name</replaceable>,
+            using the <replaceable class="parameter">data_source</replaceable>.
+            <command>MERGE</command> provides a single <acronym>SQL</acronym> statement that can
+            conditionally <command>INSERT</command> or <command>UPDATE</command> rows, a task
+            that would otherwise require multiple procedural language statements.
+            See <xref linkend="sql-merge"/> for more details.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           support SYSTIMESTAMP function, SYSTIMESTAMP returns the system date, including fractional
+           seconds and time zone, of the system on which the database resides. The return type is
+           TIMESTAMP WITH TIME ZONE. For example:
+
+           <programlisting>
+            SELECT SYSTIMESTAMP FROM DUAL;
+            SELECT TO_CHAR(SYSTIMESTAMP, 'SSSSS.FF') FROM DUAL;
+           </programlisting>
+
+           See <xref linkend="functions-datetime-current"/> for more details.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           If you have set <xref linkend="guc-lightdb-syntax-compatible-type"/> to oracle, then
+           the result of expression "value || NULL" will be the value, otherwise the result will
+           be NULL.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           If you have set <xref linkend="guc-lightdb-syntax-compatible-type"/> to oracle, then
+           the result of expression "''::text is NULL" will be true, otherwise the result will
+           be false.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           The LISTAGG function in orafce extension now support DISTINCT and WITHIN GROUP syntax,
+           you can use it as in this example:
+
+           <programlisting>
+            SELECT LISTAGG(DISTINCT column, ',') WITHIN GROUP (ORDER BY column) FROM mytable;
+           </programlisting>
+
+           See <xref linkend="orafce"/> for more details.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           Add new keyword MINUS for SELECT statements and as the alias of EXCEPT, they are
+           completely equivalent. See <xref linkend="sql-select"/> for more details.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           GUC parameters lightdb_enable_rowid and lightdb_enable_rownum are removed, and set
+           <xref linkend="guc-lightdb-syntax-compatible-type"/> to oracle to instead.
+          </para>
+         </listitem>
+        </itemizedlist>
+       </listitem>
+
+       <listitem>
+        <para>
+         pg_hint_plan enhancements，and several new hints such as USE_HASH_AGGREGATION, Semijoin,
+         Antijoin and Swap_join_inputs have been added. Besides, it also realizes the support of
+         canopy for distributed database. See <xref linkend="pghint_plan"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         Support Transparent Data Encryption(TDE). TDE can (and can only) be enabled by specifying
+         the -K option when generating a data directory using initdb or lt_initdb, and this option
+         passes in a 32-bytes hexadecimal key string, which is used for encryption and decryption.
+         See <xref linkend="app-initdb-encryption-key-command"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         Adding new extension lt_sm to support sm2, sm3 and sm4 encryption. lt_sm is a extension for
+         LightDB that provides a series of functions for sm2, sm3 and sm4 encryption algorithms. Data
+         can be encrypted and decrypted using the above functions.
+         See <xref linkend="ltsm"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         Adding New GUC parameters <xref linkend="guc-lightdb_tsearch_non_stopwords-config"/> and
+         <xref linkend="guc-lightdb_tsearch_word_superpose-config"/> for full text search.
+        </para>
+
+        <para>
+         LightDB full text search has many built-in stop words. Words connected by stop words will
+         be split into multiple independent words by to_tsvector function, for example, "2022-04-10"
+         will be split into "2022", "04" and "10".
+        </para>
+
+        <para>
+         <xref linkend="guc-lightdb_tsearch_non_stopwords-config"/> is used to customize non-stop
+         words, which is just the opposite of stop words, that is, non-stop words are considered
+         to be an integral part of a word and thus will not be split into multiple independent
+         words by to_tsvector function any more. Still the above example, if you set '-' as non-stop
+         words, you will only get a result of "2022-04-10".
+        </para>
+
+        <para>
+         <xref linkend="guc-lightdb_tsearch_word_superpose-config"/> is used to overlay the effect
+         of using stop words and non-stop words. For example, if you set lightdb_tsearch_word_superpose
+         to on and set lightdb_tsearch_non_stopwords to '-', you will get the results including "2022",
+         "04", "10" and "2022-04-10" at the same time when using to_tsvector("2022-04-10").
+        </para>
+
+        <para>
+         See <xref linkend="textsearch-intro-configurations"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         Adding new GUC parameters <xref linkend="guc-lt-ring-buffers"/> to set the maximum amount of
+         memory used for ring buffers within each database session. When running a sequential scan
+         query that needs to access a large number of pages(more than a quarter of the total pages
+         of <xref linkend="guc-shared-buffers"/>) just once, a special access strategy called bulk-read
+         is used. A page that has been touched only by such a scan is unlikely to be needed again soon,
+         so instead of blowing out the entire buffer cache, a small ring of buffers that specified by
+         lt_ring_buffers is allocated and those buffers are reused for the whole scan. This also implies
+         that much of the write traffic caused by such a statement will be done by the backend itself and
+         not pushed off onto other processes.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         pg_profile enhancements, adding new wait_event_type named DBCpu in wait event statistics,
+         which indicate how much cpu time the user activity spends on database.
+         See <xref linkend="pgprofile"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         pg_cron enhancements, support three task scheduling modes: asap, next interval
+         and fixed interval.
+        </para>
+
+        <itemizedlist>
+         <listitem>
+          <para>
+           asap: Each task creates only one session and corresponds to a task queue, and multiple
+           tasks can be stored in the queue. If the subsequent scheduling cycle comes during the
+           execution of the current task, they will be put into the queue. At the same time, the
+           current execution will complete all tasks in the queue one by one.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           next interval: Each task creates only one session and corresponds to a task queue,
+           and only one task is stored in the queue. If the subsequent scheduling cycle comes
+           during the execution of the current task, they will not be put into the queue, but
+           the next scheduling cycle after current task execution.
+          </para>
+         </listitem>
+
+         <listitem>
+          <para>
+           fixed interval: This mode is similar to next interval, but the difference is that
+           if the subsequent scheduling cycle comes during the execution of the current task,
+           a separate session will be created for the subsequent scheduling to execute, that is,
+           multiple scheduling tasks will be executed in parallel, but the maximum number of
+           parallel executions is cron.max_connections_per_task.
+          </para>
+         </listitem>
+        </itemizedlist>
+
+        <para>
+         In addition, the task timeout function is also added. If the task execution time
+         exceeds the specified maximum time, the task will be forcibly interrupted and
+         cron.job_run_details will record relevant error messages. The default timeout is
+         15s, which is determined by cron.task_running_timeout. This parameter can only take
+         effect when the database is started.
+        </para>
+
+        <para>
+         See <xref linkend="pgcron"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         Adding new GUC parameters <varname>pg_prewarm.lt_autoprewarm_dbs</varname>,
+         <varname>pg_prewarm.lt_autoprewarm_tables</varname> and
+         <varname>pg_prewarm.lt_autoprewarm_indexes</varname> for pg_prewarm extension,
+         which are used to selectively prewarm the specified database, table and index
+         automatically when LightDB is started. See <xref linkend="pgprewarm"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         Canopy extension is enabled by default now.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         New extension pg_show_plans is integrated and disabled by default.
+         See <xref linkend="pg-show-plans"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         Automatically ANALYZE when execute CREATE INDEX to collect statistics.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         UPDATE and DELETE statement allow use LIMIT clause to limit the rows will
+         be updated and deleted, for example:
+
+         <programlisting>
+          UPDATE mytable SET column = value LIMIT n;
+          DELETE FROM mytable WHERE column > value LIMIT m, n;
+         </programlisting>
+
+         See <xref linkend="sql-update"/> and <xref linkend="sql-delete"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         If you use function(include bulit-in function and user defined function) to specify
+         the default value of a column in CREATE TABLE statement, the function parameters can
+         be other column names, variable names, and expressions containing other column names
+         and variable names, for example:
+
+         <programlisting>
+          CREATE FUNCTION myfunc(v integer)
+          RETURNS integer AS $$
+          BEGIN
+              RETURN  v + 10;
+          END;
+          $$ LANGUAGE plpgsql;
+
+          CREATE TABLE mytable (
+              id   int  default 10,
+              key  int  default myfunc(id),
+              v1   int  default key,
+              v2   int  default key + myfunc(key)
+          );
+         </programlisting>
+
+         See <xref linkend="sql-createtable"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         When using "CREATE TABLE AS SELECT colname AS alias" to create a table,
+         ltapk is not allowed as the alias.
+         See <xref linkend="sql-createtable"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         <filename>lt_standby_forward (EXPERIMENTAL)</filename> is a module which forwards SQL statements
+         from a hot standby to primary, providing a facility to reduce loading of primary
+         and allow clients query from standby. For example, client can send INSERT,
+         CREATE to a hot standby. See <xref linkend="lt-standby-forward"/> for more details.
+        </para>
+       </listitem>
+
+       <listitem>
+        <para>
+         The sqlprompt format of ltsql is adjusted to username@database.
+        </para>
+       </listitem>
+    </itemizedlist>
+ </sect1>
+
+ <sect1 id="release-13-3-21-3">
+  <title>Release 13.3-21.3</title>
+
+  <formalpara>
+   <title>Release date:</title>
+   <para>2021-12-31</para>
+  </formalpara>
+
+  <para>
+   This release contains a variety of changes from LightDB 13.3-21.2.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+      WAL (Write-Ahead Log) can be placed on Intel Optane PMEM, archieving significant
+      improvements in recovery time and performance. To enable this feature, set GUC
+      option wal_sync_method to pmem_drain. See <xref linkend="guc-wal-sync-method"/> for details.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    MySQL compatibility enhancements 
+    </para>
+    <itemizedlist>
+        <listitem>
+        <para>
+        functions support: find_in_set(), group_concat(), if(), truncate(),
+        datediff(), locate() and database(). See <xref linkend="myfce"/> for details.
+        </para>
+        </listitem>
+
+        <listitem>
+        <para>longtext data type support</para>
+        </listitem>
+
+        <listitem>
+        <para>LIMIT(m, n) syntax support. See <xref linkend="queries-limit"/> for details.</para>
+        </listitem>
+      </itemizedlist>
+   </listitem>
+
+   <listitem>
+    <para>
+    Oracle compatibility enhancements, including data type implicit conversion between number
+    (such as int2, int4, int8, float4, float8 and numeric) and string(such as char, varchar,
+    text and unknow). See <xref linkend="typeconv"/> for details.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Autovacuum when setting a table read only. No more manual execution.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    Wildcards '%' can be used when viewing GUC parameters with SHOW statement. For example,
+    you can use it like "SHOW max%", "SHOW %timeout" and "SHOW %vacuum%". See <xref linkend="sql-show"/> for details.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Alias can be used when updating a single table with UPDATE statement. For example,
+     you can use it like "UPDATE mytable AS t SET t.colname = value WHERE t.id = 1".
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    Support automatic cleaning of archived WAL and log files according to specified rules. See <xref linkend="runtime-config-wal-archiving"/> for details.  
+    </para>
+    <itemizedlist>
+        <listitem>
+        <para>
+        Archived WAL: clean up archived wal files in archive dir (<xref linkend="guc-lightdb-archive-dir"/>) 
+        older than (checkpoint file - <xref linkend="guc-lt-archive-retention-size"/>) when archive wal success. 
+        For example:
+            lightdb_archive_retention_size = 2. checkpoint file is 000000010000000000000008,
+            will remove the file older than 000000010000000000000006.
+        </para>
+        </listitem>
+
+        <listitem>
+        <para>
+        log files: by setting <xref linkend="guc-log-retention-age"/> to N Mins(usually set to xxxd to remove file xxx days ago) to remove files older than N Mins. 
+        Execute when switching to a new file. The time depends on file modification time.   
+        </para>
+        </listitem>
+      </itemizedlist>
+   </listitem>
+
+   <listitem>
+    <para>
+    COPY and pg_bulkload support multi character separators(at most three) for text.
+    See <xref linkend="sql-copy"/> for details. 
+    </para>
+    <programlisting>
+    COPY country TO STDOUT (DELIMITER 'ABC');
+    </programlisting>
+   </listitem>
+
+   <listitem>
+    <para>
+    Modify default search_path to contains oracle schema. This means functions and data types
+    in orafce extension can be used anywhere directly.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    integrate Citus extension, but not enabled by default.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    integrate pg_pathman extension and enabled by default.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Enhance pg_profile, adding database time statistics in LightDB profile report(PWR).
+     See <xref linkend="pgprofile"/> for details.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    Enhance pg_hint_plan, including multi hint support, hint scope qualification,
+    qb_name syntax support and no_merge hint syntax support. 
+    Now you can use hint only for sub query. See <xref linkend="pghint_plan"/> for details. 
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    Enhance pg_cron, including second level timed task support and one time scheduled
+    task support. In addition, the default time zone of the task is adjusted to UTC/GMT+08:00.
+    See <xref linkend="pgcron"/> for details.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    Enhance system_stats, adding a new function lt_get_sys_kernel_settings() to get linux kernel parameters.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    lt_initdb command line parameters support specifying non default port number(-p).
+    For example: lt_initdb -p xxx -D xxx.
+    See <xref linkend="app-lt_initdb"/> for details.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+    Support ROWNUM. ROWNUM is a pseudocolumn like oracle ROWNUM. Each row returns by a query, 
+    the <literal>ROWNUM</literal> pseudocolumn returns a number indicating the order in which LightDB selects the row
+    from a table or a set of joined rows. 
+    </para>
+    <para>
+    Now ROWNUM supports using with order by, group by, subquery, join, union and partition table. 
+    However, it is not supported in update or deletion, and it is not supported in column expression(like selecting rownum + 1 from xxx ). 
+    See <xref linkend="queries-ROWNUM "/> for details.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     The following extensions is removed from LightDB.
+    </para>
+    <itemizedlist>
+      <listitem>
+       <para>pg_wait_sampling</para>
+      </listitem>
+
+      <listitem>
+       <para>timescaledb</para>
+      </listitem>
+    </itemizedlist>
+   </listitem>
+
+  </itemizedlist>
+ </sect1>
+
+ <sect1 id="release-13-3-21-2">
+  <title>Release 13.3-21.2</title>
+
+  <formalpara>
+   <title>Release date:</title>
+   <para>2021-10-24</para>
+  </formalpara>
+
+  <para>
+   This release contains a variety of changes from LightDB 13.3-21.1.
+  </para>
+
+  <itemizedlist>
+   <listitem>
+    <para>
+     This version contains a database monitor and management platform, the LightDB Enterprise Manager (LightDB-EM) embedded version, provides monitoring
+     and management solution for LightDB.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     New Installation Wizard, with GUI and CLI mode. Allows you to simply and easily install standalone or high-available deployment LightDB, including the LightDB-EM.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Enhance PWR and ASH, especially wait-event. Helping you to find out most resource-consuming activities and top SQL in your LightDB databases.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Enhance Oracle compatibilty, as following:
+        Function. rowid, sysdate, nvl function supports numeric, real, integer, text, varchar, bpchar, bit conversion. guid function.
+        DataType. clob, blob, varchar2, number, rowid.
+    </para>
+   </listitem>
+
+   <listitem>
+      <para>
+       Enhance MySQL compatibilty, as following:
+          Function. uuid function.
+          DataType. datetime.
+          Syntax and features. Supporting AUTO_INCREMENT, ON UPDATE CURRENT_TIMESTAMP.
+      </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Add a new GUC parameter lightdb_keep_temp_file, for debug purpose. Allowing temporary files, such as sort and hash temporary files, be retained.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+      Add Ordered optimizer hint, which is equivalent to Leading optimizer hint.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     To Improve database design and best practice, LightDB introduce design checking through DDL. 
+     Five kinds of checkings are supporting now:
+        keyword_not_allowed,bad_datatype,must_have_pk,must_have_gmt,no_more_100cols. 
+      these rules can enable all or enable as needed, like MySQL's sql-mode.
+     GUC parameters lightdb_best_practice_mode and lightdb_best_practice_level used for controling the rule.
+     Existing object all not affected.
+    </para>
+   </listitem>
+
+   <listitem>
+      <para>
+         To improve legacy system pull-mode incremental-sync speed, LightDB support hidden auto-increment primary key column and hidden update timestamp column.
+         Add WITH PRIMARY KEY to create an implicit column ltapk, which will be incremented automatically when a new row is inserted.
+         Add WITH UPDATE CURRENT_TIMESTAMP to create an implicit column ltaut, which will be updated automatically when row a is inserted or modified.
+      </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+      The following built-in extensions are auto enabled by default in every database, user don't
+      need to perform CREATE EXTENSION manually.
+    </para>
+     <itemizedlist>
+      <listitem>
+       <para>pg_log_long_xact, pl/pgsql function to log long running transactions</para>
+      </listitem>
+
+      <listitem>
+       <para>pg_bulkload, pg_bulkload is a high speed data loading utility for LightDB, an replacement for COPY command</para>
+      </listitem>
+
+      <listitem>
+       <para>system_stats, system statistic functions for LightDB</para>
+      </listitem>
+
+      <listitem>
+       <para>timescaledb, enables scalable inserts and complex queries for time-series data</para>
+      </listitem>
+
+      <listitem>
+       <para>zhparser, a parser for full-text search of Chinese. The default configuration name is zhcfg</para>
+      </listitem>
+
+      <listitem>
+       <para>rum, RUM index access method, a faster full text search implementation.</para>
+      </listitem>
+
+      <listitem>
+       <para>tsvector2, a extended format of tsvector, a better space usage datatype for full text search.</para>
+      </listitem>
+    </itemizedlist>
+   </listitem>
+
+   <listitem>
+    <para>
+     The following extensions are also built-in but not enabled by default, perform CREATE EXTENSION before using them.
+    </para>
+    <itemizedlist>
+      <listitem>
+       <para>mysql_fdw, a Foreign Data Wrapper (FDW) for MySQL</para>
+      </listitem>
+
+      <listitem>
+       <para>oracle_fdw, a Foreign Data Wrapper for Oracle</para>
+      </listitem>
+    </itemizedlist>
+   </listitem>
+  </itemizedlist>
+ </sect1>
+
+ <sect1 id="release-13-3-21-1">
+  <title>Release 13.3-21.1</title>
+
+  <formalpara>
+  <title>Release date:</title>
+  <para>2021-08-17</para>
+  </formalpara>
+
+  <para>
+   This release contains a variety of changes from PostgreSQL 13.3.
+  </para>
+  
+  <itemizedlist>
+   <listitem>
+    <para>
+     The default values of some GUC parameters have been modified for better performance
+     for modern hardware.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+     The native partition can be declared in clause statement of CREATE TABLE,
+     which supports list, range and hash syntax.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Add lightdb_explain_no_runtime_pruned_partition parameter to control whether partitions
+     pruned at runtime are shown in EXPLAIN ANALYZE output.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+     Built-in pg_hint_plan , which can control the execution plan with hinting phrases
+     in comment of special form.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Built-in pg_wait_sampling, which provides sampling based statistics of wait events.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+     Built-in pg_profile, which can help you to find out most resource-consuming activities
+     in your LightDB databases.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Built-in pg_cron, a simple cron-based job scheduler that runs inside the database.
+     It uses the same syntax as regular cron, but it allows you to schedule LightDB
+     commands directly from the database.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Built-in pg_cheat_funcs, which provides a set of cheat(but useful) functions on LightDB.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+     Built-in pgfincore, which provides a set of functions to handle low-level management
+     of relations using mincore to explore cache memory.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Built-in orafce, an Oracle's compatibility functions and packages.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Built-in pgaudit, which provides detailed session and/or object audit logging via the
+     standard LightDB logging facility.
+    </para>
+   </listitem>
+
+   <listitem>
+    <para>
+     Built-in pg_probackup, which manages backup and recovery of LightDB database clusters.
+    </para>
+   </listitem>
+   
+   <listitem>
+    <para>
+      The following built-in extensions are auto enabled by default in every database(Except
+      dblink, pg_profile and pg_cron, which is only available in postgres database), you don't
+      need to perform CREATE EXTENSION manually.
+    </para>
+
+    <itemizedlist>
+      <listitem>
+       <para>pg_stat_statements</para>
+      </listitem>
+      
+      <listitem>
+       <para>auto_explain</para>
+      </listitem>
+
+      <listitem>
+       <para>tablefunc</para>
+      </listitem>
+
+      <listitem>
+       <para>dblink</para>
+      </listitem>
+      
+      <listitem>
+       <para>uuid-ossp</para>
+      </listitem>
+      
+      <listitem>
+       <para>pg_hint_plan</para>
+      </listitem>      
+
+      <listitem>
+       <para>pg_wait_sampling</para>
+      </listitem> 
+
+      <listitem>
+       <para>pg_profile</para>
+      </listitem> 
+
+      <listitem>
+       <para>pg_cron</para>
+      </listitem> 
+      
+      <listitem>
+       <para>pgfincore</para>
+      </listitem>      
+
+      <listitem>
+       <para>orafce</para>
+      </listitem> 
+
+      <listitem>
+       <para>pgaudit</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+     Specially, a pg_cron job named "take_sample_every_10min" will be created automatically by default in postgres database. 
+     This job will call take_sample() every 10 minutes (take_sample() is provided by pg_profile extension).
+    </para>
+   </listitem>
+  </itemizedlist>
+
+ </sect1>

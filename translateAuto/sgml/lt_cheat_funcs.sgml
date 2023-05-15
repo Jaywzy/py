@@ -1,0 +1,1409 @@
+<sect1 id="lt_cheat_funcs">
+  <title>lt_cheat_funcs</title>
+  <para>
+    This extension provides cheat (but useful) functions on LightDB.
+  </para>
+
+  <sect2 id="lt_cheat_funcs.functions">
+    <title>Functions</title>
+    <para>
+      Note that <emphasis role="strong">CREATE EXTENSION
+      lt_cheat_funcs</emphasis> needs to be executed in all the
+      databases that you want to execute the functions that this
+      extension provides.
+    </para>
+    <programlisting>
+=# CREATE EXTENSION lt_cheat_funcs;
+</programlisting>
+    <sect3 id="setof-record-pg_stat_get_memory_context">
+      <title>SETOF record pg_stat_get_memory_context()</title>
+      <para>
+        Return statistics about all memory contexts. This function
+        returns a record, shown in the table below.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec colwidth="20*" align="left" />
+          <colspec colwidth="14*" align="left" />
+          <colspec colwidth="64*" align="left" />
+          <thead>
+            <row>
+              <entry>
+                Column Name
+              </entry>
+              <entry>
+                Data Type
+              </entry>
+              <entry>
+                Description
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                name
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                context name
+              </entry>
+            </row>
+            <row>
+              <entry>
+                parent
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                name of parent context
+              </entry>
+            </row>
+            <row>
+              <entry>
+                level
+              </entry>
+              <entry>
+                integer
+              </entry>
+              <entry>
+                distance from TopMemoryContext in context tree
+              </entry>
+            </row>
+            <row>
+              <entry>
+                total_bytes
+              </entry>
+              <entry>
+                bigint
+              </entry>
+              <entry>
+                total bytes requested from malloc
+              </entry>
+            </row>
+            <row>
+              <entry>
+                total_nblocks
+              </entry>
+              <entry>
+                bigint
+              </entry>
+              <entry>
+                total number of malloc blocks
+              </entry>
+            </row>
+            <row>
+              <entry>
+                free_bytes
+              </entry>
+              <entry>
+                bigint
+              </entry>
+              <entry>
+                free space in bytes
+              </entry>
+            </row>
+            <row>
+              <entry>
+                free_chunks
+              </entry>
+              <entry>
+                bigint
+              </entry>
+              <entry>
+                number of free chunks
+              </entry>
+            </row>
+            <row>
+              <entry>
+                used_bytes
+              </entry>
+              <entry>
+                bigint
+              </entry>
+              <entry>
+                used space in bytes
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      <para>
+        This function is restricted to superusers by default, but other
+        users can be granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="void-pg_stat_print_memory_context">
+      <title>void pg_stat_print_memory_context()</title>
+      <para>
+        Cause statistics about all memory contexts to be logged. The
+        format of log message for each memory context is:
+      </para>
+      <programlisting>
+[name]: [total_bytes] total in [total_nblocks] blocks; [free_bytes] free ([free_chunks] chunks); [used_bytes] used
+</programlisting>
+      <para>
+        For descriptions of the above fields, please see
+        <link linkend="setof-record-pg_stat_get_memory_context">pg_stat_get_memory_context()</link>.
+      </para>
+      <para>
+        This function is restricted to superusers by default, but other
+        users can be granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="record-pg_cached_plan_sourcestmt-text">
+      <title>record pg_cached_plan_source(stmt text)</title>
+      <para>
+        Return information about cached plan source of the specified
+        prepared statement. This function returns a record, shown in the
+        table below.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec colwidth="24*" align="left" />
+          <colspec colwidth="22*" align="left" />
+          <colspec colwidth="53*" align="left" />
+          <thead>
+            <row>
+              <entry>
+                Column Name
+              </entry>
+              <entry>
+                Data Type
+              </entry>
+              <entry>
+                Description
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                generic_cost
+              </entry>
+              <entry>
+                double precision
+              </entry>
+              <entry>
+                cost of generic plan, or -1 if not known
+              </entry>
+            </row>
+            <row>
+              <entry>
+                total_custom_cost
+              </entry>
+              <entry>
+                double precision
+              </entry>
+              <entry>
+                total cost of custom plans so far
+              </entry>
+            </row>
+            <row>
+              <entry>
+                num_custom_plans
+              </entry>
+              <entry>
+                integer
+              </entry>
+              <entry>
+                number of plans included in total
+              </entry>
+            </row>
+            <row>
+              <entry>
+                force_generic
+              </entry>
+              <entry>
+                boolean
+              </entry>
+              <entry>
+                force use of generic plan?
+              </entry>
+            </row>
+            <row>
+              <entry>
+                force_custom
+              </entry>
+              <entry>
+                boolean
+              </entry>
+              <entry>
+                force use of custom plan?
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+    </sect3>
+    <sect3 id="void-pg_signal_processpid-int-signame-text">
+      <title>void pg_signal_process(pid int, signame text)</title>
+      <para>
+        Send a signal to LightDB server process. This function can
+        signal to only postmaster, backend, walsender and walreceiver
+        process. Valid signal names are HUP, INT, QUIT, ABRT, KILL,
+        TERM, USR1, USR2, CONT, and STOP. This function is restricted to
+        superusers by default, but other users can be granted EXECUTE to
+        run the function.
+      </para>
+      <para>
+        For example, terminate walreceiver process:
+      </para>
+      <programlisting>
+=# SELECT pg_signal_process(pid, 'TERM') FROM pg_stat_wal_receiver;
+</programlisting>
+    </sect3>
+    <sect3 id="integer-pg_get_prioritypid-int">
+      <title>integer pg_get_priority(pid int)</title>
+      <para>
+        Return the scheduling priority (<quote>nice</quote>) of the
+        specified LightDB server process. This function can get the
+        priority of only postmaster, backend, walsender and walreceiver
+        process. See getpriority(2) man page for details about a
+        scheduling priority. This function is restricted to superusers
+        by default, but other users can be granted EXECUTE to run the
+        function.
+      </para>
+    </sect3>
+    <sect3 id="void-pg_set_prioritypid-int-priority-int">
+      <title>void pg_set_priority(pid int, priority int)</title>
+      <para>
+        Set the scheduling priority (<quote>nice</quote>) of the
+        specified LightDB server process to the specified value. This
+        function can change the priority of only postmaster, backend,
+        walsender and walreceiver process. See getpriority(2) man page
+        for details about a scheduling priority. This function is
+        restricted to superusers by default, but other users can be
+        granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="void-pg_segmentation_faulttreat_fatal_as_error-boolean">
+      <title>void pg_segmentation_fault(treat_fatal_as_error
+      boolean)</title>
+      <para>
+        Cause segmentation fault. If lt_cheat_funcs.exit_on_segv is
+        enabled and treat_fatal_as_error is true, segmentation fault
+        that this function causes will lead to ERROR instead of FATAL
+        error. This is intended mainly for testing. This function is
+        restricted to superusers by default, but other users can be
+        granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="void-pg_process_config_file">
+      <title>void pg_process_config_file()</title>
+      <para>
+        Read and process the configuration file. Note that, if an error
+        occurs, it’s logged with DEBUG2 level. This function is
+        restricted to superusers by default, but other users can be
+        granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="text-pg_xlogfile_namelocation-pg_lsn-recovery-boolean">
+      <title>text pg_xlogfile_name(location pg_lsn, recovery
+      boolean)</title>
+      <para>
+        Convert transaction log location string to file name. This
+        function is almost the same as pg_xlogfile_name() which
+        LightDB core provides. The difference of them is whether
+        there is a second parameter of type boolean. If false, this
+        function always fails with an error during recovery. This is the
+        same behavior as the core version of pg_xlogfile_name(). If
+        true, this function can be executed even during recovery. But
+        note that the first 8 digits of returned WAL filename (which
+        represents the timeline ID) can be completely incorrect. That
+        is, this function can return bogus WAL file name. For details of
+        this conversion, please see <xref linkend="functions-admin-backup"/>.
+      </para>
+    </sect3>
+    
+    <sect3 id="setof-record-pg_stat_get_syncrep_waiters">
+      <title>SETOF record pg_stat_get_syncrep_waiters()</title>
+      <para>
+        Return statistics about all server processes waiting for
+        synchronous replication. This function returns a record per
+        server process waiting for synchronous replication, shown in the
+        table below.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec align="left" />
+          <colspec align="left" />
+          <colspec align="left" />
+          <thead>
+            <row>
+              <entry>
+                Column Name
+              </entry>
+              <entry>
+                Data Type
+              </entry>
+              <entry>
+                Description
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                pid
+              </entry>
+              <entry>
+                integer
+              </entry>
+              <entry>
+                Process ID of a server process
+              </entry>
+            </row>
+            <row>
+              <entry>
+                wait_lsn
+              </entry>
+              <entry>
+                pg_lsn
+              </entry>
+              <entry>
+                Transaction log position to wait for
+              </entry>
+            </row>
+            <row>
+              <entry>
+                wait_mode
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                Wait mode of this server process
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+        Possible values of wait_mode are write, flush and apply.
+      </para>
+      <para>
+        This function is restricted to superusers by default, but other users
+        can be granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="void-pg_wait_syncreplocation-pg_lsn">
+      <title>void pg_wait_syncrep(location pg_lsn)</title>
+      <para>
+        Wait for synchronous replication. This function waits until the
+        given transaction log location is acknowledged by synchronous
+        standbys, based on the setting of <xref linkend="guc-synchronous-commit"/>.
+      </para>
+      <para>
+        This function is restricted to superusers by default, but other users
+        can be granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="xid-pg_set_next_xidtransactionid-xid">
+      <title>xid pg_set_next_xid(transactionid xid)</title>
+      <para>
+        Set and return the next transaction ID. Note that this function
+        doesn’t check if it’s safe to assign the given transaction ID to
+        the next one. The caller must carefully choose the safe
+        transaction ID, e.g., which doesn’t cause a transaction ID
+        wraparound problem. This function is restricted to superusers by
+        default, but other users can be granted EXECUTE to run the
+        function.
+      </para>
+    </sect3>
+    <sect3 id="setof-record-pg_xid_assignment">
+      <title>SETOF record pg_xid_assignment()</title>
+      <para>
+        Return information about transaction ID assignment state. This
+        function returns a record, shown in the table below.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec colwidth="20*" align="left" />
+          <colspec colwidth="14*" align="left" />
+          <colspec colwidth="65*" align="left" />
+          <thead>
+            <row>
+              <entry>
+                Column Name
+              </entry>
+              <entry>
+                Data Type
+              </entry>
+              <entry>
+                Description
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                next_xid
+              </entry>
+              <entry>
+                xid
+              </entry>
+              <entry>
+                next transaction ID to assign
+              </entry>
+            </row>
+            <row>
+              <entry>
+                oldest_xid
+              </entry>
+              <entry>
+                xid
+              </entry>
+              <entry>
+                cluster-wide minimum datfrozenxid
+              </entry>
+            </row>
+            <row>
+              <entry>
+                xid_vac_limit
+              </entry>
+              <entry>
+                xid
+              </entry>
+              <entry>
+                start forcing autovacuums here
+              </entry>
+            </row>
+            <row>
+              <entry>
+                xid_warn_limit
+              </entry>
+              <entry>
+                xid
+              </entry>
+              <entry>
+                start complaining here
+              </entry>
+            </row>
+            <row>
+              <entry>
+                xid_stop_limit
+              </entry>
+              <entry>
+                xid
+              </entry>
+              <entry>
+                refuse to advance next transaction ID beyond here
+              </entry>
+            </row>
+            <row>
+              <entry>
+                xid_wrap_limit
+              </entry>
+              <entry>
+                xid
+              </entry>
+              <entry>
+                where the world ends
+              </entry>
+            </row>
+            <row>
+              <entry>
+                oldest_xid_db
+              </entry>
+              <entry>
+                oid
+              </entry>
+              <entry>
+                database with minimum datfrozenxid
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+        This function is restricted to superusers by default, but other
+        users can be granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="xid-pg_set_next_oidobjectid-oid">
+      <title>xid pg_set_next_oid(objectid oid)</title>
+      <para>
+        Set and return the next object ID (OID). Note that the next OID
+        is set to 16384 (FirstNormalObjectId) when the given OID is less
+        than that number. This function is restricted to superusers by
+        default, but other users can be granted EXECUTE to run the
+        function.
+      </para>
+    </sect3>
+    <sect3 id="setof-record-pg_oid_assignment">
+      <title>SETOF record pg_oid_assignment()</title>
+      <para>
+        Return information about object ID (OID) assignment state. This
+        function returns a record, shown in the table below.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec align="left" />
+          <colspec align="left" />
+          <colspec align="left" />
+          <thead>
+            <row>
+              <entry>
+                Column Name
+              </entry>
+              <entry>
+                Data Type
+              </entry>
+              <entry>
+                Description
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                next_oid
+              </entry>
+              <entry>
+                oid
+              </entry>
+              <entry>
+                next object ID to assign
+              </entry>
+            </row>
+            <row>
+              <entry>
+                oid_count
+              </entry>
+              <entry>
+                integer
+              </entry>
+              <entry>
+                OIDs available before must do WAL work
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+        This function is restricted to superusers by default, but other
+        users can be granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="integer-pg_advance_vacuum_cleanup_ageinteger">
+      <title>integer pg_advance_vacuum_cleanup_age(integer)</title>
+      <para>
+        Specify the number of transactions by which VACUUM and HOT
+        updates will advance cleanup of dead row versions.
+        <xref linkend="guc-vacuum-defer-cleanup-age"/>
+        in the session calling this function is set to the negative
+        value of that specified number. If the argument is omitted or
+        NULL is specified, vacuum_defer_cleanup_age is reset to its
+        original setting value specified in the configuration file. This
+        function returns the vacuum cleanup age.
+      </para>
+      <para>
+        By advancing the cleanup age, VACUUM and HOT updates can clean
+        up even dead tuples that were produced since oldest transaction
+        had started. So this function is helpful to prevent the database
+        from bloating due to unremovable dead tuples while long
+        transaction is running.
+      </para>
+      <para>
+        Note that this is extremely dangerous function and can easily
+        corrupt the database. Any important data may disappear and data
+        consistency may be lost completely. This function must not be
+        used for a purpose other than debug.
+      </para>
+      <para>
+        This function is restricted to superusers by default, but other
+        users can be granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="void-pg_checkpointfast-bool-wait-bool-force-bool">
+      <title>void pg_checkpoint(fast bool, wait bool, force
+      bool)</title>
+      <para>
+        Perform a checkpoint. If fast is true (default), a checkpoint
+        will finish as soon as possible. Otherwise, I/O required for a
+        checkpoint will be spread out over a period of time, to minimize
+        the impact on query processing. If wait is true (default), this
+        function waits for a checkpoint to complete before returning.
+        Otherwise, it just signals checkpointer to do it and returns. If
+        force is true (default), this function forces a checkpoint even
+        if no WAL activity has occurred since the last one. This
+        function is restricted to superusers by default, but other users
+        can be granted EXECUTE to run the function.
+      </para>
+    </sect3>
+  
+    <sect3 id="setof-record-pg_recovery_settings">
+      <title>SETOF record pg_recovery_settings()</title>
+      <para>
+        Return information about all parameter settings in
+        recovery.conf. This function returns a record, shown in the
+        table below.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec align="left" />
+          <colspec align="left" />
+          <colspec align="left" />
+          <thead>
+            <row>
+              <entry>
+                Column Name
+              </entry>
+              <entry>
+                Data Type
+              </entry>
+              <entry>
+                Description
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                name
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                configuration parameter name
+              </entry>
+            </row>
+            <row>
+              <entry>
+                setting
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                value of the parameter
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+        This function is restricted to superusers by default, but other
+        users can be granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="text-pg_show_primary_conninfo">
+      <title>text pg_show_primary_conninfo()</title>
+      <para>
+        Return the current value of primary_conninfo recovery parameter.
+        If it’s not set yet, NULL is returned. This function is
+        restricted to superusers by default, but other users can be
+        granted EXECUTE to run the function. For details of
+        primary_conninfo parameter, please see <xref linkend="guc-primary-conninfo"/>.
+      </para>
+    </sect3>
+    <sect3 id="integer-pg_postmaster_pid">
+      <title>integer pg_postmaster_pid()</title>
+      <para>
+        Return the Process ID of the postmaster process.
+      </para>
+    </sect3>
+    <sect3 id="timestamp-with-time-zone-pg_backend_start_time">
+      <title>timestamp with time zone pg_backend_start_time()</title>
+      <para>
+        Return the time when the server process attached to the current
+        session was started.
+      </para>
+    </sect3>
+    <sect3 id="setof-text-pg_list_relation_filepathrelation-regclass">
+      <title>SETOF text pg_list_relation_filepath(relation
+      regclass)</title>
+      <para>
+        List the file path names of the specified relation.
+      </para>
+    </sect3>
+    <sect3 id="text-pg_tablespace_version_direcotry">
+      <title>text pg_tablespace_version_direcotry()</title>
+      <para>
+        Return the name of major-version-specific tablespace
+        subdirectory.
+      </para>
+    </sect3>
+    <sect3 id="bigint-pg_file_write_binaryfilepath-text-data-bytea">
+      <title>bigint pg_file_write_binary(filepath text, data
+      bytea)</title>
+      <para>
+        Write bytea data to the file. This function creates the file if
+        it does not exist, and truncates it to zero length otherwise.
+        Then this function writes the bytea data from the beginning of
+        the file, and returns the number of bytes written. This function
+        is restricted to superusers by default, but other users can be
+        granted EXECUTE to run the function.
+      </para>
+    </sect3>
+    <sect3 id="void-pg_file_fsyncfilepath-text">
+      <title>void pg_file_fsync(filepath text)</title>
+      <para>
+        Try to fsync the file or directory. This function is restricted to
+        superusers by default, but other users can be granted EXECUTE to
+        run the function.
+      </para>
+    </sect3>
+    <sect3 id="text-to_octalinteger-or-bigint">
+      <title>text to_octal(integer or bigint)</title>
+      <para>
+        Convert number to its equivalent octal representation.
+      </para>
+    </sect3>
+    <sect3 id="text-pg_text_to_hexstr-text">
+      <title>text pg_text_to_hex(str text)</title>
+      <para>
+        Convert text to its equivalent hexadecimal representation.
+      </para>
+      <para>
+        Here is an example of the conversion from text to hex:
+      </para>
+      <programlisting>
+=# SELECT pg_text_to_hex('LightDB');
+    pg_text_to_hex    
+----------------------
+ 4c696768744442
+(1 row)
+</programlisting>
+    </sect3>
+    <sect3 id="text-pg_hex_to_texthex-text">
+      <title>text pg_hex_to_text(hex text)</title>
+      <para>
+        Convert hexadecimal representation to its equivalent text.
+      </para>
+      <para>
+        Here is an example of the conversion from hex to text:
+      </para>
+      <programlisting>
+=# SELECT pg_hex_to_text('4c696768744442');
+ pg_hex_to_text
+----------------
+ LightDB
+(1 row)
+</programlisting>
+    </sect3>
+    <sect3 id="text-pg_chrcode-integer">
+      <title>text pg_chr(code integer)</title>
+      <para>
+        Return the character with the given code. This function is
+        almost the same as chr() which LightDB core provides. The
+        difference of them is that this function returns NULL instead of
+        throwing an error when the requested character is too large or
+        not valid. Note that valid Unicode code point stops at U+10FFFF
+        (1114111), even though 4-byte UTF8 sequences can hold values up
+        to U+1FFFFF. Therefore this function returns NULL whenever the
+        given code is larger than 1114111.
+      </para>
+    </sect3>
+    <sect3 id="text-pg_utf8code-integer">
+      <title>text pg_utf8(code integer)</title>
+      <para>
+        Alias of
+        <link linkend="text-pg_chrcode-integer">pg_chr(code integer)</link>.
+        function.
+      </para>
+    </sect3>
+    <sect3 id="setof-record-pg_all_utf8">
+      <title>SETOF record pg_all_utf8()</title>
+      <para>
+        Return all valid UTF-8 characters. This function returns a
+        record, shown in the table below.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec align="left" />
+          <colspec align="left" />
+          <colspec align="left" />
+          <thead>
+            <row>
+              <entry>
+                Column Name
+              </entry>
+              <entry>
+                Data Type
+              </entry>
+              <entry>
+                Description
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                code
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                code of character
+              </entry>
+            </row>
+            <row>
+              <entry>
+                utf8
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                UTF-8 character
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+        This function can be executed only under UTF-8 database
+        encoding.
+      </para>
+    </sect3>
+    <sect3 id="text-pg_eucjpcode1-bit8-code2-bit8-code3-bit8">
+      <title>text pg_eucjp(code1 bit(8), code2 bit(8), code3
+      bit(8))</title>
+      <para>
+        Return EUC_JP character with the given codes. The following
+        table shows the valid combination of the codes.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec align="left" />
+          <colspec align="left" />
+          <colspec align="left" />
+          <thead>
+            <row>
+              <entry>
+                code1
+              </entry>
+              <entry>
+                code2
+              </entry>
+              <entry>
+                code3
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                x00 - x7f
+              </entry>
+              <entry>
+                -
+              </entry>
+              <entry>
+                -
+              </entry>
+            </row>
+            <row>
+              <entry>
+                x8e
+              </entry>
+              <entry>
+                xa1 - xdf
+              </entry>
+              <entry>
+                -
+              </entry>
+            </row>
+            <row>
+              <entry>
+                xa1 - xfe
+              </entry>
+              <entry>
+                xa1 - xfe
+              </entry>
+              <entry>
+                -
+              </entry>
+            </row>
+            <row>
+              <entry>
+                x8f
+              </entry>
+              <entry>
+                xa1 - xfe
+              </entry>
+              <entry>
+                xa1 - xfe
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+        For example, return EUC_JP character with <quote>a1fa</quote>
+        (BLACK STAR):
+      </para>
+      <programlisting>
+=# SELECT pg_eucjp('xa1', 'xfa');
+</programlisting>
+      <para>
+        This function returns NULL when the requested character is
+        invalid for EUC_JP. This function can be executed only under
+        EUC_JP database encoding.
+      </para>
+    </sect3>
+    <sect3 id="setof-record-pg_all_eucjp">
+      <title>SETOF record pg_all_eucjp()</title>
+      <para>
+        Return all valid EUC_JP characters. This function returns a
+        record, shown in the table below.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec colwidth="14*" align="left" />
+          <colspec colwidth="12*" align="left" />
+          <colspec colwidth="73*" align="left" />
+          <thead>
+            <row>
+              <entry>
+                Column Name
+              </entry>
+              <entry>
+                Data Type
+              </entry>
+              <entry>
+                Description
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                code1
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                first byte of character
+              </entry>
+            </row>
+            <row>
+              <entry>
+                code2
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                second byte of character (x00 means non-existence of
+                this byte)
+              </entry>
+            </row>
+            <row>
+              <entry>
+                code3
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                third byte of character (x00 means non-existence of this
+                byte)
+              </entry>
+            </row>
+            <row>
+              <entry>
+                eucjp
+              </entry>
+              <entry>
+                text
+              </entry>
+              <entry>
+                EUC_JP character
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+        This function can be executed only under EUC_JP database
+        encoding.
+      </para>
+    </sect3>
+    <sect3 id="bytea-pglz_compressdata-text">
+      <title>bytea pglz_compress(data text)</title>
+      <para>
+        Create and return a compressed version of text data. This
+        function uses PGLZ (an implementation of LZ compression for
+        LightDB) for the compression. If the compression fails (e.g.,
+        the compressed result is actually bigger than the original),
+        this function returns the original data. Note that the return
+        data may be 4-bytes bigger than the original even when the
+        compression fails because 4-bytes extra information like the
+        length of original data is always stored in it. The bytea data
+        that this function returns needs to be decompressed by using
+        pg_lz_decompress() to obtain the original text data.
+      </para>
+    </sect3>
+    <sect3 id="bytea-pglz_compress_byteadata-bytea">
+      <title>bytea pglz_compress_bytea(data bytea)</title>
+      <para>
+        Create and return a compressed version of bytea data. This
+        function uses PGLZ (an implementation of LZ compression for
+        LightDB) for the compression. If the compression fails (e.g.,
+        the compressed result is actually bigger than the original),
+        this function returns the original data. Note that the return
+        data may be 4-bytes bigger than the original even when the
+        compression fails because 4-bytes extra information like the
+        length of original data is always stored in it. The bytea data
+        that this function returns needs to be decompressed by using
+        pg_lz_decompress_bytea() to obtain the original bytea data.
+      </para>
+    </sect3>
+    <sect3 id="text-pglz_decompressdata-bytea">
+      <title>text pglz_decompress(data bytea)</title>
+      <para>
+        Decompress a compressed version of bytea data into text. Note
+        that the input of this function must be the bytea data that
+        pg_lz_compress() or pg_lz_compress_bytea() returned. Otherwise
+        this function may return a corrupted data.
+      </para>
+    </sect3>
+    <sect3 id="bytea-pglz_decompress_byteadata-bytea">
+      <title>bytea pglz_decompress_bytea(data bytea)</title>
+      <para>
+        Decompress a compressed version of bytea data into bytea. Note
+        that the input of this function must be the bytea data that
+        pg_lz_compress() or pg_lz_compress_bytea() returned. Otherwise
+        this function may return a corrupted data.
+      </para>
+    </sect3>
+    <sect3 id="text-pg_saslprepinput-text">
+      <title>text pg_saslprep(input text)</title>
+      <para>
+        Normalize an input string with SASLprep. SASLprep normalization
+        is basically used to process a user-supplied password into
+        canonical form for SCRAM authentication. Note that an error is
+        raised if the input is not a valid UTF-8 string or the
+        normalized string contains characters prohibited by the SASLprep
+        profile.
+      </para>
+    </sect3>
+    <sect3 id="pg_advisory_xact_unlock-bigint">
+      <title>pg_advisory_xact_unlock (bigint)</title>
+      <para>
+        Release a previously-acquired exclusive transaction-level
+        advisory lock. Return true if the lock is successfully released.
+        If the lock was not held, false is returned, and in addition, an
+        SQL warning will be reported by the server.
+      </para>
+    </sect3>
+    <sect3 id="pg_advisory_xact_unlock_shared-bigint">
+      <title>pg_advisory_xact_unlock_shared (bigint)</title>
+      <para>
+        Release a previously-acquired shared transaction-level advisory
+        lock. Return true if the lock is successfully released. If the
+        lock was not held, false is returned, and in addition, an SQL
+        warning will be reported by the server.
+      </para>
+    </sect3>
+    <sect3 id="pg_advisory_xact_unlock-integer-integer">
+      <title>pg_advisory_xact_unlock (integer, integer)</title>
+      <para>
+        Same as pg_advisory_xact_unlock(bigint).
+      </para>
+    </sect3>
+    <sect3 id="pg_advisory_xact_unlock_shared-integer-integer">
+      <title>pg_advisory_xact_unlock_shared (integer, integer)</title>
+      <para>
+        Same as pg_advisory_xact_unlock_shared(bigint).
+      </para>
+    </sect3>
+  </sect2>
+  <sect2 id="encoding-conversions">
+    <title>Encoding Conversions</title>
+    <sect3 id="pg_euc_jp_to_utf8">
+      <title>pg_euc_jp_to_utf8</title>
+      <para>
+        This is an encoding conversion from EUC_JP to UTF-8. It uses two
+        conversion maps; ordinary map and extra map. They are defined in
+        <literal>conv/euc_jp_to_utf8.map</literal> and
+        <literal>conv/euc_jp_to_utf8.extra</literal>, respectively. For
+        each character, ordinary map is consulted first. If no match is
+        found, extra map is consulted next. If still no match, an error
+        is raised.
+      </para>
+      <para>
+        The content of ordinary map is the same as the map that
+        euc_jp_to_utf8 (default conversion map from EUC_JP to UTF-8 that
+        LightDB provides) uses. The extra map contains some mappings
+        (e.g., the following mappings for Roman numerals and full-width
+        symbols) that ordinary map doesn’t have.
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec align="left" />
+          <colspec align="left" />
+          <colspec align="left" />
+          <thead>
+            <row>
+              <entry>
+                EUC_JP
+              </entry>
+              <entry>
+                UTF-8
+              </entry>
+              <entry>
+                Description
+              </entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>
+                fcf1
+              </entry>
+              <entry>
+                e285b0 (U+2170)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL ONE
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcf2
+              </entry>
+              <entry>
+                e285b1 (U+2171)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL TWO
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcf3
+              </entry>
+              <entry>
+                e285b2 (U+2172)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL THREE
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcf4
+              </entry>
+              <entry>
+                e285b3 (U+2173)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL FOUR
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcf5
+              </entry>
+              <entry>
+                e285b4 (U+2174)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL FIVE
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcf6
+              </entry>
+              <entry>
+                e285b5 (U+2175)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL SIX
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcf7
+              </entry>
+              <entry>
+                e285b6 (U+2176)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL SEVEN
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcf8
+              </entry>
+              <entry>
+                e285b7 (U+2177)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL EIGHT
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcf9
+              </entry>
+              <entry>
+                e285b8 (U+2178)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL NINE
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcfa
+              </entry>
+              <entry>
+                e285b9 (U+2179)
+              </entry>
+              <entry>
+                SMALL ROMAN NUMERAL TEN
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcfb
+              </entry>
+              <entry>
+                efbfa2 (U+FFE2)
+              </entry>
+              <entry>
+                FULLWIDTH NOT SIGN
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcfc
+              </entry>
+              <entry>
+                efbfa4 (U+FFE4)
+              </entry>
+              <entry>
+                FULLWIDTH BROKEN BAR
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcfd
+              </entry>
+              <entry>
+                efbc87 (U+FF07)
+              </entry>
+              <entry>
+                FULLWIDTH APOSTROPHE
+              </entry>
+            </row>
+            <row>
+              <entry>
+                fcfe
+              </entry>
+              <entry>
+                efbc82 (U+FF02)
+              </entry>
+              <entry>
+                FULLWIDTH QUOTATION MARK
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+        In order to use pg_euc_jp_to_utf8 as the default conversion from
+        EUC_JP to UTF-8, its
+        <link linkend="catalog-pg-conversion"><structname>pg_conversion</structname></link>.condefault
+        needs to be enabled. Also condefault for euc_jp_to_utf8
+        (built-in conversion from EUC_JP to UTF-8) needs to be disabled.
+        Here is an example of these catalog updates:
+      </para>
+      <programlisting>
+=# BEGIN;
+=# UPDATE pg_conversion SET condefault = 'f' WHERE conname = 'euc_jp_to_utf8';
+=# UPDATE pg_conversion SET condefault = 't' WHERE conname = 'pg_euc_jp_to_utf8';
+=# COMMIT;
+</programlisting>
+      <para>
+        It’s possible to use the customized conversion map by modifying
+        the map files directly and rebuilding lt_cheat_funcs module.
+        Note that entries in a map file must be sorted in ascending
+        order.
+      </para>
+    </sect3>
+  </sect2>
+  <sect2 id="configuration-parameters">
+    <title>Configuration Parameters</title>
+    <para>
+      Note that
+      <xref linkend="guc-shared-preload-libraries"/>
+      or
+      <xref linkend="guc-session-preload-libraries"/>
+      must be set to
+      <quote>lt_cheat_funcs</quote> in lightdb.conf if you want to
+      use the configuration parameters which this extension provides.
+    </para>
+    <sect3 id="lt_cheat_funcs.log_memory_context-boolean">
+      <title>lt_cheat_funcs.log_memory_context (boolean)</title>
+      <para>
+        Cause statistics about the memory contexts to be logged at the
+        end of query execution. For details of log format, please see
+        <link linkend="void-pg_stat_print_memory_context">pg_stat_print_memory_context()</link>
+        This parameter is off by default. Only superusers can change
+        this setting.
+      </para>
+    </sect3>
+    <sect3 id="lt_cheat_funcs.hide_appname-boolean">
+      <title>lt_cheat_funcs.hide_appname (boolean)</title>
+      <para>
+        If true, client’s application_name is ignored and its setting
+        value is stored in lt_cheat_funcs.hidden_appname parameter. By
+        default, this is set to false, so that the string that client
+        specifies will be used as application_name. This parameter can
+        only be set in the lightdb.conf file or on the server command
+        line.
+      </para>
+    </sect3>
+    <sect3 id="lt_cheat_funcs.hidden_appname-string">
+      <title>lt_cheat_funcs.hidden_appname (string)</title>
+      <para>
+        Report client’s application_name hidden from view. The default
+        is an empty string. Any users can change this setting.
+      </para>
+    </sect3>
+    <sect3 id="lt_cheat_funcs.log_session_start_options-boolean">
+      <title>lt_cheat_funcs.log_session_start_options (boolean)</title>
+      <para>
+        Log options sent to the server at connection start. This
+        parameter is off by default. Only superusers can change this
+        parameter at session start, and it cannot be changed at all
+        within a session.
+      </para>
+    </sect3>
+    <sect3 id="lt_cheat_funcs.scheduling_priority-integer">
+      <title>lt_cheat_funcs.scheduling_priority (integer)</title>
+      <para>
+        Specify the scheduling priority (<quote>nice</quote>) of
+        LightDB server process. Valid values are between -20 and 19.
+        Lower values cause more favorable scheduling. The default value
+        is zero. Any users can change this setting. See getpriority(2)
+        man page for details about a scheduling priority.
+      </para>
+    </sect3>
+    <sect3 id="lt_cheat_funcs.exit_on_segv-boolean">
+      <title>lt_cheat_funcs.exit_on_segv (boolean)</title>
+      <para>
+        If off, which is the default, segmentation fault will lead to
+        the server crash. If on, only the current session causing
+        segmentation fault will be terminated. Any users can change this
+        setting.
+      </para>
+    </sect3>
+  </sect2>
+</sect1>

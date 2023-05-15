@@ -1,0 +1,183 @@
+<!-- doc/src/sgml/ltope.sgml -->
+
+<sect1 id="ltope" xreflabel="lt_ope">
+    <title>lt_ope</title>
+
+    <indexterm zone="ltope">
+        <primary>lt_ope</primary>
+    </indexterm>
+
+    <sect2>
+        <title>What is lt_ope?</title>
+
+        <para>
+            Order-Preserving Encryption is an encryption method for data preservation order, which allows
+            comparison operations to be directly applied to encrypted data without decrypting operands.
+        </para>
+
+        <para>
+            lt_ope support order-preserving encryption for three data types: <literal>bigint</literal>, <literal>double precision</literal>,
+            and <literal>text</literal>. The maximum supported plaintext length of the <literal>text</literal> type is 128 bytes, and the currently
+            supported character types include a total of 128 characters from 0 to 127 in ASCII. The type of ciphertext encrypted by three types
+            of plaintext is <literal>ope_type</literal>.
+        </para>
+
+        <para>
+            The ciphertext type <literal>ope_type</literal> supports the following operators: <literal>></literal>, <literal>>=</literal>,
+            <literal>&lt;</literal>, <literal>&lt;=</literal>, <literal>=</literal> and <literal>!=</literal>. At the same time,
+            the <literal>ope_type</literal> type ciphertext encrypted by the text type plaintext supports the <literal>like 'xxx%'</literal> operation.
+        </para>
+
+        <para>
+            The ciphertext type <literal>ope_type</literal> also supports <literal>order by</literal>, <literal>between...and</literal>,
+            <literal>IN</literal>, <literal>NOT IN</literal> and <literal>BTREE index</literal>.
+        </para>
+    </sect2>
+
+    <sect2>
+        <title>function usage</title>
+
+        <sect3>
+            <title><literal>bigint</literal> type order-preserving encryption</title>
+
+            <para>
+                The <literal>bigint</literal> type encryption interface:
+                <literal>ope_bigint_encrypt(plaintext bigint) return ope_type</literal>.
+            </para>
+
+            <programlisting>
+SELECT ope_bigint_encrypt(12345678);
+                    ope_bigint_encrypt                    
+----------------------------------------------------------
+ 663667376838DD03DDFF2F57DE01DE028841DF02DF43DF63DF65DF68
+            </programlisting>
+        </sect3>
+
+        <sect3>
+            <title><literal>double precision</literal> type order-preserving encryption</title>
+
+            <para>
+                The <literal>double precision</literal> type encryption interface:
+                <literal>ope_double_encrypt(plaintext double precision) return ope_type</literal>.
+            </para>
+
+            <programlisting>
+SELECT ope_double_encrypt(1234.5678);
+                                      ope_double_encrypt                                      
+----------------------------------------------------------------------------------------------
+ 663667376838DC02DDFF5227DE01DE026961DF02DDF4DF43DF63DF65DF68DDFDDDFDDDFDDDFDDDFDDA8CDDFDDDFD
+            </programlisting>
+        </sect3>
+
+        <sect3>
+            <title><literal>text</literal> type order-preserving encryption</title>
+
+            <para>
+                The <literal>text</literal> type encryption interface:
+                <literal>ope_text_encrypt(plaintext text) return ope_type</literal>.
+            </para>
+
+            <programlisting>
+SELECT ope_text_encrypt('123456789@qq.com');
+                                       ope_text_encrypt                                       
+----------------------------------------------------------------------------------------------
+ 6535643463336232DDFF52CBDE01DE02FD63DF02DF43DF63DF65DF68DF6CDFE2FF82FF82DDF4FDDFDA8CFF01FDFC
+            </programlisting>
+        </sect3>
+
+        <sect3>
+            <title>OPE decryption</title>
+
+            <para>
+                The OPE decryption interface:
+                <literal>ope_decrypt(ciphertext ope_type) return text</literal>.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>OPE example</title>
+
+            <para>
+                The following is an example of order-preserving encryption of text type:
+            </para>
+
+            <programlisting>
+-- The info field in the test_ope table is plaintext of text type, and the opedata field is order-preserving encrypted ciphertext of type <literal>ope_type</literal>:
+create table test_ope(id int, info text, opedata ope_type, crt_time timestamp not null);
+CREATE TABLE
+
+create index opedata_index on test_ope USING BTREE (opedata);
+CREATE INDEX
+
+select * from test_ope ;
+    id |               info               |                                                                           opedata                                                                            |          crt_time
+----+----------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------
+    1 | 27025cc9acd114a4f5192930ebc6fffb | 6535643463336232DE01067CDF65DDFD8BE9DE01DF43FDDFFDDFDF6CFDDAFDDFFDE2DDFFDDFFDF028584FDDADF02FDEBDF43DDFFDF6CDE01DF6CDE02DDFDFDE3FDDBFDDFDF63FDEBFDEBFDEBFDDB | 2022-06-16 11:10:37.170803
+    2 | cc97ddaf161894af7d5fbbe4ae31d0a1 | 6535643463336232FDDFE67CFDDFDF6C8BE9DF65FDE2FDE2FDDAFDEBDDFFDF63DDFFDF68DF6CDF028584FDDAFDEBDF65FDE2DF43FDEBFDDBFDDBFDE3DF02FDDAFDE3DE02DDFFFDE2DDFDFDDADDFF | 2022-06-16 12:10:37.170955
+    3 | 433dc866e329799e7d134992b13960fa | 6535643463336232DF021A7DDE02DE028BE9FDE2FDDFDF68DF63DF63FDE3DE02DE01DF6CDF65DF6C8584DF6CFDE3DF65FDE2DDFFDE02DF02DF6CDF6CDE01FDDBDDFFDE02DF6CDF63DDFDFDEBFDDA | 2022-06-16 13:10:37.170999
+    4 | dff20cb13ce5d0365a6eb7625167e158 | 6535643463336232FDE2557DFDEBFDEB8BE9DE01DDFDFDDFFDDBDDFFDE02FDDFFDE3DF43FDE2DDFD8584DE02DF63DF43FDDADF63FDE3FDDBDF65DF63DE01DF43DDFFDF63DF65FDE3DDFFDF43DF68 | 2022-06-16 14:10:37.171109
+    5 | c07b52a7943c3ee93aea8b05c04edbf3 | 6535643463336232FDDFC17DDDFDDF658BE9FDDBDF43DE01FDDADF65DF6CDF02DE02FDDFDE02FDE38584FDE3DF6CDE02FDDAFDE3FDDADF68FDDBDDFDDF43FDDFDDFDDF02FDE3FDE2FDDBFDEBDE02 | 2022-06-16 15:10:37.171169
+    6 | cf87a3591009b652ba01dd3eb6a50d42 | 6535643463336232FDDF047EFDEBDF688BE9DF65FDDADE02DF43DF6CDDFFDDFDDDFDDF6CFDDBDF638584DF43DE01FDDBFDDADDFDDDFFFDE2FDE2DE02FDE3FDDBDF63FDDADF43DDFDFDE2DF02DE01 | 2022-06-16 16:10:37.171208
+    7 | c2a1654f7e4887339e552d9d70666c1c | 6535643463336232FDDF157EDE01FDDA8BE9DDFFDF63DF43DF02FDEBDF65FDE3DF02DF68DF68DF658584DE02DE02DF6CFDE3DF43DF43DE01FDE2DF6CFDE2DF65DDFDDF63DF63DF63FDDFDDFFFDDF | 2022-06-16 17:10:37.171225
+    8 | 127306338277eef17554ce089d28eb9d | 6535643463336232DDFF257EDE01DF658BE9DE02DDFDDF63DE02DE02DF68DE01DF65DF65FDE3FDE38584FDEBDDFFDF65DF43DF43DF02FDDFFDE3DDFDDF68DF6CFDE2DE01DF68FDE3FDDBDF6CFDE2 | 2022-06-16 18:10:37.171241
+    9 | 4b7c57af3114003805bc0dd861ac7996 | 6535643463336232DF02387EFDDBDF658BE9FDDFDF43DF65FDDAFDEBDE02DDFFDDFFDF02DDFDDDFD8584DE02DF68DDFDDF43FDDBFDDFDDFDFDE2FDE2DF68DF63DDFFFDDAFDDFDF65DF6CDF6CDF63 | 2022-06-16 19:10:37.171261
+    10 | 8ed90bd708f01094507636b80d9ef465 | 6535643463336232DF686F7EFDE3FDE28BE9DF6CDDFDFDDBFDE2DF65DDFDDF68FDEBDDFDDDFFDDFD8584DF6CDF02DF43DDFDDF65DF63DE02DF63FDDBDF68DDFDFDE2DF6CFDE3FDEBDF02DF63DF43 | 2022-06-16 20:10:37.171317
+
+select * from test_ope order by opedata;
+    id |               info               |                                                                           opedata                                                                            |          crt_time
+----+----------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------
+    8 | 127306338277eef17554ce089d28eb9d | 6535643463336232DDFF257EDE01DF658BE9DE02DDFDDF63DE02DE02DF68DE01DF65DF65FDE3FDE38584FDEBDDFFDF65DF43DF43DF02FDDFFDE3DDFDDF68DF6CFDE2DE01DF68FDE3FDDBDF6CFDE2 | 2022-06-16 18:10:37.171241
+    1 | 27025cc9acd114a4f5192930ebc6fffb | 6535643463336232DE01067CDF65DDFD8BE9DE01DF43FDDFFDDFDF6CFDDAFDDFFDE2DDFFDDFFDF028584FDDADF02FDEBDF43DDFFDF6CDE01DF6CDE02DDFDFDE3FDDBFDDFDF63FDEBFDEBFDEBFDDB | 2022-06-16 11:10:37.170803
+    3 | 433dc866e329799e7d134992b13960fa | 6535643463336232DF021A7DDE02DE028BE9FDE2FDDFDF68DF63DF63FDE3DE02DE01DF6CDF65DF6C8584DF6CFDE3DF65FDE2DDFFDE02DF02DF6CDF6CDE01FDDBDDFFDE02DF6CDF63DDFDFDEBFDDA | 2022-06-16 13:10:37.170999
+    9 | 4b7c57af3114003805bc0dd861ac7996 | 6535643463336232DF02387EFDDBDF658BE9FDDFDF43DF65FDDAFDEBDE02DDFFDDFFDF02DDFDDDFD8584DE02DF68DDFDDF43FDDBFDDFDDFDFDE2FDE2DF68DF63DDFFFDDAFDDFDF65DF6CDF6CDF63 | 2022-06-16 19:10:37.171261
+    10 | 8ed90bd708f01094507636b80d9ef465 | 6535643463336232DF686F7EFDE3FDE28BE9DF6CDDFDFDDBFDE2DF65DDFDDF68FDEBDDFDDDFFDDFD8584DF6CDF02DF43DDFDDF65DF63DE02DF63FDDBDF68DDFDFDE2DF6CFDE3FDEBDF02DF63DF43 | 2022-06-16 20:10:37.171317
+    5 | c07b52a7943c3ee93aea8b05c04edbf3 | 6535643463336232FDDFC17DDDFDDF658BE9FDDBDF43DE01FDDADF65DF6CDF02DE02FDDFDE02FDE38584FDE3DF6CDE02FDDAFDE3FDDADF68FDDBDDFDDF43FDDFDDFDDF02FDE3FDE2FDDBFDEBDE02 | 2022-06-16 15:10:37.171169
+    7 | c2a1654f7e4887339e552d9d70666c1c | 6535643463336232FDDF157EDE01FDDA8BE9DDFFDF63DF43DF02FDEBDF65FDE3DF02DF68DF68DF658584DE02DE02DF6CFDE3DF43DF43DE01FDE2DF6CFDE2DF65DDFDDF63DF63DF63FDDFDDFFFDDF | 2022-06-16 17:10:37.171225
+    2 | cc97ddaf161894af7d5fbbe4ae31d0a1 | 6535643463336232FDDFE67CFDDFDF6C8BE9DF65FDE2FDE2FDDAFDEBDDFFDF63DDFFDF68DF6CDF028584FDDAFDEBDF65FDE2DF43FDEBFDDBFDDBFDE3DF02FDDAFDE3DE02DDFFFDE2DDFDFDDADDFF | 2022-06-16 12:10:37.170955
+    6 | cf87a3591009b652ba01dd3eb6a50d42 | 6535643463336232FDDF047EFDEBDF688BE9DF65FDDADE02DF43DF6CDDFFDDFDDDFDDF6CFDDBDF638584DF43DE01FDDBFDDADDFDDDFFFDE2FDE2DE02FDE3FDDBDF63FDDADF43DDFDFDE2DF02DE01 | 2022-06-16 16:10:37.171208
+    4 | dff20cb13ce5d0365a6eb7625167e158 | 6535643463336232FDE2557DFDEBFDEB8BE9DE01DDFDFDDFFDDBDDFFDE02FDDFFDE3DF43FDE2DDFD8584DE02DF63DF43FDDADF63FDE3FDDBDF65DF63DE01DF43DDFFDF63DF65FDE3DDFFDF43DF68 | 2022-06-16 14:10:37.171109
+
+select * from test_ope where opedata > ope_text_encrypt('c') and opedata &lt;= ope_text_encrypt('d');
+    id |               info               |                                                                           opedata                                                                            |          crt_time
+----+----------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------
+    2 | cc97ddaf161894af7d5fbbe4ae31d0a1 | 6535643463336232FDDFE67CFDDFDF6C8BE9DF65FDE2FDE2FDDAFDEBDDFFDF63DDFFDF68DF6CDF028584FDDAFDEBDF65FDE2DF43FDEBFDDBFDDBFDE3DF02FDDAFDE3DE02DDFFFDE2DDFDFDDADDFF | 2022-06-16 12:10:37.170955
+    5 | c07b52a7943c3ee93aea8b05c04edbf3 | 6535643463336232FDDFC17DDDFDDF658BE9FDDBDF43DE01FDDADF65DF6CDF02DE02FDDFDE02FDE38584FDE3DF6CDE02FDDAFDE3FDDADF68FDDBDDFDDF43FDDFDDFDDF02FDE3FDE2FDDBFDEBDE02 | 2022-06-16 15:10:37.171169
+    6 | cf87a3591009b652ba01dd3eb6a50d42 | 6535643463336232FDDF047EFDEBDF688BE9DF65FDDADE02DF43DF6CDDFFDDFDDDFDDF6CFDDBDF638584DF43DE01FDDBFDDADDFDDDFFFDE2FDE2DE02FDE3FDDBDF63FDDADF43DDFDFDE2DF02DE01 | 2022-06-16 16:10:37.171208
+    7 | c2a1654f7e4887339e552d9d70666c1c | 6535643463336232FDDF157EDE01FDDA8BE9DDFFDF63DF43DF02FDEBDF65FDE3DF02DF68DF68DF658584DE02DE02DF6CFDE3DF43DF43DE01FDE2DF6CFDE2DF65DDFDDF63DF63DF63FDDFDDFFFDDF | 2022-06-16 17:10:37.171225
+
+select * from test_ope where opedata like 'dff20%';
+    id |               info               |                                                                           opedata                                                                            |          crt_time
+----+----------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------
+    4 | dff20cb13ce5d0365a6eb7625167e158 | 6535643463336232FDE2557DFDEBFDEB8BE9DE01DDFDFDDFFDDBDDFFDE02FDDFFDE3DF43FDE2DDFD8584DE02DF63DF43FDDADF63FDE3FDDBDF65DF63DE01DF43DDFFDF63DF65FDE3DDFFDF43DF68 | 2022-06-16 14:10:37.171109
+
+select * from test_ope where opedata between ope_text_encrypt('c') and  ope_text_encrypt('d');
+    id |               info               |                                                                           opedata                                                                            |          crt_time
+----+----------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------
+    2 | cc97ddaf161894af7d5fbbe4ae31d0a1 | 6535643463336232FDDFE67CFDDFDF6C8BE9DF65FDE2FDE2FDDAFDEBDDFFDF63DDFFDF68DF6CDF028584FDDAFDEBDF65FDE2DF43FDEBFDDBFDDBFDE3DF02FDDAFDE3DE02DDFFFDE2DDFDFDDADDFF | 2022-06-16 12:10:37.170955
+    5 | c07b52a7943c3ee93aea8b05c04edbf3 | 6535643463336232FDDFC17DDDFDDF658BE9FDDBDF43DE01FDDADF65DF6CDF02DE02FDDFDE02FDE38584FDE3DF6CDE02FDDAFDE3FDDADF68FDDBDDFDDF43FDDFDDFDDF02FDE3FDE2FDDBFDEBDE02 | 2022-06-16 15:10:37.171169
+    6 | cf87a3591009b652ba01dd3eb6a50d42 | 6535643463336232FDDF047EFDEBDF688BE9DF65FDDADE02DF43DF6CDDFFDDFDDDFDDF6CFDDBDF638584DF43DE01FDDBFDDADDFDDDFFFDE2FDE2DE02FDE3FDDBDF63FDDADF43DDFDFDE2DF02DE01 | 2022-06-16 16:10:37.171208
+    7 | c2a1654f7e4887339e552d9d70666c1c | 6535643463336232FDDF157EDE01FDDA8BE9DDFFDF63DF43DF02FDEBDF65FDE3DF02DF68DF68DF658584DE02DE02DF6CFDE3DF43DF43DE01FDE2DF6CFDE2DF65DDFDDF63DF63DF63FDDFDDFFFDDF | 2022-06-16 17:10:37.171225
+
+select * from test_ope where opedata = ope_text_encrypt('127306338277eef17554ce089d28eb9d');
+    id |               info               |                                                                           opedata                                                                            |          crt_time
+----+----------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------
+    8 | 127306338277eef17554ce089d28eb9d | 6535643463336232DDFF257EDE01DF658BE9DE02DDFDDF63DE02DE02DF68DE01DF65DF65FDE3FDE38584FDEBDDFFDF65DF43DF43DF02FDDFFDE3DDFDDF68DF6CFDE2DE01DF68FDE3FDDBDF6CFDE2 | 2022-06-16 18:10:37.171241
+
+select ope_text_encrypt('cc97ddaf161894af7d5fbbe4ae31d0a1') IN (select opedata from test_ope);
+    ?column?
+----------
+    t
+
+select ope_text_encrypt('cc97ddaf161894af7d5fbbe4ae31d0a1') NOT IN (select opedata from test_ope);
+    ?column?
+----------
+    f
+
+select ope_decrypt(test_ope.opedata) from test_ope where id = 2;
+            ope_decrypt
+----------------------------------
+    cc97ddaf161894af7d5fbbe4ae31d0a1
+            </programlisting>
+        </sect3>
+    </sect2>
+</sect1>

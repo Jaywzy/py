@@ -1,0 +1,129 @@
+<sect1 id="lt_proctab">
+  <title>lt_proctab</title>
+  <para>
+    lt_proctab is a collection of stored functions that can access the
+    operating systems process table so that system statitics can be
+    queried through the database.
+  </para>
+  <sect2 id="pg-proctab-functions">
+    <title>functions</title>
+    <sect3 id="lt_proctab-1">
+      <title>pg_proctab</title>
+      <para>
+        Gets information about all LightDB processes. The list of all
+        processes is retrieved from
+        <link linkend="monitoring-pg-stat-activity-view">pg_stat_activity</link>,
+        and process information is retrieved from the
+        <literal>/proc</literal> system file.
+      </para>
+      <programlisting>
+lightdb@postgres=# select * from pg_proctab();
+-[ RECORD 1 ]---------+-----------------------------------------
+pid                   | 64994
+comm                  | lightdb
+fullcomm              | lightdb: autovacuum launcher 
+state                 | S
+ppid                  | 64986
+pgrp                  | 64994
+session               | 64994
+tty_nr                | 0
+tpgid                 | -1
+flags                 | 4202560
+minflt                | 529
+cminflt               | 0
+majflt                | 0
+cmajflt               | 0
+utime                 | 1
+stime                 | 0
+cutime                | 0
+cstime                | 0
+priority              | 20
+nice                  | 0
+num_threads           | 1
+itrealvalue           | 0
+starttime             | 3258371
+vsize                 | 1902161920
+rss                   | 3588
+exit_signal           | 17
+processor             | 3
+rt_priority           | 0
+policy                | 0
+delayacct_blkio_ticks | 0
+uid                   | 1001
+username              | lightdb
+rchar                 | 66914
+wchar                 | 26
+syscr                 | 72
+syscw                 | 26
+reads                 | 0
+writes                | 0
+cwrites               | 0
+</programlisting>
+    </sect3>
+    <sect3 id="pg_cputime">
+      <title>pg_cputime</title>
+      <para>
+        CPU information obtained from <literal>/proc/stat</literal>.
+      </para>
+      <programlisting>
+lightdb@postgres=# select * from pg_cputime();
+  user  | nice | system |   idle   | iowait 
+--------+------+--------+----------+--------
+ 289580 |   61 |  29378 | 15540161 |   7253
+(1 row)
+</programlisting>
+    </sect3>
+    <sect3 id="pg_loadavg">
+      <title>pg_loadavg</title>
+      <para>
+        Load information obtained from <literal>/proc/loadavg</literal>.
+      </para>
+      <programlisting>
+lightdb@postgres=# select * from pg_loadavg();
+ load1 | load5 | load15 | last_pid 
+-------+-------+--------+----------
+  0.08 |  0.05 |   0.05 |    74363
+(1 row)
+</programlisting>
+    </sect3>
+    <sect3 id="pg_loadavg-1">
+      <title>pg_loadavg</title>
+      <para>
+        Memory usage information obtained from
+        <literal>/proc/meminfo</literal>.
+      </para>
+      <programlisting>
+lightdb@postgres=# select * from pg_memusage();
+ memused | memfree | memshared | membuffers | memcached | swapused | swapfree | swapcached 
+---------+---------+-----------+------------+-----------+----------+----------+------------
+ 4441516 | 3552556 |         0 |       2084 |   3770828 |        0 |  4064252 |          0
+(1 row)
+</programlisting>
+    </sect3>
+    <sect3 id="pg_diskusage">
+      <title>pg_diskusage</title>
+      <para>
+        Disk usage information obtained from
+        <literal>/proc/diskstats</literal>
+      </para>
+      <programlisting>
+lightdb@postgres=# select * from pg_diskusage();
+-[ RECORD 1 ]----+---------
+major            | 8
+minor            | 0
+devname          | sda
+reads_completed  | 36385
+reads_merged     | 67
+sectors_read     | 2060883
+readtime         | 25260
+writes_completed | 384347
+writes_merged    | 3697
+sectors_written  | 16852473
+writetime        | 351385
+current_io       | 0
+iotime           | 326759
+totaliotime      | 372183
+</programlisting>
+    </sect3>
+  </sect2>
+</sect1>

@@ -1,0 +1,463 @@
+<!-- doc/src/sgml/wal2sql.sgml -->
+<sect1 id="wal2sql" xreflabel="wal2sql">
+    <title>wal2sql</title>
+    <indexterm zone="wal2sql">
+        <primary>wal2sql</primary>
+    </indexterm>
+
+    <para>
+    The <emphasis>wal2sql</emphasis> is an output extension for logical decoding. 
+    It means that the extension have access to tuples produced by INSERT and UPDATE. 
+    Also, UPDATE/DELETE old row versions can be accessed depending on the configured replica identity. 
+    Changes can be consumed using the streaming protocol (logical replication slots) or by a special SQL API.
+    </para>
+    <para>
+    format version 1 produces a JSON object per transaction.All of the new/old tuples are available in the JSON object. 
+     Also, there are options to include properties such as transaction timestamp, schema-qualified, data types, and transaction ids.
+    </para>
+    <para>
+    format version 2 produces a JSON object per tuple. Optional JSON object for beginning and end of transaction. 
+    Also, there are a variety of options to include properties.
+    </para>
+    <sect2 id="configuration-lightdb">
+        <title>Configuration</title>
+        <para>You need to set up at least parameters at lightdb.conf</para>
+        <programlisting>
+        # lightdb.conf
+
+        wal_level = logical
+        </programlisting>
+    </sect2>
+
+    <sect2 id="Configuration_Parameters">
+        <title>Configuration Parameters</title>
+        <variablelist>
+        <varlistentry>
+            <term>
+                <varname>include-transaction</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-transaction</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+                emit records denoting the start and end of each transaction. Default is true.
+            </para>
+           </listitem>
+        </varlistentry>
+        
+        <varlistentry>
+            <term>
+                <varname>include-xids</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-xids</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add xid to each changeset. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>include-timestamp</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-timestamp</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add timestamp to each changeset. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>include-pk</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-pk</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add primary key information as pk. Column name and data type is included. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>include-origin</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-origin</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add origin of a piece of data. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>include-schemas</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-schemas</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add schema to each change. Default is true.
+            </para>
+           </listitem>
+        </varlistentry>
+        <varlistentry>
+            <term>
+                <varname>include-types</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-types</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add type to each change. Default is true.
+            </para>
+           </listitem>
+        </varlistentry>
+        
+        <varlistentry>
+            <term>
+                <varname>include-type-oids</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-type-oids</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add type oids. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>include-typmod</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-typmod</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add modifier to types that have it (eg. varchar(20) instead of varchar). Default is true.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>include-domain-data-type</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-domain-data-type</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            replace domain name with the underlying data type. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>include-column-positions</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-column-positions</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add column position (pg_attribute.attnum). Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>include-not-null</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-not-null</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add not null information as columnoptionals. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+
+        <varlistentry>
+            <term>
+                <varname>include-default</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-default</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add default expression. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>pretty-print</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>pretty-print</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            dd spaces and indentation to JSON structures. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>write-in-chunks</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>write-in-chunks</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            write after every change instead of every changeset. Only used when format-version is 1. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>include-lsn</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>include-lsn</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            add nextlsn to each changeset. Default is false.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>actions</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>actions</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            efine which operations will be sent. Default is all actions (insert, update, delete, and truncate). 
+            However, if you are using format-version 1, truncate is not enabled (backward compatibility).
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>filter-origins</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>filter-origins</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            exclude changes from the specified origins. Default is empty which means that no origin will be filtered. It is a comma separated value.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>filter-tables</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>filter-tables</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            xclude rows from the specified tables. Default is empty which means that no table will be filtered. 
+            It is a comma separated value. The tables should be schema-qualified. *.foo means table foo in all schemas and 
+            bar.* means all tables in schema bar. Special characters (space, single quote, comma, period, asterisk) must be escaped with backslash.
+            Schema and table are case-sensitive. Table "public"."Foo bar" should be specified as public.Foo\ bar.
+            </para>
+           </listitem>
+        </varlistentry>
+        
+        <varlistentry>
+            <term>
+                <varname>add-tables</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>add-tables</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            include only rows from the specified tables. Default is all tables from all schemas. It has the same rules from filter-tables.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>filter-msg-prefixes</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>filter-msg-prefixes</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            exclude messages if prefix is in the list. Default is empty which means that no message will be filtered. It is a comma separated value.
+            </para>
+           </listitem>
+        </varlistentry>
+        
+        <varlistentry>
+            <term>
+                <varname>add-msg-prefixes</varname> (<type>boolean</type>)
+                <indexterm>
+                <primary><varname>add-msg-prefixes</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            include only messages if prefix is in the list. Default is all prefixes. 
+            It is a comma separated value. wal2sql applies filter-msg-prefixes before this parameter.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        <varlistentry>
+            <term>
+                <varname>format-version</varname> (<type>integer</type>)
+                <indexterm>
+                <primary><varname>format-version</varname> configuration parameter</primary>
+                </indexterm>
+            </term>
+            <listitem>
+            <para>
+            defines which format to use. Default is 1.
+            </para>
+           </listitem>
+        </varlistentry>
+
+        </variablelist>
+    </sect2>
+
+    <sect2 id="Examples_of_Parameters">
+        <title>Examples of Parameters</title>
+        <para>There are two ways to obtain the changes (JSON objects) from wal2sql plugin: calling functions via <link linkend="app-ltdts-recvlogical">ltdts_recvlogical</link> or SQL.</para>
+        <sect3 id="example_lt_recvlogical">
+            <title>ltdts_recvlogical</title>
+            <para>
+            Besides the configuration above, it is necessary to configure a replication connection to use <link linkend="app-ltdts-recvlogical">ltdts_recvlogical</link>. 
+            </para>
+            <para>
+            Add a replication connection rule at lt_hba.conf
+            </para>
+            <programlisting>
+            local    mydatabase      myuser                     trust
+            </programlisting>
+            <para>
+            Also, set max_wal_senders at lightdb.conf:
+            </para>
+            <programlisting>
+            max_wal_senders = 1
+            </programlisting>
+            <para>
+            A restart is necessary if you changed max_wal_senders.
+
+            You are ready to try wal2sql. In one terminal:
+            </para>
+
+            <programlisting>
+            # create a logical repliction slot name as test_oracle_slot
+            ltdts_recvlogical -d postgres  --slot=test_oracle_slot --create-slot -P wal2sql
+
+            # delete a logical repliction slot
+            ltdts_recvlogical -d postgres  --slot=test_oracle_slot --drop-slot
+
+            # print output in the first terminal 
+            ltdts_recvlogical -d postgres --slot test_oracle_slot --start -o pretty-print=1 -o add-msg-prefixes=wal2sql -f -
+
+            # forward output to oracle。
+            ltdts_recvlogical --tnsname=TEST --oracle-username=scott --oracle-password=tiger --start --slot=test_oracle_slot -o include-types=false
+            -o include-type-oids=true -d postgres -h 10.20.30.193 -p 9999 -f debug.dat
+            </programlisting>
+        </sect3>
+        <sect3 id="SQL">
+            <title>SQL</title>
+            <para>Save the following code and execute it</para>
+
+            <programlisting>
+            CREATE TABLE table3_with_pk (a SERIAL, b VARCHAR(30), c TIMESTAMP NOT NULL, PRIMARY KEY(a, c));
+            CREATE TABLE table3_without_pk (a SERIAL, b NUMERIC(5,2), c TEXT);
+
+            SELECT 'init' FROM pg_create_logical_replication_slot('test_slot', 'wal2sql');
+
+            BEGIN;
+            INSERT INTO table3_with_pk (b, c) VALUES('Backup and Restore', now());
+            INSERT INTO table3_with_pk (b, c) VALUES('Tuning', now());
+            INSERT INTO table3_with_pk (b, c) VALUES('Replication', now());
+            SELECT pg_logical_emit_message(true, 'wal2sql', 'this message will be delivered');
+            DELETE FROM table3_with_pk WHERE a &lt; 3;
+            SELECT pg_logical_emit_message(false, 'wal2sql', 'this non-transactional message will be delivered even if you rollback the transaction');
+
+            INSERT INTO table3_without_pk (b, c) VALUES(2.34, 'Tapir');
+            -- it is not added to stream because there isn't a pk or a replica identity
+            UPDATE table3_without_pk SET c = 'Anta' WHERE c = 'Tapir';
+            COMMIT;
+
+            SELECT data FROM pg_logical_slot_get_changes('test_slot', NULL, NULL, 'format-version', '2', 'add-msg-prefixes', 'wal2sql');
+            SELECT 'stop' FROM pg_drop_replication_slot('test_slot');
+
+            DROP TABLE table3_with_pk;
+            DROP TABLE table3_without_pk;
+            </programlisting>
+        </sect3>
+    </sect2>
+
+    <sect2 id="wal2sql-note">
+  <title>Note</title>
+  <orderedlist numeration="arabic" spacing="compact">
+    <listitem>
+      <para>
+        <literal>wal2sql</literal> is not supported on
+        <ulink url="https://www.loongson.cn/">LoongArch</ulink>.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        In <link linkend="high-availability">high availability</link>
+        please start <literal>ltdts_logicalrepl_copier.sh</literal> to
+        copy slot from primary to standby.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        In <link linkend="high-availability">high availability</link>
+        when faiover occur, please restart new primary LightDB to let
+        slot work.
+      </para>
+    </listitem>
+  </orderedlist>
+</sect2>
+ </sect1>

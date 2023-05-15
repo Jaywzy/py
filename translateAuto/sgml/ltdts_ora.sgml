@@ -1,0 +1,233 @@
+<!--
+doc/src/sgml/ref/ltdts_ora.sgml
+LightDB documentation
+-->
+
+<refentry id="app-ltdts-ora">
+ <indexterm zone="app-ltdts-ora">
+  <primary>ltdts_ora</primary>
+ </indexterm>
+
+ <refmeta>
+  <refentrytitle><application>ltdts_ora</application></refentrytitle>
+  <manvolnum>1</manvolnum>
+  <refmiscinfo>Application</refmiscinfo>
+ </refmeta>
+
+ <refnamediv>
+  <refname>ltdts_ora</refname>
+  <refpurpose>Ltdts_ora is used for synchronize data from Oracle to LightDB.</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <cmdsynopsis>
+   <command>java -jar ltdts_ora.jar</command>
+   <arg rep="repeat" choice="opt"><replaceable>option</replaceable></arg>
+   <arg>
+      example:java -jar ltdts_ora.jar --server.port=7777 --oh=192.168.1.1:1521/test --ou=XSTRM --op=dbz --oa=DBZXOUT --lh=192.168.1.2:7000/postgres --lu=lightdb --lp=lightdb123
+   </arg>
+  </cmdsynopsis>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   <command>ltdts_ora</command> is used for synchronize data from Oracle to LightDB.
+   Befor you run the ltdts_ora.jar, you should finish the prepare work as blow first.
+   <programlisting>
+# Open Oracle archive log and enable XStream.
+sqlplus /nolog
+CONNECT sys/password@host:port AS SYSDBA;
+
+alter system set db_recovery_file_dest_size = 100G;
+alter system set db_recovery_file_dest = '/opt/oracle/oradata/recovery_area' scope=spfile;
+alter system set enable_goldengate_replication=true;
+shutdown immediate;
+startup mount;
+alter database archivelog;
+alter database open;
+-- select status from v$instance;
+-- Should show "Database log mode: Archive Mode"
+archive log list;
+
+exit;
+
+# Creating an XStream Administrator user
+sqlplus sys/password@host:port/SID as sysdba
+
+CREATE TABLESPACE xstream_adm_tbs DATAFILE '/opt/oracle/oradata/orcl/xstream_adm_tbs.dbf' SIZE 25M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
+CREATE USER xstrmadmin IDENTIFIED BY dbz DEFAULT TABLESPACE xstream_adm_tbs QUOTA UNLIMITED ON xstream_adm_tbs;
+GRANT CREATE SESSION TO xstrmadmin;
+BEGIN
+ DBMS_XSTREAM_AUTH.GRANT_ADMIN_PRIVILEGE(
+  grantee                 => 'xstrmadmin',
+  privilege_type          => 'CAPTURE',
+  grant_select_privileges => TRUE,
+  container             => 'ALL'
+ );
+END;
+
+# Creating the connector’s XStream user
+
+CREATE TABLESPACE xstream_tbs DATAFILE '/opt/oracle/oradata/orcl/xstream_tbs.dbf' SIZE 25M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
+CREATE USER xstrm IDENTIFIED BY dbz DEFAULT TABLESPACE xstream_tbs QUOTA UNLIMITED ON xstream_tbs;
+GRANT CREATE SESSION TO xstrm;
+GRANT SELECT ON V_$DATABASE to xstrm;
+GRANT FLASHBACK ANY TABLE TO xstrm;
+GRANT SELECT ANY TABLE to xstrm;
+GRANT LOCK ANY TABLE TO xstrm;
+grant select_catalog_role to xstrm;
+GRANT EXECUTE_CATALOG_ROLE TO xstrm;
+
+# alter database add supplemental log data (all) columns;
+alter database add supplemental log data (primary key, unique index) columns;
+
+exit;
+
+
+# Create an XStream Outbound Server
+sqlplus xstrmadmin/password@host:port/SID
+
+DECLARE
+tables DBMS_UTILITY.UNCL_ARRAY;
+schemas DBMS_UTILITY.UNCL_ARRAY;
+BEGIN
+ tables(1) := NULL;
+ schemas(1) := 'XSTRM';
+ DBMS_XSTREAM_ADM.CREATE_OUTBOUND(
+  server_name => 'dbzxout',
+  table_names => tables,
+  schema_names => schemas
+ );
+END;
+/
+
+exit;
+
+# Configure the XStream user account to connect to the XStream Outbound Server
+sqlplus sys/password@host:port/SID as sysdba
+
+BEGIN
+ DBMS_XSTREAM_ADM.ALTER_OUTBOUND(
+  server_name  => 'dbzxout',
+  connect_user => 'xstrm'
+ );
+END;
+/
+
+exit;
+      </programlisting>
+  </para>
+
+ </refsect1>
+
+ <refsect1>
+  <title>Options</title>
+   <para>
+    At least one of the following options must be specified to select an action:
+    <variablelist>
+
+     <varlistentry>
+      <term><option>--oh</option></term>
+      <listitem>
+       <para>
+        Specifies the host of the Oracle,the port of the Oracle,and the database name of the Oracle.
+        The format is like 192.168.1.1:1521/ORCL
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--ou</option></term>
+      <listitem>
+       <para>
+        Oracle user name to connect as
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--op</option></term>
+      <listitem>
+       <para>
+        Oracle user password
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--oa</option></term>
+      <listitem>
+       <para>
+        Oracle XStream out apply name
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--m</option></term>
+      <listitem>
+       <para>
+        Data synchronization format mode, options are {SQL,JSON},the default value is SQL.
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--sd</option></term>
+      <listitem>
+       <para>
+        Where do you want to synchronize data, options are {LT,FILE},the default value is LT.
+        [tips:LT is short for LightDB]
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--lh</option></term>
+      <listitem>
+       <para>
+        Specifies the host of the LightDB,the port of the LightDB,and the database name of the LightDB.
+        The format is like 192.168.1.1:5432/postgres
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--lu</option></term>
+      <listitem>
+       <para>
+        LightDB user name to connect as.
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--lp</option></term>
+      <listitem>
+       <para>
+        LightDB user password.
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--bl</option></term>
+      <listitem>
+       <para>
+        Blacklist table not to synchronize, if you have more then one, separate by ','.
+       </para>
+      </listitem>
+     </varlistentry>
+
+    </variablelist>
+   </para>
+ </refsect1>
+
+ <refsect1>
+  <title>See Also</title>
+  <simplelist type="inline">
+   <member><xref linkend="app-ltdts-recvlogical"/></member>
+  </simplelist>
+ </refsect1>
+</refentry>

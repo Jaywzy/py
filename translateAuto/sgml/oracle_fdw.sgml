@@ -1,0 +1,1092 @@
+<!-- doc/src/sgml/oracle_fdw.sgml -->
+
+<sect1 id="oracle_fdw" xreflabel="oracle_fdw">
+    <title>oracle_fdw</title>
+
+    <indexterm zone="oracle_fdw">
+        <primary>oracle_fdw</primary>
+    </indexterm>
+
+    <para>
+        oracle_fdw is a LightDB extension that provides a Foreign Data Wrapper for easy and efficient access
+        to Oracle databases, including pushdown of WHERE conditions and required columns as well as
+        comprehensive EXPLAIN support.
+    </para>
+
+    <para>
+        oracle_fdw was written by Laurenz Albe, with notable contributions from Vincent Mora
+        of Oslandia and Tatsuro Yamada of the NTT OSS Center.
+    </para>
+
+    <para>
+        Special thanks to Christian Ullrich for ongoing help with Windows.
+    </para>
+
+    <sect2>
+        <title>Cookbook</title>
+
+        <para>
+            This is a simple example how to use oracle_fdw.
+        </para>
+
+        <para>
+            More detailed information will be provided in the sections
+            Options and Usage. You should also read the LightDB documentation on foreign data
+            and the commands referenced there.
+        </para>
+
+        <para>
+            For the sake of this example, let's assume you can connect as operating system user
+            <literal>lightdb</literal> (or whoever starts the LightDB server) with the following command:
+        </para>
+
+        <programlisting>
+            sqlplus orauser/orapwd@//dbserver.mydomain.com:1521/ORADB
+        </programlisting>
+
+        <para>
+            That means that the Oracle client and the environment is set up correctly.
+        </para>
+
+        <para>
+            We want to access a table defined like this:
+        </para>
+
+        <programlisting>
+            SQL> DESCRIBE oratab
+             Name                            Null?    Type
+             ------------------------------- -------- ------------
+             ID                              NOT NULL NUMBER(5)
+             TEXT                                     VARCHAR2(30)
+             FLOATING                        NOT NULL NUMBER(7,2)
+        </programlisting>
+
+        <para>
+            Then configure oracle_fdw as LightDB superuser like this:
+        </para>
+
+        <programlisting>
+            pgdb=# CREATE EXTENSION oracle_fdw;
+            pgdb=# CREATE SERVER oradb FOREIGN DATA WRAPPER oracle_fdw
+                      OPTIONS (dbserver '//dbserver.mydomain.com:1521/ORADB');
+        </programlisting>
+
+        <para>
+            (You can use other naming methods or local connections, see the description of the option <literal>dbserver</literal> below.)
+        </para>
+
+        <para>
+            It is a good idea to use a superuser only where really necessary, so let's allow a normal user to
+            use the foreign server (this is not required for the example to work, but I recommend it):
+        </para>
+
+        <programlisting>
+            pgdb=# GRANT USAGE ON FOREIGN SERVER oradb TO pguser;
+        </programlisting>
+
+        <para>
+            Then you can connect to LightDB as <literal>pguser</literal> and define:
+        </para>
+
+        <programlisting>
+            pgdb=> CREATE USER MAPPING FOR pguser SERVER oradb
+                      OPTIONS (user 'orauser', password 'orapwd');
+        </programlisting>
+
+        <para>
+            (You can use external authentication to avoid storing Oracle passwords; see below.)
+        </para>
+
+        <programlisting>
+            pgdb=> CREATE FOREIGN TABLE oratab (
+                      id        integer           OPTIONS (key 'true')  NOT NULL,
+                      text      character varying(30),
+                      floating  double precision  NOT NULL
+                   ) SERVER oradb OPTIONS (schema 'ORAUSER', table 'ORATAB');
+        </programlisting>
+
+        <para>
+            (Remember that table and schema name -- the latter is optional -- must normally be in uppercase.)
+        </para>
+
+        <para>
+            Now you can use the table like a regular LightDB table.
+        </para>
+    </sect2>
+
+    <sect2>
+        <title>Objects created by the extension</title>
+
+        <programlisting>
+            FUNCTION oracle_fdw_handler() RETURNS fdw_handler
+            FUNCTION oracle_fdw_validator(text[], oid) RETURNS void
+        </programlisting>
+
+        <para>
+            These functions are the handler and the validator function necessary to create a foreign data wrapper.
+        </para>
+
+        <programlisting>
+            FOREIGN DATA WRAPPER oracle_fdw
+              HANDLER oracle_fdw_handler
+              VALIDATOR oracle_fdw_validator
+        </programlisting>
+
+        <para>
+            The extension automatically creates a foreign data wrapper named <literal>oracle_fdw</literal>.
+        </para>
+
+        <para>
+            Normally that's all you need, and you can proceed to define foreign servers. You can create
+            additional Oracle foreign data wrappers, for example if you need to set the <literal>nls_lang</literal>
+            option (you can alter the existing <literal>oracle_fdw</literal> wrapper, but all modifications
+            will be lost after a dump/restore).
+        </para>
+
+        <programlisting>
+            FUNCTION oracle_close_connections() RETURNS void
+        </programlisting>
+
+        <para>
+            This function can be used to close all open Oracle connections in this session. See the
+            Usage
+            section for further description.
+        </para>
+
+        <programlisting>
+            FUNCTION oracle_diag(name DEFAULT NULL) RETURNS text
+        </programlisting>
+
+        <para>
+            This function is useful for diagnostic purposes only.
+        </para>
+
+        <para>
+            It will return the versions of oracle_fdw, LightDB server and Oracle client. If called with no
+            argument or NULL, it will additionally return the values of some environment variables
+            used for establishing Oracle connections.
+        </para>
+
+        <programlisting>
+            FUNCTION oracle_execute(server name, stmt text) RETURNS void
+        </programlisting>
+
+        <para>
+            This function can be used to execute arbitrary SQL statements on the remote Oracle server. That will
+            only work with statements that do not return results (typically DDL statements).
+        </para>
+
+        <para>
+            Be careful when using this function, since it might disturb the transaction management of oracle_fdw.
+            Remember that running a DDL statement in Oracle will issue an implicit COMMIT. You are best advised
+            to use this function outside of multi-statement transactions.
+        </para>
+    </sect2>
+
+    <sect2>
+        <title>Options</title>
+
+        <sect3>
+            <title>Foreign data wrapper options</title>
+
+            <para>
+                (Caution: If you modify the default foreign data wrapper <literal>oracle_fdw</literal>, any changes
+                will be lost upon dump/restore. Create a new foreign data wrapper if you want the options to be
+                persistent. The SQL script shipped with the software contains a CREATE FOREIGN DATA
+                WRAPPER statement you can use.)
+            </para>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <literal>nls_lang</literal> (optional)
+                    </para>
+
+                    <para>
+                        Sets the NLS_LANG environment variable for Oracle to this value.
+                    </para>
+
+                    <para>
+                        NLS_LANG is in the form "language_territory.charset" (for example AMERICAN_AMERICA.AL32UTF8).
+                        This must match your database encoding. When this value is not set, oracle_fdw will
+                        automatically do the right thing if it can and issue a warning if it cannot. Set this only
+                        if you know what you are doing. See the
+                        Problems
+                        section.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </sect3>
+
+        <sect3>
+            <title>Foreign server options</title>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <literal>dbserver</literal> (required)
+                    </para>
+
+                    <para>
+                        The Oracle database connection string for the remote database.
+                    </para>
+
+                    <para>
+                        This can be in any of the forms that Oracle supports as long as your Oracle client is configured accordingly.
+                    </para>
+
+                    <para>
+                        Set this to an empty string for local ("BEQUEATH") connections.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        <literal>isolation_level</literal> (optional, defaults to <literal>serializable</literal>)
+                    </para>
+
+                    <para>
+                        The transaction isolation level to use at the Oracle database.
+                    </para>
+
+                    <para>
+                        The value can be <literal>serializable</literal>, <literal>read_committed</literal> or <literal>read_only</literal>.
+                    </para>
+
+                    <para>
+                        Note that the Oracle table can be queried more than once during a single LightDB statement
+                        (for example, during a nested loop join). To make sure that no inconsistencies caused by race
+                        conditions with concurrent transactions can occur, the transaction isolation level must
+                        guarantee read stability.
+                    </para>
+
+                    <para>
+                        This is only guaranteed with Oracle's SERIALIZABLE or READ ONLY isolation levels.
+                    </para>
+
+                    <para>
+                        Unfortunately Oracle's implementation of SERIALIZABLE is rather bad and causes serialization
+                        errors (ORA-08177) in unexpected situations, like inserts into the table.
+                    </para>
+
+                    <para>
+                        Using READ COMMITTED transactions works around this problem, but
+                        <literal>there is a risk of inconsistencies</literal>. If you want to use it, check your
+                        execution plans if the foreign scan could be executed more than once.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        <literal>nchar</literal> (boolean, optional, defaults to off)
+                    </para>
+
+                    <para>
+                        Setting this option to <literal>on</literal> chooses a more expensive character conversion on
+                        the Oracle side. This is required if you are using a single-byte Oracle database character set,
+                        but have NCHAR or NVARCHAR2 columns containing contain characters that cannot be represented
+                        in the database character set.
+                    </para>
+
+                    <para>
+                        Setting <literal>nchar</literal> to <literal>on</literal> has a noticable performance impact,
+                        and it causes ORA-01461 errors with UPDATE statements that set strings over 2000 bytes
+                        (or 16383 if you have MAX_STRING_SIZE = EXTENDED). This error seems to be an Oracle bug.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </sect3>
+
+        <sect3>
+            <title>User mapping options</title>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <literal>user</literal> (required)
+                    </para>
+
+                    <para>
+                        The Oracle user name for the session.
+                    </para>
+
+                    <para>
+                        Set this to an empty string for external authentication if you don't want to store Oracle credentials
+                        in the LightDB database (one simple way is to use an <literal>external password store</literal>).
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        <literal>password</literal> (required)
+                    </para>
+
+                    <para>
+                        The password for the Oracle user.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </sect3>
+
+        <sect3>
+            <title>Foreign table options</title>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        <literal>table</literal> (required)
+                    </para>
+
+                    <para>
+                        The Oracle table name. This name must be written exactly as it occurs in Oracle's system
+                        catalog, so normally consist of uppercase letters only.
+                    </para>
+
+                    <para>
+                        To define a foreign table based on an arbitrary Oracle query, set this option to the
+                        query enclosed in parentheses, e.g.
+                    </para>
+
+                    <programlisting>
+                        OPTIONS (table '(SELECT col FROM tab WHERE val = ''string'')')
+                    </programlisting>
+
+                    <para>
+                        Do not set the <literal>schema</literal> option in this case.
+                    </para>
+
+                    <para>
+                        INSERT, UPDATE and DELETE will work on foreign tables defined on simple queries; if you want
+                        to avoid that (or confusing Oracle error messages for more complicated queries), use the
+                        table option <literal>readonly</literal>.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        <literal>dblink</literal> (optional)
+                    </para>
+
+                    <para>
+                        The Oracle database link through which the table is accessed. This name must be written exactly
+                         as it occurs in Oracle's system catalog, so normally consist of uppercase letters only.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        <literal>schema</literal> (optional)
+                    </para>
+
+                    <para>
+                        The table's schema (or owner). Useful to access tables that do not belong to the connecting
+                        Oracle user. This name must be written exactly as it occurs in Oracle's system catalog,
+                        so normally consist of uppercase letters only.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        <literal>max_long</literal> (optional, defaults to "32767")
+                    </para>
+
+                    <para>
+                        The maximal length of any LONG, LONG RAW and XMLTYPE columns in the Oracle table. Possible
+                        values are integers between 1 and 1073741823 (the maximal size of a <literal>bytea</literal>
+                        in LightDB). This amount of memory will be allocated at least twice, so large values will
+                        consume a lot of memory.
+                    </para>
+
+                    <para>
+                        If <literal>max_long</literal> is less than the length of the longest value retrieved, you will
+                        receive the error message <literal>ORA-01406: fetched column value was truncated</literal>.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        <literal>readonly</literal> (optional, defaults to "false")
+                    </para>
+
+                    <para>
+                        INSERT, UPDATE and DELETE is only allowed on tables where this option is not set to yes/on/true.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        <literal>sample_percent</literal> (optional, defaults to "100")
+                    </para>
+
+                    <para>
+                        This option only influences ANALYZE processing and can be useful to ANALYZE very large tables
+                        in a reasonable time.
+                    </para>
+
+                    <para>
+                        The value must be between 0.000001 and 100 and defines the percentage of Oracle table blocks
+                        that will be randomly selected to calculate LightDB table statistics. This is accomplished
+                        using the <literal>SAMPLE BLOCK (x)</literal> clause in Oracle.
+                    </para>
+
+                    <para>
+                        ANALYZE will fail with ORA-00933 for tables defined with Oracle queries and may fail with
+                        ORA-01446 for tables defined with complex Oracle views.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        <literal>prefetch</literal> (optional, defaults to "200")
+                    </para>
+
+                    <para>
+                        Sets the number of rows that will be fetched with a single round-trip between LightDB and
+                        Oracle during a foreign table scan. This is implemented using Oracle row prefetching. The
+                        value must be between 0 and 10240, where a value of zero disables prefetching.
+                    </para>
+
+                    <para>
+                        Higher values can speed up performance, but will use more memory on the LightDB server.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </sect3>
+    </sect2>
+
+    <sect2>
+        <title>Usage</title>
+
+        <sect3>
+            <title>Oracle permissions</title>
+
+            <para>
+                The Oracle user will obviously need CREATE SESSION privilege and the right to select from the
+                table or view in question.
+            </para>
+
+            <para>
+                For EXPLAIN VERBOSE the user will also need SELECT privileges on V$SQL and V$SQL_PLAN.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Connections</title>
+
+            <para>
+                oracle_fdw caches Oracle connections because it is expensive to create an Oracle session for each
+                individual query. All connections are automatically closed when the LightDB session ends.
+            </para>
+
+            <para>
+                The function<literal>oracle_close_connections()</literal> can be used to close all cached Oracle
+                connections. This can be useful for long-running sessions that don't access foreign tables all the
+                time and want to avoid blocking the resources needed by an open Oracle connection.
+            </para>
+
+            <para>
+                You cannot call this function inside a transaction that modifies Oracle data.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Columns</title>
+
+            <para>
+                When you define a foreign table, the columns of the Oracle table are mapped to the LightDB columns
+                in the order of their definition.
+            </para>
+
+            <para>
+                oracle_fdw will only include those columns in the Oracle query that are actually needed by the LightDB query.
+            </para>
+
+            <para>
+                The LightDB table can have more or less columns than the Oracle table. If it has more columns,
+                and these columns are used, you will receive a warning and NULL values will be returned.
+            </para>
+
+            <para>
+                If you want to UPDATE or DELETE, make sure that the key option is set on all columns that belong to
+                the table's primary <literal>key</literal>. Failure to do so will result in errors.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Oracle permissions</title>
+
+            <para>
+                You must define the LightDB columns with data types that oracle_fdw can translate (see the
+                conversion table below). This restriction is only enforced if the column actually gets used, so you
+                can define "dummy" columns for untranslatable data types as long as you don't access them (this
+                trick only works with SELECT, not when modifying foreign data). If an Oracle value exceeds the
+                size of the LightDB column (e.g., the length of a varchar column or the maximal integer value),
+                you will receive a runtime error.
+            </para>
+
+            <para>
+                These conversions are automatically handled by oracle_fdw:
+            </para>
+
+            <programlisting>
+                Oracle type              | Possible LightDB types
+                -------------------------+--------------------------------------------------
+                CHAR                     | char, varchar, text
+                NCHAR                    | char, varchar, text
+                VARCHAR                  | char, varchar, text
+                VARCHAR2                 | char, varchar, text, json
+                NVARCHAR2                | char, varchar, text
+                CLOB                     | char, varchar, text, json
+                LONG                     | char, varchar, text
+                RAW                      | uuid, bytea
+                BLOB                     | bytea
+                BFILE                    | bytea (read-only)
+                LONG RAW                 | bytea
+                NUMBER                   | numeric, float4, float8, char, varchar, text
+                NUMBER(n,m)     | numeric, float4, float8, int2, int4, int8,
+                                         |    boolean, char, varchar, text
+                FLOAT                    | numeric, float4, float8, char, varchar, text
+                BINARY_FLOAT             | numeric, float4, float8, char, varchar, text
+                BINARY_DOUBLE            | numeric, float4, float8, char, varchar, text
+                DATE                     | date, timestamp, timestamptz, char, varchar, text
+                TIMESTAMP                | date, timestamp, timestamptz, char, varchar, text
+                TIMESTAMP WITH TIME ZONE | date, timestamp, timestamptz, char, varchar, text
+                TIMESTAMP WITH           | date, timestamp, timestamptz, char, varchar, text
+                   LOCAL TIME ZONE       |
+                INTERVAL YEAR TO MONTH   | interval, char, varchar, text
+                INTERVAL DAY TO SECOND   | interval, char, varchar, text
+                XMLTYPE                  | xml, char, varchar, text
+                MDSYS.SDO_GEOMETRY       | geometry (see "PostGIS support" below)
+            </programlisting>
+
+            <para>
+                If a NUMBER is converted to a boolean, 0 means <literal>false</literal>, everything else <literal>true</literal>
+            </para>
+
+            <para>
+                Inserting or updating XMLTYPE only works with values that do not exceed the maximum length of the
+                VARCHAR2 data type (4000 or 32767, depending on the <literal>MAX_STRING_SIZE</literal> parameter).
+            </para>
+
+            <para>
+                NCLOB is currently not supported because Oracle cannot automatically convert it to the client encoding.
+            </para>
+
+            <para>
+                If you need conversions exceeding the above, define an appropriate view in Oracle or LightDB.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>WHERE conditions and ORDER BY clauses</title>
+
+            <para>
+                LightDB will use all applicable parts of the WHERE clause as a filter for the scan. The Oracle
+                query that oracle_fdw constructs will contain a WHERE clause corresponding to these filter criteria
+                whenever such a condition can safely be translated to Oracle SQL. This feature, also known as
+                <literal>push-down of WHERE</literal> clauses, can greatly reduce the number of rows retrieved
+                from Oracle and may enable Oracle's optimizer to choose a good plan for accessing the required tables.
+            </para>
+
+            <para>
+                Similarly, ORDER BY clauses will be pushed down to Oracle wherever possible. Note that no ORDER
+                BY condition that sorts by a character string will be pushed down as the sort orders in
+                LightDB an Oracle cannot be guaranteed to be the same.
+            </para>
+
+            <para>
+                To make use of that, try to use simple conditions for the foreign table. Choose LightDB column
+                data types that correspond to Oracle's types, because otherwise conditions cannot be translated.
+            </para>
+
+            <para>
+                The expressions <literal>now()</literal>, <literal>transaction_timestamp()</literal>, <literal>
+                current_timestamp</literal>, <literal>current_date</literal> and <literal>localtimestamp</literal>
+                will be translated correctly.
+            </para>
+
+            <para>
+                The output of EXPLAIN will show the Oracle query used, so you can see which conditions were
+                translated to Oracle and how.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Joins between foreign tables</title>
+
+            <para>
+                oracle_fdw can push down joins to the Oracle server, that is, a join between
+                two foreign tables will lead to a single Oracle query that performs the join on the Oracle side.
+            </para>
+
+            <para>
+                There are some restrictions when this can happen:
+            </para>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Both tables must be defined on the same foreign server.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        Joins between three or more tables won't be pushed down.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        The join must be in a SELECT statement.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        oracle_fdw must be able to push down all join conditions and WHERE clauses.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        Cross joins without join conditions are not pushed down.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        If a join is pushed down, ORDER BY clauses will not be pushed down
+                    </para>
+                </listitem>
+            </itemizedlist>
+
+            <para>
+                It is important that table statistics for both foreign tables have been collected with ANALYZE
+                for LightDB to determine the best join strategy.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Modifying foreign data</title>
+
+            <para>
+                oracle_fdw supports INSERT, UPDATE and DELETE on foreign tables. This is allowed by default (also in databases
+                upgraded from an earlier LightDB release) and can be disabled by setting the <literal>readonly</literal> table option.
+            </para>
+
+            <para>
+                For UPDATE and DELETE to work, the columns corresponding to the primary key columns of the Oracle
+                table must have the <literal>key</literal> column option set. These columns are used to identify a foreign table row,
+                so make sure that the option is set on all columns that belong to the primary key.
+            </para>
+
+            <para>
+                If you omit a foreign table column during INSERT, that column is set to the value defined in the
+                DEFAULT clause on the LightDB foreign table (or NULL if there is no DEFAULT clause). DEFAULT
+                clauses on the corresponding Oracle columns are not used. If the LightDB foreign table does not
+                include all columns of the Oracle table, the Oracle DEFAULT clauses will be used for the columns
+                not included in the foreign table definition.
+            </para>
+
+            <para>
+                The RETURNING clause on INSERT, UPDATE and DELETE is supported except for columns with Oracle
+                data types LONG and LONG RAW (Oracle doesn't support these data types in the RETURNING clause).
+            </para>
+
+            <para>
+                Triggers on foreign tables are supported. Triggers defined with AFTER and FOR
+                EACH ROW require that the foreign table has no columns with Oracle data type LONG or LONG RAW.
+                This is because such triggers make use of the RETURNING clause mentioned above.
+            </para>
+
+            <para>
+                While modifying foreign data works, the performance is not particularly good, specifically when many
+                rows are affected, because (owing to the way foreign data wrappers work) each row has to be treated individually.
+            </para>
+
+            <para>
+                Transactions are forwarded to Oracle, so BEGIN, COMMIT, ROLLBACK and SAVEPOINT work as expected.
+                Prepared statements involving Oracle are not supported. See the Internals section for details.
+            </para>
+
+            <para>
+                Since oracle_fdw uses serialized transactions by default, it is possible that data modifying
+                statements lead to a serialization failure:
+            </para>
+
+            <programlisting>
+                ORA-08177: can't serialize access for this transaction
+            </programlisting>
+
+            <para>
+                This can happen if concurrent transactions modify the table and gets more likely in long running
+                transactions. Such errors can be identified by their SQLSTATE (40001). An application using
+                oracle_fdw should retry transactions that fail with this error.
+            </para>
+
+            <para>
+                It is possible to use a different transaction isolation level, see Foreign server options for a discussion.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>EXPLAIN</title>
+
+            <para>
+                LightDB's EXPLAIN will show the query that is actually issued to Oracle. EXPLAIN VERBOSE will
+                show Oracle's execution plan (that will not work with Oracle server 9i or older, see Problems).
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>ANALYZE</title>
+
+            <para>
+                You can use ANALYZE to gather statistics on a foreign table. This is supported by oracle_fdw.
+            </para>
+
+            <para>
+                Without statistics, LightDB has no way to estimate the row count for queries on a foreign table,
+                 which can cause bad execution plans to be chosen.
+            </para>
+
+            <para>
+                LightDB will not automatically gather statistics for foreign tables with the autovacuum daemon
+                like it does for normal tables, so it is particularly important to run ANALYZE on foreign tables
+                after creation and whenever the remote table has changed significantly.
+            </para>
+
+            <para>
+                Keep in mind that analyzing an Oracle foreign table will result in a full sequential table scan. You
+                can use the table option <literal>sample_percent</literal> to speed this up by using only a sample of the Oracle table.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>PostGIS support</title>
+
+            <para>
+                The data type <literal>geometry</literal> is only available when PostGIS is installed.
+            </para>
+
+            <para>
+                The only supported geometry types are POINT, LINE, POLYGON, MULTIPOINT, MULTILINE and MULTIPOLYGON
+                in two and three dimensions. Empty PostGIS geometries are not supported because they have no
+                equivalent in Oracle Spatial.
+            </para>
+
+            <para>
+                NULL values for Oracle SRID will be converted to 0 and vice versa. For other conversions between
+                Oracle SRID and PostGIS SRID, create a file <literal>srid.map</literal> in the LightDB
+                <literal>share</literal> directory. Each line of this file shall contain an Oracle SRID and the
+                corresponding PostGIS SRID, separated by whitespace. Keep the file small for good performance.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Support for IMPORT FOREIGN SCHEMA</title>
+
+            <para>
+                IMPORT FOREIGN SCHEMA is supported to bulk import table definitions for all
+                tables in an Oracle schema.
+            </para>
+
+            <para>
+                In addition to the documentation of IMPORT FOREIGN SCHEMA, consider the following:
+            </para>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        IMPORT FOREIGN SCHEMA will create foreign tables for all objects found in ALL_TAB_COLUMNS.
+                        That includes tables, views and materialized views, but not synonyms.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        These are the supported options for IMPORT FOREIGN SCHEMA:
+                    </para>
+
+                    <itemizedlist>
+                        <listitem>
+                            <para>
+                                <literal>case</literal>: controls case folding for table and column names during import
+                            </para>
+
+                            <para>
+                                The possible values are:
+                            </para>
+
+                            <itemizedlist>
+                                <listitem>
+                                    <para>
+                                        <literal>keep</literal>: leave the names as they are in Oracle, usually in upper case.
+                                    </para>
+                                </listitem>
+
+                                <listitem>
+                                    <para>
+                                        <literal>lower</literal>: translate all table and column names to lower case.
+                                    </para>
+                                </listitem>
+
+                                <listitem>
+                                    <para>
+                                        <literal>smart</literal>: only translate names that are all upper case in Oracle (this is the default).
+                                    </para>
+                                </listitem>
+                            </itemizedlist>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                <literal>collation</literal>: the collation used for case folding for the <literal>
+                                lower</literal> and <literal>smart</literal> options of <literal>case</literal>
+                            </para>
+
+                            <para>
+                                The default value is <literal>default</literal> which is the database's default
+                                collation. Only collations in the <literal>pg_catalog</literal> schema are supported.
+                                See the <literal>collname</literal> values in the <literal>pg_collation</literal> catalog
+                                for a list of possible values.
+                            </para>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                <literal>dblink</literal>: the Oracle database link through which the schema is accessed
+                            </para>
+
+                            <para>
+                                This name must be written exactly as it occurs in Oracle's system catalog, so
+                                normally consist of uppercase letters only.
+                            </para>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                <literal>readonly</literal>: sets the <literal>readonly</literal> option on all imported tables
+                            </para>
+
+                            <para>
+                                See the Options section for details.
+                            </para>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                <literal>max_long</literal>: sets the <literal>max_long</literal> option on all imported tables
+                            </para>
+
+                            <para>
+                                See the Options section for details.
+                            </para>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                <literal>sample_percent</literal>: sets the <literal>sample_percent</literal> option on all imported tables
+                            </para>
+
+                            <para>
+                                See the Options section for details.
+                            </para>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                <literal>prefetch</literal>: sets the <literal>prefetch</literal> option on all imported tables
+                            </para>
+
+                            <para>
+                                See the Options section for details.
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        The Oracle schema name must be written exactly as it is in Oracle, so normally in upper case.
+                        Since LightDB translates names to lower case before processing, you must protect the schema
+                        name with double quotes (for example <literal>"SCOTT"</literal>).
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        Table names in the LIMIT TO or EXCEPT clause must be written as they will appear in LightDB
+                        after the case folding described above.
+                    </para>
+                </listitem>
+            </itemizedlist>
+
+            <para>
+                Note that IMPORT FOREIGN SCHEMA does not work with Oracle server 8i; see the Problems section for details.
+            </para>
+        </sect3>
+    </sect2>
+
+    <sect2>
+        <title>Internals</title>
+
+        <para>
+            oracle_fdw sets the MODULE of the Oracle session to LightDB and the ACTION to the backend process
+            number. This can help identifying the Oracle session and allows you to trace it with
+            DBMS_MONITOR.SERV_MOD_ACT_TRACE_ENABLE.
+        </para>
+
+        <para>
+            oracle_fdw uses Oracle's result prefetching to avoid unnecessary client-server round-trips. The prefetch
+            row count can be configured with the <literal>prefetch</literal> table option and is set to 200 by default.
+        </para>
+
+        <para>
+            Rather than using a PLAN_TABLE to explain an Oracle query (which would require such a table to be created
+            in the Oracle database), oracle_fdw uses execution plans stored in the library cache. For that, an Oracle
+            query is explicitly described, which forces Oracle to parse the query. The hard part is to find the SQL_ID
+            and CHILD_NUMBER of the statement in V$SQL because the SQL_TEXT column contains only the first 1000 bytes
+            of the query. Therefore, oracle_fdw adds a comment to the query that contains an MD5 hash of the query text.
+            This is used to search in V$SQL. The actual execution plan or cost information is retrieved from V$SQL_PLAN.
+        </para>
+
+        <para>
+            oracle_fdw uses transaction isolation level SERIALIZABLE on the Oracle side, which corresponds to
+            LightDB's REPEATABLE READ. This is necessary because a single LightDB statement can lead to
+            multiple Oracle queries (e.g. during a nested loop join) and the results need to be consistent.
+        </para>
+
+        <para>
+            Unfortunately the Oracle implementation of SERIALIZABLE has certain quirks; see the Problems section for more.
+        </para>
+
+        <para>
+            The Oracle transaction is committed immediately before the local transaction commits, so that a completed
+            LightDB transaction guarantees that the Oracle transaction has completed. However, there is a small
+            chance that the LightDB transaction cannot complete even though the Oracle transaction is committed.
+            This cannot be avoided without using two-phase transactions and a transaction manager, which is beyond
+            what a foreign data wrapper can reasonably provide.
+        </para>
+
+        <para>
+            Prepared statements involving Oracle are not supported for the same reason.
+        </para>
+    </sect2>
+
+    <sect2>
+        <title>Problems</title>
+
+        <sect3>
+            <title>Encoding</title>
+
+            <para>
+                Characters stored in an Oracle database that cannot be converted to the LightDB database encoding
+                will silently be replaced by <literal>replacement characters</literal>, typically a normal or
+                inverted question mark, by Oracle. You will get no warning or error messages.
+            </para>
+
+            <para>
+                If you use a LightDB database encoding that Oracle does not know (currently, these are EUC_CN,
+                EUC_KR, LATIN10, MULE_INTERNAL, WIN874 and SQL_ASCII), non-ASCII characters cannot be translated
+                correctly. You will get a warning in this case, and the characters will be replaced by replacement
+                characters as described above.
+            </para>
+
+            <para>
+                You can set the <literal>nls_lang</literal> option of the foreign data wrapper to force a certain Oracle encoding,
+                but the resulting characters will most likely be incorrect and lead to LightDB error messages.
+                This is probably only useful for SQL_ASCII encoding if you know what you are doing. See the Options section.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Limited functionality in old Oracle versions</title>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        The definition of the Oracle system catalogs V$SQL and V$SQL_PLAN has changed with Oracle
+                        10.1. Using EXPLAIN VERBOSE with older Oracle server versions will result in errors like:
+                    </para>
+
+                    <programlisting>
+                        ERROR:  error describing query: OCIStmtExecute failed to execute
+                                remote query for sql_id
+                        DETAIL:  ORA-00904: "LAST_ACTIVE_TIME": invalid identifier
+                    </programlisting>
+
+                    <para>
+                        There is no plan to fix this, since Oracle 9i has been out of Extended Support since 2010 and
+                        the functionality is not essential.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        IMPORT FOREIGN SCHEMA throws the following error with Oracle server 8i:
+                    </para>
+
+                    <programlisting>
+                        ERROR:  error importing foreign schema: OCIStmtExecute failed to execute
+                                column query
+                        DETAIL:  ORA-00904: invalid column name
+                    </programlisting>
+
+                    <para>
+                        This is because the view ALL_TAB_COLUMNS lacks the column CHAR_LENGTH, which was added in Oracle 9i.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </sect3>
+
+        <sect3>
+            <title>Serialization errors</title>
+
+            <para>
+                In Oracle 11.2 or above, inserting the first row into a newly created Oracle table with oracle_fdw
+                will lead to a serialization error.
+            </para>
+
+            <para>
+                This is because of an Oracle feature called deferred <literal>segment creation</literal> which
+                defers allocation of storage space for a new table until the first row is inserted. This causes a
+                serialization failure with serializable transactions (see document 1285464.1 in Oracle's knowledge base).
+            </para>
+
+            <para>
+                This is no serious problem; you can work around it by either ignoring that first error or creating
+                the table with SEGMENT CREATION IMMEDIATE.
+            </para>
+
+            <para>
+                A much nastier problem is that concurrent inserts can sometimes cause serialization errors when an
+                index page is split concurrently with a modifying serializable transaction (see Oracle document 160593.1).
+            </para>
+
+            <para>
+                Oracle claims that this is not a bug, and the suggested solution is to retry the transaction that
+                got a serialization error.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Oracle bugs</title>
+
+            <para>
+                This is a list of Oracle bugs that have affected oracle_fdw in the past.
+            </para>
+
+            <para>
+                Bug 2728408 can cause <literal>ORA-8177 cannot serialize access for this transaction</literal>
+                even if no modification of remote data is attempted.
+            </para>
+
+            <para>
+                It can occur with Oracle server 8.1.7.4 (install one-off patch 2728408) or Oracle server 9.2
+                (install Patch Set 9.2.0.4 or better).
+            </para>
+        </sect3>
+    </sect2>
+</sect1>

@@ -1,0 +1,4100 @@
+<!-- doc/src/sgml/myfce.sgml -->
+<sect1 id="myfce" xreflabel="myfce">
+ <title>myfce</title>
+ <indexterm zone="myfce">
+  <primary>myfce</primary>
+ </indexterm>
+ <para><filename>myfce</filename> - Mysql's compatibility functions.
+ </para>
+ <sect2>
+  <title>Features Compatible with Mysql Databases</title>
+  <para>
+   Features compatible with Mysql databases are provided.
+   These features enable you to easily migrate to LightDB and reduce the costs of reconfiguring applications.
+
+   The table below lists features compatible with Mysql databases.
+  <table>
+   <title>Data type</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>
+       <para>
+        Item
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Overview
+       </para>
+      </entry>
+     </row>
+    </thead>
+
+    <tbody>
+     <row>
+      <entry>
+       <para>
+        	LONGTEXT
+       </para>
+      </entry>
+      <entry>
+       <para>
+        	LONGTEXT is an alias for TEXT.
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	SIGNED
+       </para>
+      </entry>
+      <entry>
+       <para>
+        	SIGNED is a signed integer, equivalent to bigint.
+       </para>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+   <table><title>Mathematical Functions</title><tgroup cols="2"><thead><row><entry><para>
+           Item
+          </para></entry><entry><para>
+           Overview
+          </para></entry></row></thead><tbody>
+          <row>
+            <entry>
+              <para>
+                CONV
+              </para>
+            </entry>
+            <entry>
+              <para>
+                Convert numbers between different number bases
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                LOG10
+              </para>
+            </entry>
+            <entry>
+              <para>
+                Return the base-10 logarithm of the argument
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                LOG2
+              </para>
+            </entry>
+            <entry>
+              <para>
+                Return the base-2 logarithm of the argument
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                RAND
+              </para>
+            </entry>
+            <entry>
+              <para>
+                Returns a random floating-point value v in the range 0 and 1.0
+              </para>
+            </entry>
+          </row>
+          <row>
+            <entry>
+              <para>
+                TRUNCATE
+              </para>
+            </entry>
+            <entry>
+              <para>
+                Truncate to specified number of decimal places
+              </para>
+            </entry>
+          </row>
+          </tbody></tgroup></table>
+  </para>
+  <table>
+   <title>String Functions</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>
+       <para>
+       Item
+      </para>
+      </entry>
+      <entry>
+       <para>
+           Overview
+      </para>
+      </entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>
+       <para>
+           ELT
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Return string at index number
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           FIELD
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Index (position) of first argument in subsequent arguments
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           FIND_IN_SET
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Index (position) of first argument within second argument
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           FROM_BASE64
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Decode base64 encoded string and return result
+       </para>
+      </entry>
+     </row>
+    <row>
+      <entry>
+       <para>
+           INSERT
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Insert substring at specified position up to specified number of characters
+       </para>
+      </entry>
+     </row>
+    <row>
+      <entry>
+       <para>
+           INSTR
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Get the first occurrence position of the substring
+       </para>
+      </entry>
+     </row>
+       <row>
+      <entry>
+       <para>
+           LCASE
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Synonym for LOWER()
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           LOCATE
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Return the position of the first occurrence of substring
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           MID
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Return a substring starting from the specified position
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           SPACE
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Return a string of the specified number of spaces
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           STRCMP
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Compare two strings
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           TO_BASE64
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Return the argument converted to a base-64 string
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           UCASE
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Synonym for UPPER()
+       </para>
+      </entry>
+     </row>
+      <row>
+      <entry>
+       <para>
+           SUBSTR
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Return the substring as specified
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+           SUBSTRING
+       </para>
+      </entry>
+      <entry>
+       <para>
+           Return the substring as specified
+       </para>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+ <table>
+   <title>Date/Time Functions</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>
+       <para>
+        Item
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Overview
+       </para>
+      </entry>
+     </row>
+    </thead>
+
+    <tbody>
+     <row>
+      <entry>
+       <para>
+        	DATEDIFF
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Subtract two dates
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	DATE_ADD
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Add the specified time interval to the date
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	DATE_FORMAT
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Return date / time data in different formats
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	DATE_SUB
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Subtracts the specified time interval from the date
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	DAY
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Returns the date part of the date month
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	DAYOFWEEK
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Returns the day of the week index of the current week, starting at 1
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	FROM_UNIXTIME
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Returns the date / datetime representation of the UNIX timestamp
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	SEC_TO_TIME
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Converts seconds to 'hh:mm:ss' format
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	STR_TO_DATE
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Convert string to date / time value
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	TIME_TO_SEC
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Return the argument converted to seconds
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	TIMEDIFF
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Subtract time
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	TIMESTAMPDIFF
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Subtract an interval from a datetime expression
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	TO_DAYS
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Return the date argument converted to days
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	TO_SECONDS
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Return the date or datetime argument converted to seconds since Year 0
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	UNIX_TIMESTAMP
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Returns the UNIX timestamp of an exact point in time
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	WEEKOFYEAR
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Returns the number of weeks of the date
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        	YEAR
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Returns the year of the date
+       </para>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <table>
+   <title>Conditional Expressions</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>
+       <para>
+           Item
+          </para>
+      </entry>
+      <entry>
+       <para>
+           Overview
+          </para>
+      </entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>
+       <para>
+              IF
+             </para>
+      </entry>
+      <entry>
+       <para>
+              If/else construct
+             </para>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <table>
+   <title>Aggregate Functions</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>
+       <para>
+           Item
+          </para>
+      </entry>
+      <entry>
+       <para>
+           Overview
+          </para>
+      </entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>
+       <para>
+        ANY_VALUE
+       </para>
+      </entry>
+      <entry>
+       <para>
+        For compatibility with MySQL mode non ONLY_FULL_GROUP_BY syntax behavior of group by in by mode
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+          GROUP_CONCAT
+         </para>
+      </entry>
+      <entry>
+       <para>
+               Returns a concatenated, delimited list of string values.
+         </para>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <table>
+   <title>System Information Functions and Operators</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>
+       <para>
+           Item
+          </para>
+      </entry>
+      <entry>
+       <para>
+           Overview
+          </para>
+      </entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>
+       <para>
+              DATABASE
+             </para>
+      </entry>
+      <entry>
+       <para>
+              Synonym for current_schema()
+             </para>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <table>
+   <title>Miscellaneous Functions</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>
+       <para>
+           Item
+          </para>
+      </entry>
+      <entry>
+       <para>
+           Overview
+          </para>
+      </entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>
+       <para>
+        BIN_TO_UUID
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Convert binary UUID to string
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        COMPRESS
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Compress string and return binary data
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        UNCOMPRESS
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Decompress the binary data compressed by compress() and restore the original string
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        UUID_TO_BIN
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Convert string UUID to binary
+       </para>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <table>
+   <title>Operators</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>
+       <para>
+           Item
+          </para>
+      </entry>
+      <entry>
+       <para>
+           Overview
+          </para>
+      </entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>
+       <para>
+        IFNULL
+       </para>
+      </entry>
+      <entry>
+       <para>
+        The corresponding value is returned according to whether the parameter is empty
+       </para>
+      </entry>
+     </row>
+     <row>
+      <entry>
+       <para>
+        ISNULL
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Test whether the argument is NULL
+       </para>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+
+    <table>
+   <title>Arithmetic Operators</title>
+   <tgroup cols="2">
+    <thead>
+     <row>
+      <entry>
+       <para>
+           Item
+          </para>
+      </entry>
+      <entry>
+       <para>
+           Overview
+          </para>
+      </entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>
+       <para>
+        /
+       </para>
+      </entry>
+      <entry>
+       <para>
+        Division operator
+       </para>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+
+ </sect2>
+ <sect2>
+  <title>SQL Functions Reference</title>
+  <sect3>
+   <title>Mathematical Functions</title>
+   <para>
+      The following mathematical functions are supported:
+     </para>
+   <itemizedlist>
+    <listitem>
+     <para>CONV</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>LOG10</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>LOG2</para>
+    </listitem>
+   </itemizedlist>
+  <itemizedlist>
+    <listitem>
+     <para>RAND</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>TRUNCATE</para>
+    </listitem>
+   </itemizedlist>
+   <sect4>
+    <title>CONV</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Convert numbers between different number bases.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+conv( p_num text, p_from_base int4, p_to_base int4) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       Converts numbers between different number bases.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        Returns a string representation of the number N, converted from base from_base to base to_base. Returns NULL if any argument is NULL. The argument N is interpreted as an integer, but may be specified as an integer or a string.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       The minimum base is 2 and the maximum base is 36. If from_base is a negative number, N is regarded as a signed number. Otherwise, N is treated as unsigned. CONV() works with 64-bit precision.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+	</emphasis>
+    </para>
+    <para>
+      In the following example, '123456' converted from base 10 to base 16 is 1E240.
+    </para>
+    <programlisting>
+select conv('123456', 10, 16);
+conv  
+-------
+1E240
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>LOG10</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     return the base-10 logarithm of the argument.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+log10(p1 numeric) RETURNS numeric
+log10(p1 double precision) RETURNS double precision
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns the base-10 logarithm of p1. If X is less than or equal to 0.0E0, the function returns NULL and a warning “Invalid argument for logarithm” is reported.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+	</emphasis>
+    </para>
+    <para>
+      In the following example, return the base-10 logarithm of the argument 2.
+    </para>
+    <programlisting>
+select log10(2);
+      log10        
+--------------------
+0.3010299956639812
+(1 row)
+    </programlisting>
+   </sect4>
+<sect4>
+    <title>LOG2</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Return the base-2 logarithm of the argument.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+log2(p_num numeric) RETURNS numeric
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns the base-2 logarithm of p_num. If p_num is less than or equal to 0.0E0, the function returns NULL and a warning “Invalid argument for logarithm” is reported.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+	</emphasis>
+    </para>
+    <para>
+      In the following example, return the base-2 logarithm of the argument 64.
+    </para>
+    <programlisting>
+select log2(64);
+        log2        
+--------------------
+6.0000000000000000
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>RAND</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Returns a random floating-point value v in the range 0 and 1.0. 
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+rand(p_seed int default null) RETURNS double precision
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       With a constant initializer argument, the seed is initialized once when the statement is prepared, prior to execution.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        With a nonconstant initializer argument (such as a column name), the seed is initialized with the value for each invocation of RAND().
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       One implication of this behavior is that for equal argument values, RAND(N) returns the same value each time, and thus produces a repeatable sequence of column values.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       RAND() in a WHERE clause is evaluated for every row (when selecting from one table) or combination of rows (when selecting from a multiple-table join).
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+	</emphasis>
+    </para>
+    <para>
+         In the following example, the sequence of values produced by RAND(123) is the same both places it occurs.
+        </para>
+    <programlisting>
+select rand(123);
+        rand
+---------------------
+ 0.05425240159967615
+(1 row)
+        </programlisting>
+   </sect4>
+   <sect4>
+    <title>TRUNCATE</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Truncate to specified number of decimal places.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+TRUNCATE(SMALLINT X,INTEGER D) returns INTEGER
+TRUNCATE(INTEGER X,INTEGER D) returns INTEGER
+TRUNCATE(BIGINT X,INTEGER D) returns BIGINT
+TRUNCATE(DOUBLE PRECISION X,INTEGER D) returns DOUBLE PRECISION
+TRUNCATE(NUMERIC,INTEGER D) returns NUMERIC
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       Returns the number X, truncated to D decimal places.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        If D is 0, the result has no decimal point or fractional part.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       D can be negative to cause D digits left of the decimal point of the value X to become zero.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+	</emphasis>
+    </para>
+    <para>
+         In the following example, the result of "1.223" truncated  to 1 decimal places is returned.
+        </para>
+    <programlisting>
+SELECT TRUNCATE(1.223,1);
+  truncate
+----------
+      1.2
+(1 row)
+        </programlisting>
+   </sect4>
+  </sect3>
+  <sect3 id="myfce-functions-string">
+   <title>String Functions</title>
+   <para>
+    The following string functions are supported:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>ELT</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>FIELD</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>FIND_IN_SET</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>INSTR</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>FROM_BASE64</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>INSERT</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>LCASE</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>LOCATE</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>MID</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>SPACE</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>STRCMP</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>TO_BASE64</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>UCASE</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>SUBSTR</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>SUBSTRING</para>
+    </listitem>
+   </itemizedlist>
+   <sect4>
+    <title>ELT</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Return string at index number.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+elt(str_pos int, VARIADIC strlist text[]) RETURNS text 
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        ELT() returns the str_posth element of the list of strings: str1 if str_pos = 1, str2 if str_pos = 2, and so on.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        Returns NULL if N is less than 1 or greater than the number of arguments.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       ELT() is the complement of FIELD().
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example,Return 'Bb' at 2.
+    </para>
+    <programlisting>
+select elt( 2, 'Aa', 'Bb', 'Cc', 'Dd', 'Ff');
+elt
+-----
+Bb
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>FIELD</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Index (position) of first argument in subsequent arguments.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+field(str text, VARIADIC strlist text[]) RETURNS bigint
+field(str numeric, VARIADIC strlist numeric[]) RETURNS bigint   
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns the index (position) of str in the str1, str2, str3, ... list. Returns 0 if str is not found.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        If all arguments to FIELD() are strings, all arguments are compared as strings. If all arguments are numbers, they are compared as numbers. Otherwise, the arguments are compared as double.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If str is NULL, the return value is 0 because NULL fails equality comparison with any value. FIELD() is the complement of ELT().
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example,Index (position) of 'Bb' in 'Aa', 'Bb', 'Cc', 'Dd', 'Ff' 2 is returned.
+    </para>
+    <programlisting>
+select field('Bb', 'Aa', 'Bb', 'Cc', 'Dd', 'Ff');
+field
+-------
+    2
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>FIND_IN_SET</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Index (position) of first argument within second argument.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+FIND_IN_SET(str "any",strlist TEXT) returns INTEGER
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       Returns a value in the range of 1 to N if the string <emphasis>str</emphasis>  is in the string list
+       <emphasis>strlist</emphasis> consisting of N substrings.  <emphasis>strlist</emphasis> is a string composed of substrings separated by , characters.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Returns 0 if <emphasis>str</emphasis> is not in <emphasis>strlist</emphasis> or if <emphasis>strlist</emphasis> is the empty string. 
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Returns NULL if either argument is NULL. This function does not work properly if the first argument contains a comma (,) character.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If first argument is not String Types,the first parameter will be converted to string.In other words,find_in_set(n,strlist) is equivalent to find_in_set(n::text,strlist)
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       The data type of the return value is integer.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example,position of 'b' within 'a,b,c,d'
+     is returned.
+    </para>
+    <programlisting>
+SELECT FIND_IN_SET('b','a,b,c,d');
+  find_in_set
+-------------
+            2
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>FROM_BASE64</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Decode base64 encoded string and return result.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+from_base64(p_str text) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Takes a string encoded with the base-64 encoded rules used by TO_BASE64() and returns the decoded result as a binary string.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       The result is NULL if the argument is NULL or not a valid base-64 string. 
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       See the description of TO_BASE64() for details about the encoding and decoding rules.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example,Decode base64 encoded string 'YWJj' and return result 'abc'.
+    </para>
+    <programlisting>
+select from_base64('YWJj');
+from_base64
+-------------
+abc
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>INSERT</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Insert substring at specified position up to specified number of characters.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+insert(p_source text, p_pos bigint, p_len bigint, p_replacement text) RETURNS text 
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns the string str, with the substring beginning at position pos and len characters long replaced by the string newstr.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Returns the original string if pos is not within the length of the string. Replaces the rest of the string from position pos if len is not within the length of the rest of the string.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Returns NULL if any argument is NULL.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example,Insert substring 'What' at specified position 3 up to specified number 4 of characters.
+    </para>
+    <programlisting>
+select insert('Quadratic', 3, 4, 'What');
+  insert
+-----------
+QuWhattic
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>INSTR</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Get the first occurrence position of the substring.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+instr(str text, patt text) RETURNS int 
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Get the first occurrence position of sub string patt in str, starting from 1.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If not found, return 0.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example, the first occurrence of substring '4de' in string 'abc124deff4de' is 6.
+    </para>
+    <programlisting>
+select instr('abc124deff4de', '4de');
+ instr 
+-------
+     6
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>LCASE</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Synonym for LOWER().
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+lcase(p_source text) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        LCASE() is a synonym for LOWER().
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Returns the string str with all characters changed to lowercase according to the current character set mapping. The default is utf8mb4.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example,Returns the string 'quadratic' with all characters changed to lowercase.
+    </para>
+    <programlisting>
+select lcase('QuadRatic');
+  lcase
+-----------
+quadratic
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>LOCATE</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Return the position of the first occurrence of substring.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+LOCATE(substr TEXT,str TEXT) returns INTEGER
+LOCATE(substr TEXT,str TEXT,POS INTEGER) returns INTEGER
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       The first syntax returns the position of the first occurrence of substring <emphasis>substr</emphasis> in string <emphasis>str</emphasis>. 
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       The second syntax returns the position of the first occurrence of substring <emphasis>substr</emphasis> in string <emphasis>str</emphasis>, starting at position <emphasis>pos</emphasis>. 
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        Returns 0 if <emphasis>substr</emphasis> is not in <emphasis>str</emphasis>.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       Returns NULL if any argument is NULL.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example,position of 'bar' in 'foobarbar', starting at position 5.
+     is returned.
+    </para>
+    <programlisting>
+SELECT LOCATE('bar', 'foobarbar', 5);
+  locate 
+--------
+      7
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>MID</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Return a substring starting from the specified position.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+mid(p_source text, p_pos bigint, p_len bigint) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        The forms without a len argument return a substring from string str starting at position pos. The forms with a len argument return a substring len characters long from string str, starting at position pos.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       It is also possible to use a negative value for pos. In this case, the beginning of the substring is pos characters from the end of the string, rather than the beginning. A negative value may be used for pos in any of the forms of this function. A value of 0 for pos returns an empty string.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example, return a substring 'ongy' starting from the specified position 2.
+    </para>
+    <programlisting>
+select mid('Hongye', 2, 4);
+mid
+------
+ongy
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>SPACE</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Return a string of the specified number of spaces.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+space(p_num int) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns a string consisting of N space characters.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example, return a string of the specified number of spaces.
+    </para>
+    <programlisting>
+select concat('|', space(11), '|');
+    concat     
+---------------
+|           |
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>STRCMP</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Compare two strings.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+strcmp(p1 text, p2 text) RETURNS int
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        STRCMP() returns 0 if the strings are the same, -1 if the first argument is smaller than the second according to the current sort order, and 1 otherwise.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example, returns -1 the first argument is smaller than the second according to the current sort order.
+    </para>
+    <programlisting>
+select strcmp('text', 'text2');
+strcmp 
+--------
+    -1
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>TO_BASE64</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Return the argument converted to a base-64 string.
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+to_base64(p_str text) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Converts the string argument to base-64 encoded form and returns the result as a character string with the connection character set and collation.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        If the argument is not a string, it is converted to a string before conversion takes place. The result is NULL if the argument is NULL.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        Base-64 encoded strings can be decoded using the FROM_BASE64() function.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example, return the argument 'abc' converted to a base-64 string 'YWJj'.
+    </para>
+    <programlisting>
+select to_base64('abc');
+to_base64 
+-----------
+YWJj
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>UCASE</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Synonym for UPPER().
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+ucase(p_source text) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns the string str with all characters changed to uppercase according to the current character set mapping. The default is utf8mb4.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+     In the following example, returns the string 'QUADRATIC' with all characters changed to uppercase according to the current character set mapping.
+    </para>
+    <programlisting>
+select ucase('QuadRatic');
+  ucase   
+-----------
+QUADRATIC
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>SUBSTR</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Return the substring as specified
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+substr(str text, pos int) RETURNS text
+substr(str text, pos int, len int) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       The forms without a len argument return a substring from string str starting at position pos. The forms with a len argument return a substring len characters long from string str, starting at position pos.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       It is also possible to use a negative value for pos. In this case, the beginning of the substring is pos characters from the end of the string, rather than the beginning. A negative value may be used for pos in any of the forms of this function. A value of 0 for pos returns an empty string.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       This function is multibyte safe. It returns NULL if any of its arguments are NULL.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If len is less than 1, the result is the empty string.
+      </para>
+     </listitem>
+      <listitem>
+      <para>
+       It is also possible for both pos and len to accept numeric type, if the fractional part of a input less than 0.5, round to integer part, otherwise round to floor of input + 0.5 for a positive input, floor of intput-0.5 would be applied if input is negative.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+    In the following example, the result is bc
+    </para>
+    <programlisting>
+select substr('abc',-2,2);
+ substr
+--------
+ bc
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>SUBSTRING</title>
+    <para>
+     <emphasis role="bold">
+     Description
+    </emphasis>
+    </para>
+    <para>
+     Return the substring as specified
+    </para>
+    <para>
+     <emphasis role="bold">
+     Syntax
+    </emphasis>
+    </para>
+    <programlisting>
+substring(str text, pos int) RETURNS text
+substring(str text, pos int, len int) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+     General rules
+    </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+      substring is a synonym for substr
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+     Example
+    </emphasis>
+    </para>
+    <para>
+    In the following example, the result is bc
+    </para>
+    <programlisting>
+select substring('abc',-2,2);
+ substring
+--------
+ bc
+(1 row)
+    </programlisting>
+   </sect4>
+  </sect3>
+  <sect3>
+   <title>Date/Time Functions</title>
+   <para>
+      The following date/time functions are supported:
+   </para>
+   <itemizedlist>
+    <listitem>
+     <para>DATEDIFF</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>DATE_ADD</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>DATE_FORMAT</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>DATE_SUB</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>DAY</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>DAYOFWEEK</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>FROM_UNIXTIME</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>STR_TO_DATE</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>SEC_TO_TIME</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>TIME_TO_SEC</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>TIMEDIFF</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>TIMESTAMPDIFF</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>TO_DAYS</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>TO_SECONDS</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>UNIX_TIMESTAMP</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>WEEKOFYEAR</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>YEAR</para>
+    </listitem>
+   </itemizedlist>
+   <sect4>
+    <title>DATEDIFF</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Subtract two dates.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+DATEDIFF(expr1 timestamp,expr2 timestamp)
+DATEDIFF(expr1 text,expr2 text)
+        </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+           <emphasis>expr1</emphasis> − <emphasis>expr2</emphasis> expressed as a value in days from one date to the other. <emphasis>expr1</emphasis> and <emphasis>expr2</emphasis> are date or date-and-time expressions. Only the date parts of the values are used in the calculation.
+          </para>
+     </listitem>
+     <listitem>
+      <para>
+           Returns NULL if any argument is NULL.
+          </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, 1 is returned because '2007-12-31' minus '2007-12-30' equals 1
+        </para>
+    <programlisting>
+SELECT DATEDIFF('2007-12-31 23:59:59','2007-12-30');
+datediff 
+----------
+ 1
+(1 row)
+        </programlisting>
+   </sect4>
+  <sect4>
+    <title>DATE_ADD</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Date addition.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+DATE_ADD(expr1 timestamptz, expr2 interval) RETURN date
+DATE_ADD(expr1 text, expr2 interval) RETURN date
+        </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+           Returns the date type after adding interval (year / month / day) to the expr1 date parameter
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+           The second parameter expr2 only support interval (year / month / day)
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, '2020-01-02' is returned because '20200101' add 1 day
+        </para>
+    <programlisting>
+select date_add('20200101', interval 1 day);
+  date_add  
+------------
+2020-01-02
+(1 row)
+    </programlisting>
+   </sect4>
+  <sect4>
+    <title>DATE_FORMAT</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Date format display.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+DATE_FORMAT(expr1 timestamp, expr2 text) RETURN text
+DATE_FORMAT(expr1 timestamptz, expr2 text) RETURN text
+DATE_FORMAT(expr1 text, expr2 text) RETURN text
+        </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+           Return expr1 time parameter, display and output in expr2 format
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, '2021/12/01 11,59,59' is returned because expr2is in '%Y/%m/%d %h,%i,%s' format
+        </para>
+    <programlisting>
+select date_format('20211201 11:59:59','%Y/%m/%d %h,%i,%s');
+      date_format     
+---------------------
+  2021/12/01 11,59,59
+(1 row)
+    </programlisting>
+
+  <para>
+   <xref linkend="functions-date-format-table"/> shows the
+   template patterns available for formatting date_format values.
+  </para>
+
+    <table id="functions-date-format-table">
+     <title>Template Patterns for date_format Formatting</title>
+     <tgroup cols="2">
+      <thead>
+       <row>
+        <entry>Pattern</entry>
+        <entry>Description</entry>
+       </row>
+      </thead>
+      <tbody>
+       <row>
+        <entry><literal>%a</literal></entry>
+        <entry>Abbreviated week name</entry>
+       </row>
+       <row>
+        <entry><literal>%b</literal></entry>
+        <entry>Abbreviated month name</entry>
+       </row>
+       <row>
+        <entry><literal>%c</literal></entry>
+        <entry>Month, value</entry>
+       </row>
+       <row>
+        <entry><literal>%D</literal></entry>
+        <entry>Day of the month with English prefix</entry>
+       </row>
+       <row>
+        <entry><literal>%d</literal></entry>
+        <entry>Day of month, value (00-31)</entry>
+       </row>
+       <row>
+        <entry><literal>%e</literal></entry>
+        <entry>Day of month, value (0-31)</entry>
+       </row>
+       <row>
+        <entry><literal>%f</literal></entry>
+        <entry>Microsecond</entry>
+       </row>
+       <row>
+        <entry><literal>%H</literal></entry>
+        <entry>Hours (00-23)</entry>
+       </row>
+       <row>
+        <entry><literal>%h</literal></entry>
+        <entry>Hours (01-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%I</literal></entry>
+        <entry>Hours (01-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%i</literal></entry>
+        <entry>Minute, value (00-59)</entry>
+       </row>
+       <row>
+        <entry><literal>%j</literal></entry>
+        <entry>Day of year (001-366)</entry>
+       </row>
+       <row>
+        <entry><literal>%k</literal></entry>
+        <entry>Hours (0-23)</entry>
+       </row>
+       <row>
+        <entry><literal>%l</literal></entry>
+        <entry>Hours (1-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%M</literal></entry>
+        <entry>Month Name</entry>
+       </row>
+       <row>
+        <entry><literal>%m</literal></entry>
+        <entry>Month, value (00-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%p</literal></entry>
+        <entry>AM or PM</entry>
+       </row>
+       <row>
+        <entry><literal>%r</literal></entry>
+        <entry>Time, 12 hours (hh: mm: ss AM or PM)</entry>
+       </row>
+       <row>
+        <entry><literal>%S</literal></entry>
+        <entry>Seconds (00-59)</entry>
+       </row>
+       <row>
+        <entry><literal>%s</literal></entry>
+        <entry>Seconds (00-59)</entry>
+       </row>
+       <row>
+        <entry><literal>%T</literal></entry>
+        <entry>Time, 24 hours (hh: mm: ss)</entry>
+       </row>
+       <row>
+        <entry><literal>%W</literal></entry>
+        <entry>Week Name</entry>
+       </row>
+       <row>
+        <entry><literal>%Y</literal></entry>
+        <entry>Year, 4 digits</entry>
+       </row>
+       <row>
+        <entry><literal>%y</literal></entry>
+        <entry>Year, 2 digits</entry>
+       </row>
+      </tbody>
+     </tgroup>
+    </table>
+   </sect4>
+  <sect4>
+    <title>DATE_SUB</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Date subtraction.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+DATE_SUB(expr1 timestamptz, expr2 interval) RETURN date
+DATE_SUB(expr1 text, expr2 interval) RETURN date
+        </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+           Returns the date type after the expr1 date parameter minus the interval (year / month / day)
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+           The second parameter expr2 only support interval (year / month / day)
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, '2019-12-31' is returned because '20200101' minus 1 day
+        </para>
+    <programlisting>
+select date_sub('20200101', interval 1 day);
+  date_sub  
+------------
+2019-12-31
+(1 row)
+    </programlisting>
+   </sect4>
+  <sect4>
+    <title>DAY</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Return month date.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+DAY(expr1 text) RETURN int2
+DAY(expr1 timestamptz) RETURN int4
+        </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+           Returns the date part of a given expr1 date month
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+           Only month and day parameters are not supported, such as' 0101 ', 0704
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, '1' is returned because 2011/12/01's date is 1
+        </para>
+    <programlisting>
+select day('2011/12/01');
+day 
+-----
+  1
+(1 row)
+    </programlisting>
+   </sect4>
+  <sect4>
+    <title>DAYOFWEEK</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Return to the day of the week.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+DAYOFWEEK(expr1 text) RETURN int4
+DAYOFWEEK(expr1 timestamptz) RETURN int4
+        </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+           Returns the day of the week according to the expr1 date parameter. The return value is 1 ~ 7, and Sunday is 1
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+           At least include the complete time format, such as 20200202, 200202. Parameters less than 6 bits are not supported
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, '4' is returned because 20200101 is Wednesday
+        </para>
+    <programlisting>
+select dayofweek(20200101);
+  dayofweek 
+-----------
+          4
+(1 row)
+    </programlisting>
+   </sect4>
+  <sect4>
+    <title>FROM_UNIXTIME</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Return time format according to UNIX timestamp.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+FROM_UNIXTIME(expr1 text) RETURN timestamp
+FROM_UNIXTIME(expr1 int8) RETURN timestamp
+FROM_UNIXTIME(expr1 text, expr2 text) RETURN text
+FROM_UNIXTIME(expr1 int8, expr2 text) RETURN text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+           Return time format according to expr1 parameter UNIX timestamp. The date format can be specified according to the expr2 parameter
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, timestamp is returned according to UNIX timestamp 20220910
+        </para>
+    <programlisting>
+select from_unixtime(20220910);
+    from_unixtime    
+---------------------
+  1970-08-23 08:55:10
+(1 row)
+select from_unixtime(20220910, '%Y/%m/%d %h,%i,%s');
+    from_unixtime    
+---------------------
+  1970/08/23 08,55,10
+(1 row)
+    </programlisting>
+  <para>
+   <xref linkend="functions-from-unixtime-table"/> shows the
+   template patterns available for formatting from_unixtime values.
+  </para>
+
+    <table id="functions-from-unixtime-table">
+     <title>Template Patterns for from_unixtime Formatting</title>
+     <tgroup cols="2">
+      <thead>
+       <row>
+        <entry>Pattern</entry>
+        <entry>Description</entry>
+       </row>
+      </thead>
+      <tbody>
+       <row>
+        <entry><literal>%a</literal></entry>
+        <entry>Abbreviated week name</entry>
+       </row>
+       <row>
+        <entry><literal>%b</literal></entry>
+        <entry>Abbreviated month name</entry>
+       </row>
+       <row>
+        <entry><literal>%c</literal></entry>
+        <entry>Month, value</entry>
+       </row>
+       <row>
+        <entry><literal>%D</literal></entry>
+        <entry>Day of the month with English prefix</entry>
+       </row>
+       <row>
+        <entry><literal>%d</literal></entry>
+        <entry>Day of month, value (00-31)</entry>
+       </row>
+       <row>
+        <entry><literal>%e</literal></entry>
+        <entry>Day of month, value (0-31)</entry>
+       </row>
+       <row>
+        <entry><literal>%f</literal></entry>
+        <entry>Microsecond</entry>
+       </row>
+       <row>
+        <entry><literal>%H</literal></entry>
+        <entry>Hours (00-23)</entry>
+       </row>
+       <row>
+        <entry><literal>%h</literal></entry>
+        <entry>Hours (01-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%I</literal></entry>
+        <entry>Hours (01-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%i</literal></entry>
+        <entry>Minute, value (00-59)</entry>
+       </row>
+       <row>
+        <entry><literal>%j</literal></entry>
+        <entry>Day of year (001-366)</entry>
+       </row>
+       <row>
+        <entry><literal>%k</literal></entry>
+        <entry>Hours (0-23)</entry>
+       </row>
+       <row>
+        <entry><literal>%l</literal></entry>
+        <entry>Hours (1-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%M</literal></entry>
+        <entry>Month Name</entry>
+       </row>
+       <row>
+        <entry><literal>%m</literal></entry>
+        <entry>Month, value (00-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%p</literal></entry>
+        <entry>AM or PM</entry>
+       </row>
+       <row>
+        <entry><literal>%r</literal></entry>
+        <entry>Time, 12 hours (hh: mm: ss AM or PM)</entry>
+       </row>
+       <row>
+        <entry><literal>%S</literal></entry>
+        <entry>Seconds (00-59)</entry>
+       </row>
+       <row>
+        <entry><literal>%s</literal></entry>
+        <entry>Seconds (00-59)</entry>
+       </row>
+       <row>
+        <entry><literal>%T</literal></entry>
+        <entry>Time, 24 hours (hh: mm: ss)</entry>
+       </row>
+       <row>
+        <entry><literal>%W</literal></entry>
+        <entry>Week Name</entry>
+       </row>
+       <row>
+        <entry><literal>%Y</literal></entry>
+        <entry>Year, 4 digits</entry>
+       </row>
+       <row>
+        <entry><literal>%y</literal></entry>
+        <entry>Year, 2 digits</entry>
+       </row>
+      </tbody>
+     </tgroup>
+    </table>
+   </sect4>
+   <sect4>
+    <title>SEC_TO_TIME</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+     Converts seconds to 'hh:mm:ss' format.
+    </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+sec_to_time(p_secs int) RETURNS interval
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns the seconds argument, converted to hours, minutes, and seconds, as a TIME value.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        The range of the result is constrained to that of the TIME data type. A warning occurs if the argument corresponds to a value outside that range.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, Converts seconds 80580 to 'hh:mm:ss' format 22:23:00.
+    </para>
+    <programlisting>
+select mysql.sec_to_time(80580);
+sec_to_time
+-------------
+22:23:00
+(1 row)
+    </programlisting>
+   </sect4>
+     <sect4>
+    <title>STR_TO_DATE</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Convert string to time value. This is the inverse of the DATE_FORMAT() function. It takes
+         a string str and a format string format. STR_TO_DATE() returns a DATETIME value if the format
+          string contains both date and time parts, or a DATE or TIME value if the string contains 
+          only date or time parts. If the date,time, or datetime value extracted from str is illegal,
+          STR_TO_DATE() returns error.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+STR_TO_DATE(datetime_str text, datetime_format text) RETURN datetime
+STR_TO_DATE(date_str text, date_format text) RETURN date
+STR_TO_DATE(time_str text, time_format text) RETURN time
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+           Convert string str parameter and format format parameter to time value
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+           If the NO_ZERO_DATE SQL mode is enabled, zero dates are disallowed. In that case,
+           STR_TO_DATE() returns NULL.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, '2022-09-10 11:13:13' is returned according to timestamp '2022/09/10 11,13,13' and format '%Y/%m/%d %h,%i,%s'.
+        It returns a DATETIME value if the format string contains both date and time parts.
+        </para>
+    <programlisting>
+select str_to_date('2022/09/10 11,13,13', '%Y/%m/%d %h,%i,%s');
+      str_to_date     
+---------------------
+  2022-09-10 11:13:13
+(1 row)
+    </programlisting>
+
+    <para>
+         In the following example, returns a DATE value because of the format string contains only date parts.
+        </para>
+    <programlisting>
+select str_to_date('2022/09/10', '%Y/%m/%d');
+      str_to_date     
+---------------------
+  2022-09-10
+(1 row)
+    </programlisting>
+
+    <para>
+         In the following example, returns a TIME value because of the format string contains only time parts.
+        </para>
+    <programlisting>
+select str_to_date('09:00:59', '%h:%i:%s');
+      str_to_date     
+---------------------
+  09:00:59
+(1 row)
+    </programlisting>
+
+    <para>
+      If the NO_ZERO_DATE SQL mode is enabled, zero dates are disallowed. In that case,
+      STR_TO_DATE() return NULL:
+    </para>
+    <programlisting>
+set lightdb_sql_mode = 'no_zero_date';
+select str_to_date('2022/09/0', '%Y/%m/%d');
+    str_to_date 
+-------------
+ 
+(1 row)
+    </programlisting>
+
+  <para>
+   <xref linkend="functions-str-to-date-table"/> shows the
+   template patterns available for formatting str_to_date values.
+  </para>
+
+    <table id="functions-str-to-date-table">
+     <title>Template Patterns for str_to_date Formatting</title>
+     <tgroup cols="2">
+      <thead>
+       <row>
+        <entry>Pattern</entry>
+        <entry>Description</entry>
+       </row>
+      </thead>
+      <tbody>
+       <row>
+        <entry><literal>%a</literal></entry>
+        <entry>Abbreviated week name</entry>
+       </row>
+       <row>
+        <entry><literal>%b</literal></entry>
+        <entry>Abbreviated month name</entry>
+       </row>
+       <row>
+        <entry><literal>%c</literal></entry>
+        <entry>Month, value</entry>
+       </row>
+       <row>
+        <entry><literal>%D</literal></entry>
+        <entry>Day of the month with English prefix</entry>
+       </row>
+       <row>
+        <entry><literal>%d</literal></entry>
+        <entry>Day of month, value (00-31)</entry>
+       </row>
+       <row>
+        <entry><literal>%e</literal></entry>
+        <entry>Day of month, value (0-31)</entry>
+       </row>
+       <row>
+        <entry><literal>%f</literal></entry>
+        <entry>Microsecond</entry>
+       </row>
+       <row>
+        <entry><literal>%H</literal></entry>
+        <entry>Hours (00-23)</entry>
+       </row>
+       <row>
+        <entry><literal>%h</literal></entry>
+        <entry>Hours (01-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%I</literal></entry>
+        <entry>Hours (01-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%i</literal></entry>
+        <entry>Minute, value (00-59)</entry>
+       </row>
+       <row>
+        <entry><literal>%j</literal></entry>
+        <entry>Day of year (001-366)</entry>
+       </row>
+       <row>
+        <entry><literal>%k</literal></entry>
+        <entry>Hours (0-23)</entry>
+       </row>
+       <row>
+        <entry><literal>%l</literal></entry>
+        <entry>Hours (1-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%M</literal></entry>
+        <entry>Month Name</entry>
+       </row>
+       <row>
+        <entry><literal>%m</literal></entry>
+        <entry>Month, value (00-12)</entry>
+       </row>
+       <row>
+        <entry><literal>%p</literal></entry>
+        <entry>AM or PM</entry>
+       </row>
+       <row>
+        <entry><literal>%r</literal></entry>
+        <entry>Time, 12 hours (hh: mm: ss AM or PM)</entry>
+       </row>
+       <row>
+        <entry><literal>%S</literal></entry>
+        <entry>Seconds (00-59)</entry>
+       </row>
+       <row>
+        <entry><literal>%s</literal></entry>
+        <entry>Seconds (00-59)</entry>
+       </row>
+       <row>
+        <entry><literal>%T</literal></entry>
+        <entry>Time, 24 hours (hh: mm: ss)</entry>
+       </row>
+       <row>
+        <entry><literal>%W</literal></entry>
+        <entry>Week Name</entry>
+       </row>
+       <row>
+        <entry><literal>%Y</literal></entry>
+        <entry>Year, 4 digits</entry>
+       </row>
+       <row>
+        <entry><literal>%y</literal></entry>
+        <entry>Year, 2 digits</entry>
+       </row>
+      </tbody>
+     </tgroup>
+    </table>
+   </sect4>
+   <sect4>
+    <title>TIME_TO_SEC</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+      Return the argument converted to seconds.
+    </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+time_to_sec(p_time time) RETURNS int
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns the time argument, converted to seconds.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, returns the time argument '22:23:00' converted to seconds 80580.
+        </para>
+    <programlisting>
+select time_to_sec('22:23:00');
+time_to_sec 
+-------------
+      80580
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>TIMEDIFF</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Subtract time.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+timediff(p_date1 timestamptz, p_date2 timestamptz) RETURNS interval
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        TIMEDIFF() returns expr1 − expr2 expressed as a time value. expr1 and expr2 are time or date-and-time expressions, but both must be of the same type.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        The result returned by TIMEDIFF() is limited to the range allowed for TIME values. Alternatively, you can use either of the functions TIMESTAMPDIFF() and UNIX_TIMESTAMP(), both of which return integers.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+      In the following example, returns '2000-01-01 00:00:00' − '2000-01-01 00:00:00.000001' expressed as a time value.
+    </para>
+    <programlisting>
+      select mysql.timediff('2000-01-01 00:00:00', '2000-01-01 00:00:00.000001');
+          timediff
+      ------------------
+      -00:00:00.000001
+      (1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>TIMESTAMPDIFF</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Subtract an interval from a datetime expression.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+timestampdiff( p_unit text, p_ts1  timestamptz, p_ts2  timestamptz) RETURNS bigint
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns datetime_expr2 − datetime_expr1, where datetime_expr1 and datetime_expr2 are date or datetime expressions.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        One expression may be a date and the other a datetime; a date value is treated as a datetime having the time part '00:00:00' where necessary.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        The unit for the result (an integer) is given by the unit argument. The legal values for unit are the same as those listed in the description of the TIMESTAMPADD() function.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, Returns '1911-11-11 11:23:45.123456' − '2021-12-12 12:12:12.654321'::timestamp, the result (an integer) is given by MICROSECOND.
+        </para>
+    <programlisting>
+select timestampdiff ('MICROSECOND', '1911-11-11 11:23:45.123456'::timestamp, '2021-12-12 12:12:12.654321'::timestamp);
+  timestampdiff   
+------------------
+3474060507530865
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>TO_DAYS</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         Return the date argument converted to days.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+to_days(p_date timestamp) RETURNS bigint
+to_days(p_date timestamptz) RETURNS bigint
+to_days( p_date text) RETURNS bigint
+to_days( p_date text, p_format text) RETURNS bigint
+to_days(p_date bigint) RETURNS bigint
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Given a date date, returns a day number (the number of days since year 0).
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        TO_DAYS() is not intended for use with values that precede the advent of the Gregorian calendar (1582), because it does not take into account the days that were lost when the calendar was changed. For dates before 1582 (and possibly a later year in other locales), results from this function are not reliable.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, return the date argument '1111-11-11' converted to days 406098.
+        </para>
+    <programlisting>
+select to_days('1111-11-11');
+to_days 
+---------
+  406098
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>TO_SECONDS</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+      Return the date or datetime argument converted to seconds since Year 0.
+    </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+to_seconds(p_date timestamp) RETURNS bigint
+to_seconds(p_date timestamptz) RETURNS bigint
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Given a date or datetime expr, returns the number of seconds since the year 0. If expr is not a valid date or datetime value, returns NULL.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        Like TO_DAYS(), TO_SECONDS() is not intended for use with values that precede the advent of the Gregorian calendar (1582), because it does not take into account the days that were lost when the calendar was changed. For dates before 1582 (and possibly a later year in other locales), results from this function are not reliable.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, Return the date or datetime argument '2009-11-29' converted to seconds 63426672000 since Year 0.
+        </para>
+    <programlisting>
+select to_seconds('2009-11-29'::timestamp);
+to_seconds  
+-------------
+63426672000
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>UNIX_TIMESTAMP</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+      Return UNIX timestamp according to time format.
+    </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+UNIX_TIMESTAMP() RETURN int8
+UNIX_TIMESTAMP(expr1 timestamptz) RETURN int8
+UNIX_TIMESTAMP(expr1 text) RETURN int8
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns the UNIX timestamp according to the expr1 parameter time format. If there is no parameter, returns the current UNIX timestamp
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        Expr1 parameter contains at least the complete log format, such as 20200101
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, Return the unix timestamp '1577808000' corresponding parameter 20200101.
+        </para>
+    <programlisting>
+select unix_timestamp(20200101);
+  unix_timestamp 
+----------------
+      1577808000
+(1 row)
+select unix_timestamp();
+  unix_timestamp 
+----------------
+      1663051334
+(1 row)
+    </programlisting>
+   </sect4>
+  <sect4>
+    <title>WEEKOFYEAR</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+      According to the time, return to the week within a year.
+    </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+WEEKOFYEAR(expr1 timestamptz) RETURN int4
+WEEKOFYEAR(expr1 text) RETURN int4
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        According to the time expr1 parameter, return to the week within a year
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        At least include the complete time format, such as 20200202, 200202. Parameters less than 6 bits are not supported
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, '36' is returned because '20220910' is the 36th week of the year
+        </para>
+    <programlisting>
+select weekofyear('20220910');
+  weekofyear 
+------------
+          36
+(1 row)
+    </programlisting>
+   </sect4>
+  <sect4>
+    <title>YEAR</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+      Returns the year of the date.
+    </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+YEAR(expr1 timestamptz) RETURN int4
+YEAR(expr1 text) RETURN int4
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Returns the year according to the expr1 parameter date
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        It supports complete month, day and month time parameters, such as' 20200101 'and' 200101 '. It does not support only including month and day parameters, such as' 0101' and '0704'
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, '2020' is returned because the year of '20200101' is 2020
+        </para>
+    <programlisting>
+select year(20200101);
+  year 
+------
+  2020
+(1 row)
+select year('200101');
+  year 
+------
+  2020
+(1 row)
+    </programlisting>
+   </sect4>
+  </sect3>
+  <sect3>
+   <title>Conditional Expressions</title>
+   <para>
+        The following functions for making comparisons are supported:
+       </para>
+   <itemizedlist>
+    <listitem>
+     <para>IF</para>
+    </listitem>
+   </itemizedlist>
+   <sect4>
+    <title>IF</title>
+    <para>
+     <emphasis role="bold">
+         Description
+        </emphasis>
+    </para>
+    <para>
+         If expr1 is TRUE, IF() returns expr2. Otherwise, it returns expr3.
+        </para>
+    <para>
+     <emphasis role="bold">
+         Syntax
+        </emphasis>
+    </para>
+    <programlisting>
+IF(expr1,expr2,expr3)
+        </programlisting>
+    <para>
+     <emphasis role="bold">
+         General rules
+        </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+           If only one of expr2 or expr3 is explicitly NULL, the result type of the IF() function is "text".
+          </para>
+     </listitem>
+     <listitem>
+      <para>
+           If one of expr2 and expr3 is a string, the result type of the IF() function is "text", otherwise it is "numeric".
+          </para>
+     </listitem>
+     <listitem>
+      <para>
+            The following data types can be used in expr2 and expr3:
+          </para>
+      <itemizedlist>
+       <listitem>
+        <para>CHAR</para>
+       </listitem>
+       <listitem>
+        <para>VARCHAR</para>
+       </listitem>
+       <listitem>
+        <para>TEXT</para>
+       </listitem>
+       <listitem>
+        <para>INTEGER</para>
+       </listitem>
+       <listitem>
+        <para>BIGINT</para>
+       </listitem>
+       <listitem>
+        <para>SMALLINT</para>
+       </listitem>
+       <listitem>
+        <para>NUMERIC</para>
+       </listitem>
+       <listitem>
+        <para>REAL</para>
+       </listitem>
+       <listitem>
+        <para>DOUBLE PRECISION</para>
+       </listitem>
+       <listitem>
+        <para>BOOLEAN</para>
+       </listitem>
+       <listitem>
+        <para>TIMESTAMPTZ</para>
+       </listitem>
+      </itemizedlist>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+         Example
+        </emphasis>
+    </para>
+    <para>
+         In the following example, 3 is returned because the value of 1 &gt; 2 is false.
+        </para>
+    <programlisting>
+SELECT IF(1>2,2,3);
+  if
+----
+  3
+(1 row)
+        </programlisting>
+   </sect4>
+  </sect3>
+  <sect3>
+   <title>Aggregate Functions</title>
+   <para>
+      The following aggregation functions are supported:
+     </para>
+   <itemizedlist>
+    <listitem>
+     <para>ANY_VALUE</para>
+    </listitem>
+    <listitem>
+     <para>GROUP_CONCAT</para>
+    </listitem>
+   </itemizedlist>
+   <sect4>
+    <title>ANY_VALUE</title>
+    <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+       For compatibility with MySQL mode non ONLY_FULL_GROUP_BY syntax behavior of group by in by mode.
+      </para>
+    <para>
+     <emphasis role="bold">
+       Syntax
+      </emphasis>
+    </para>
+    <programlisting>
+ANY_VALUE(anyelement)
+      </programlisting>
+    <para>
+     <emphasis role="bold">
+       General rules
+      </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+         This function is useful for in MySQL compatible GROUP BY queries when the ONLY_FULL_GROUP_BY SQL mode is enabled, 
+         for cases when MySQL rejects a query that you know is valid for reasons that MySQL cannot determine, 
+         Default ANY_VALUE will return the first line causing ambiguity. 
+         The function return value and type are the same as the return value and type of its argument.
+        </para>
+
+        <para>
+         Note that this behavior is only a nonstandard syntax compatible with MySQL. 
+         It is used to ensure that the execution in LightDB will not report errors, but the results cannot be guaranteed to be completely consistent with MySQL.
+         It is not recommended to use this feature. Please use the standard syntax format.
+        </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       In the following example, if id is a nonindexed column, the following query fails:
+      </para>
+    <programlisting>
+select co1, co2, max(co3) from t1 group by id;
+ERROR:  column "t1.co1" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 1: select co1, co2, max(co3) from t1 group by id;
+              ^
+      </programlisting>
+    <para>
+       Use ANY_VALUE() to refer to co1 and co2:
+      </para>
+    <programlisting>
+select any_value(co1) as co1, any_value(co2) as co2, max(co3) from t1 group by id;
+co1 | co2 | max 
+-----+-----+-----
+  6 |   9 |  30
+  4 |   5 |   5
+  3 |   3 |   4
+  2 |   3 |   4
+(4 rows)
+      </programlisting>
+   </sect4>
+   <sect4>
+    <title>GROUP_CONCAT</title>
+    <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+       Returns a concatenated, delimited list of string values.
+      </para>
+    <para>
+     <emphasis role="bold">
+       Syntax
+      </emphasis>
+    </para>
+    <programlisting>
+GROUP_CONCAT( [DISTINCT] column_name1 [ORDER BY {unsigned_integer | column_name2 | expr} [ASC | DESC] [SEPARATOR delimiter TEXT]) returns TEXT
+      </programlisting>
+    <para>
+     <emphasis role="bold">
+       General rules
+      </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+         This function returns a string result with the concatenated non-NULL values from a group.
+        </para>
+     </listitem>
+     <listitem>
+      <para>
+          It returns NULL if there are no non-NULL values.
+        </para>
+     </listitem>
+     <listitem>
+      <para>
+         To sort values in the result, use the ORDER BY clause.To sort in reverse order, add the DESC (descending) keyword to the name of the column you are sorting by in the ORDER BY clause. The default is ascending order; this may be specified explicitly using the ASC keyword.
+        </para>
+     </listitem>
+     <listitem>
+      <para>
+         To eliminate duplicate values, use the DISTINCT clause.
+         </para>
+     </listitem>
+     <listitem>
+      <para>
+         The default separator between values in a group is comma (,). To specify a separator explicitly, use SEPARATOR followed by the string literal value that should be inserted between group values. To eliminate the separator altogether, specify SEPARATOR ''.
+        </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       In the following example, the result with values of column col1 in table t delimited by ':' is returned.
+      </para>
+    <programlisting>
+select GROUP_CONCAT(col1 separator ':') from (values('BBBB',1),('AAAA',1),('CCCC',2)) as t(col1 ,col2) group by col2;
+group_concat
+--------------
+BBBB:AAAA
+CCCC
+(2 rows)
+      </programlisting>
+   </sect4>
+  </sect3>
+  <sect3>
+   <title>System Information Functions and Operators</title>
+   <para>
+      The following System Information functions are supported:
+     </para>
+   <itemizedlist>
+    <listitem>
+     <para>DATABASE</para>
+    </listitem>
+   </itemizedlist>
+   <sect4>
+    <title>DATABASE</title>
+    <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+       Synonym for current_schema(). The concept of schema is similar to that of database in MySQL. You can specify the current schema by setting the search_path.
+      </para>
+    <para>
+     <emphasis role="bold">
+       Syntax
+      </emphasis>
+    </para>
+    <programlisting>
+DATABASE() returns TEXT
+      </programlisting>
+    <para>
+     <emphasis role="bold">
+       General rules
+      </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        	Returns the name of the schema that is first in the search path (or a null value if the search path is empty).
+        </para>
+     </listitem>
+     <listitem>
+      <para>
+          Like mysql,This is the schema that will be used for any tables or other named objects that are created without specifying a target schema.
+        </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       In the following example, current schema is lightdb.
+      </para>
+    <programlisting>
+select database();
+  database 
+----------
+  lighdb
+(1 row)
+      </programlisting>
+   </sect4>
+  </sect3>
+  <sect3>
+   <title>Miscellaneous Functions</title>
+   <para>
+      The following Miscellaneous Functions are supported:
+     </para>
+   <itemizedlist>
+    <listitem>
+     <para>BIN_TO_UUID</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>COMPRESS</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>UNCOMPRESS</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>UUID_TO_BIN</para>
+    </listitem>
+   </itemizedlist>
+   <sect4>
+    <title>BIN_TO_UUID</title>
+    <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+       Convert binary UUID to string.
+      </para>
+    <para>
+     <emphasis role="bold">
+       Syntax
+      </emphasis>
+    </para>
+    <programlisting>
+bin_to_uuid(p_uuid bytea, swap_flag int4 default 0) RETURNS uuid
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+       General rules
+      </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        BIN_TO_UUID() is the inverse of UUID_TO_BIN(). It converts a binary UUID to a string UUID and returns the result. The binary value should be a UUID as a VARBINARY(16) value.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        The return value is a utf8 string of five hexadecimal numbers separated by dashes. (For details about this format, see the UUID() function description.) If the UUID argument is NULL, the return value is NULL. If any argument is invalid, an error occurs.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       In the following example, Convert binary UUID '\x0768a47dd355372b4926ee668b6cb443' to string '0768a47d-d355-372b-4926-ee668b6cb443'.
+      </para>
+    <programlisting>
+select bin_to_uuid('\x0768a47dd355372b4926ee668b6cb443');
+            bin_to_uuid              
+--------------------------------------
+0768a47d-d355-372b-4926-ee668b6cb443
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>COMPRESS</title>
+    <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+       Compress string and return binary data.
+      </para>
+    <para>
+     <emphasis role="bold">
+       Syntax
+      </emphasis>
+    </para>
+    <programlisting>
+COMPRESS(expr1 text) RETURN bytea
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+       General rules
+      </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Compress string expr1 parameter and return binary data. The corresponding decompression function is UNCOMPRESS
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       In the following example, compress 'abc123' into binary data '\x06000000616263313233'.
+      </para>
+    <programlisting>
+select compress('abc123');
+        compress        
+------------------------
+  \x06000000616263313233
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>UNCOMPRESS</title>
+    <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+       Decompress the binary data compressed by compress() and restore the original string.
+      </para>
+    <para>
+     <emphasis role="bold">
+       Syntax
+      </emphasis>
+    </para>
+    <programlisting>
+UNCOMPRESS(expr1 bytea) RETURN text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+       General rules
+      </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Decompress the binary data expr1 parameter compressed by compress() and restore the original string
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       In the following example, decompress binary data '\x06000000616263313233' into bCompress 'abc123'
+      </para>
+    <programlisting>
+select uncompress(compress('abc123'));
+  uncompress 
+------------
+  abc123
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>UUID_TO_BIN</title>
+    <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+       Convert string UUID to binary.
+      </para>
+    <para>
+     <emphasis role="bold">
+       Syntax
+      </emphasis>
+    </para>
+    <programlisting>
+uuid_to_bin(p_uuid uuid, swap_flag int4 default 0) RETURNS bytea
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+       General rules
+      </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Converts a string UUID to a binary UUID and returns the result. (The IS_UUID() function description lists the permitted string UUID formats.)
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        The return binary UUID is a VARBINARY(16) value. If the UUID argument is NULL, the return value is NULL. If any argument is invalid, an error occurs.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       In the following example, Convert string UUID '0768a47d-d355-372b-4926-ee668b6cb443' to binary '\x0768a47dd355372b4926ee668b6cb443'.
+      </para>
+    <programlisting>
+select uuid_to_bin('0768a47d-d355-372b-4926-ee668b6cb443'::uuid)::text;
+            uuid_to_bin             
+------------------------------------
+\x0768a47dd355372b4926ee668b6cb443
+(1 row)
+    </programlisting>
+   </sect4>
+  </sect3>
+
+  <sect3>
+   <title>Operators</title>
+   <para>
+      The following Operators are supported:
+     </para>
+   <itemizedlist>
+    <listitem>
+     <para>IFNULL</para>
+    </listitem>
+   </itemizedlist>
+   <itemizedlist>
+    <listitem>
+     <para>ISNULL</para>
+    </listitem>
+   </itemizedlist>
+   <sect4>
+    <title>IFNULL</title>
+    <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+       The corresponding value is returned according to whether the parameter is empty.
+      </para>
+    <para>
+     <emphasis role="bold">
+       Syntax
+      </emphasis>
+    </para>
+    <programlisting>
+IFNULL(expr1 anycompatible, expr2 anycompatible) RETURNS anycompatible
+IFNULL(expr1 text, expr2 text) RETURNS text
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+       General rules
+      </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        Judge whether the first parameter is null. If it is null, 
+        the value of the second parameter will be returned. If it is 
+        not null, the value of the first parameter will be returned
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+        The two input parameters must belong to the same category, and the <literal>typcategory</literal> field of <literal>pg_type</literal> can be determined
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       In the following example, when the first parameter is null, the second parameter 15 is returned; otherwise, the first parameter 1 is returned
+      </para>
+    <programlisting>
+select ifnull(1, 15);
+  ifnull 
+--------
+      1
+(1 row)
+select ifnull(null, 15);
+  ifnull 
+--------
+      15
+(1 row)
+    </programlisting>
+   </sect4>
+   <sect4>
+    <title>ISNULL</title>
+    <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+      Test whether the argument is NULL
+    </para>
+    <para>
+     <emphasis role="bold">
+       Syntax
+      </emphasis>
+    </para>
+    <programlisting>
+isnull(text) RETURNS bool
+isnull(numeric) RETURNS bool
+isnull(timestamptz) RETURNS bool
+    </programlisting>
+    <para>
+     <emphasis role="bold">
+       General rules
+      </emphasis>
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+        If expr is NULL, ISNULL() returns true, otherwise it returns false.
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       In the following example, expr is not NULL, ISNULL() returns false.
+      </para>
+    <programlisting>
+select isnull(0)::text;
+isnull 
+--------
+false
+(1 row)
+    </programlisting>
+   </sect4>
+  </sect3>
+
+  <sect3>
+    <title>Arithmetic Operators</title>
+    <para>
+      The following arithmetic operator are supported:
+    </para>
+       <itemizedlist>
+    <listitem>
+     <para> / </para>
+    </listitem>
+   </itemizedlist>
+
+    <sect4>
+    <title> / </title>
+        <para>
+     <emphasis role="bold">
+       Description
+      </emphasis>
+    </para>
+    <para>
+       Division operator. Division by zero produces a NULL result, reported a warning log.
+      </para>
+
+       <para>
+     <emphasis role="bold">
+       Example
+      </emphasis>
+    </para>
+    <para>
+       Division operator examples. Division by zero produces a NULL result, reported a warning log.
+      </para>
+    <programlisting>
+select 2 / 4;
+  ?column?        
+------------------------
+ 0.50000000000000000000
+(1 row)
+
+select 1.0 / 2;
+  ?column?        
+------------------------
+ 0.50000000000000000000
+(1 row)
+
+select 2 / 0;
+WARNING:  division by zero
+ ?column? 
+----------
+         
+(1 row)
+    </programlisting>
+
+    </sect4>
+  </sect3>
+
+
+ </sect2>
+</sect1>

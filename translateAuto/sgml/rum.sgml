@@ -1,0 +1,395 @@
+<sect1 id="rum">
+  <title>rum</title>
+  <sect2 id="introduction">
+    <title>Introduction</title>
+    <para>
+      The <emphasis role="strong">rum</emphasis> module provides access
+      method to work with <literal>RUM</literal> index. It is based on
+      the <literal>GIN</literal> access methods code.
+    </para>
+    <para>
+      <literal>GIN</literal> index allows to perform fast full text
+      search using <literal>tsvector</literal> and
+      <literal>tsquery</literal> types. But full text search with GIN
+      index has several problems:
+    </para>
+    <itemizedlist spacing="compact">
+      <listitem>
+        <para>
+          Slow ranking. It is need position information about lexems to
+          ranking. <literal>GIN</literal> index doesn’t store positions
+          of lexems. So after index scan we need additional heap scan to
+          retrieve lexems positions.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Slow phrase search with <literal>GIN</literal> index. This
+          problem relates with previous problem. It is need position
+          information to perform phrase search.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Slow ordering by timestamp. <literal>GIN</literal> index can’t
+          store some related information in index with lexemes. So it is
+          necessary to perform additional heap scan.
+        </para>
+      </listitem>
+    </itemizedlist>
+    <para>
+      <literal>RUM</literal> solves this problems by storing additional
+      information in posting tree. For example, positional information
+      of lexemes or timestamps.
+    </para>
+    
+    <para>
+      Drawback of <literal>RUM</literal> is that it has slower build and
+      insert time than <literal>GIN</literal>. It is because we need to
+      store additional information besides keys and because
+      <literal>RUM</literal> uses generic WAL records.
+    </para>
+  </sect2>
+  <sect2 id="common-operators-and-functions">
+    <title>Common operators and functions</title>
+    <para>
+      <emphasis role="strong">rum</emphasis> module provides next
+      operators.
+    </para>
+    <informaltable>
+      <tgroup cols="3">
+        <colspec colwidth="27*" align="left" />
+        <colspec colwidth="9*" align="left" />
+        <colspec colwidth="63*" align="left" />
+        <thead>
+          <row>
+            <entry>
+              Operator
+            </entry>
+            <entry>
+              Returns
+            </entry>
+            <entry>
+              Description
+            </entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>
+              tsvector &lt;=&gt; tsquery
+            </entry>
+            <entry>
+              float4
+            </entry>
+            <entry>
+              Returns distance between tsvector and tsquery.
+            </entry>
+          </row>
+          <row>
+            <entry>
+              timestamp &lt;=&gt; timestamp
+            </entry>
+            <entry>
+              float8
+            </entry>
+            <entry>
+              Returns distance between two timestamps.
+            </entry>
+          </row>
+          <row>
+            <entry>
+              timestamp &lt;=| timestamp
+            </entry>
+            <entry>
+              float8
+            </entry>
+            <entry>
+              Returns distance only for left timestamps.
+            </entry>
+          </row>
+          <row>
+            <entry>
+              timestamp |=&gt; timestamp
+            </entry>
+            <entry>
+              float8
+            </entry>
+            <entry>
+              Returns distance only for right timestamps.
+            </entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para>
+      Last three operations also works for types timestamptz, int2,
+      int4, int8, float4, float8, money and oid.
+    </para>
+  </sect2>
+  <sect2 id="operator-classes">
+    <title>Operator classes</title>
+    <para>
+      <emphasis role="strong">rum</emphasis> provides next operator
+      classes.
+    </para>
+    <sect3 id="rum_tsvector_ops">
+      <title>rum_tsvector_ops</title>
+      <para>
+        For type: <literal>tsvector</literal>
+      </para>
+      <para>
+        This operator class stores <literal>tsvector</literal> lexemes
+        with positional information. Supports ordering by
+        <literal>&lt;=&gt;</literal> operator and prefix search. There
+        is the example.
+      </para>
+      <para>
+        Let us assume we have the table:
+      </para>
+      <programlisting language="sql">
+CREATE TABLE test_rum(t text, a tsvector);
+
+CREATE TRIGGER tsvectorupdate
+BEFORE UPDATE OR INSERT ON test_rum
+FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger('a', 'pg_catalog.english', 't');
+
+INSERT INTO test_rum(t) VALUES ('The situation is most beautiful');
+INSERT INTO test_rum(t) VALUES ('It is a beautiful');
+INSERT INTO test_rum(t) VALUES ('It looks like a beautiful place');
+</programlisting>
+      <para>
+        To create the <emphasis role="strong">rum</emphasis> index we
+        need create an extension:
+      </para>
+      <programlisting language="sql">
+CREATE EXTENSION rum;
+</programlisting>
+      <para>
+        Then we can create new index:
+      </para>
+      <programlisting language="sql">
+CREATE INDEX rumidx ON test_rum USING rum (a rum_tsvector_ops);
+</programlisting>
+      <para>
+        And we can execute the following queries:
+      </para>
+      <programlisting language="sql">
+SELECT t, a &lt;=&gt; to_tsquery('english', 'beautiful | place') AS rank
+    FROM test_rum
+    WHERE a @@ to_tsquery('english', 'beautiful | place')
+    ORDER BY a &lt;=&gt; to_tsquery('english', 'beautiful | place');
+                t                |  rank
+---------------------------------+---------
+ It looks like a beautiful place | 8.22467
+ The situation is most beautiful | 16.4493
+ It is a beautiful               | 16.4493
+(3 rows)
+
+SELECT t, a &lt;=&gt; to_tsquery('english', 'place | situation') AS rank
+    FROM test_rum
+    WHERE a @@ to_tsquery('english', 'place | situation')
+    ORDER BY a &lt;=&gt; to_tsquery('english', 'place | situation');
+                t                |  rank
+---------------------------------+---------
+ The situation is most beautiful | 16.4493
+ It looks like a beautiful place | 16.4493
+(2 rows)
+</programlisting>
+    </sect3>
+    <sect3 id="rum_tsvector_hash_ops">
+      <title>rum_tsvector_hash_ops</title>
+      <para>
+        For type: <literal>tsvector</literal>
+      </para>
+      <para>
+        This operator class stores hash of <literal>tsvector</literal>
+        lexemes with positional information. Supports ordering by
+        <literal>&lt;=&gt;</literal> operator. But
+        <emphasis role="strong">doesn’t</emphasis> support prefix
+        search.
+      </para>
+    </sect3>
+    <sect3 id="rum_type_ops">
+      <title>rum_TYPE_ops</title>
+      <para>
+        For types: int2, int4, int8, float4, float8, money, oid, time,
+        timetz, date, interval, macaddr, inet, cidr, text, varchar,
+        char, bytea, bit, varbit, numeric, timestamp, timestamptz
+      </para>
+      <para>
+        Supported operations: <literal>&lt;</literal>,
+        <literal>&lt;=</literal>, <literal>=</literal>,
+        <literal>&gt;=</literal>, <literal>&gt;</literal> for all types
+        and <literal>&lt;=&gt;</literal>, <literal>&lt;=|</literal> and
+        <literal>|=&gt;</literal> for int2, int4, int8, float4, float8,
+        money, oid, timestamp and timestamptz types.
+      </para>
+      <para>
+        Supports ordering by <literal>&lt;=&gt;</literal>,
+        <literal>&lt;=|</literal> and <literal>|=&gt;</literal>
+        operators. Can be used with
+        <literal>rum_tsvector_addon_ops</literal>,
+        <literal>rum_tsvector_hash_addon_ops' and</literal>rum_anyarray_addon_ops`
+        operator classes.
+      </para>
+    </sect3>
+    <sect3 id="rum_tsvector_addon_ops">
+      <title>rum_tsvector_addon_ops</title>
+      <para>
+        For type: <literal>tsvector</literal>
+      </para>
+      <para>
+        This operator class stores <literal>tsvector</literal> lexems
+        with any supported by module field. There is the example.
+      </para>
+      <para>
+        Let us assume we have the table:
+      </para>
+      <programlisting language="sql">
+CREATE TABLE tsts (id int, t tsvector, d timestamp);
+
+\copy tsts from 'rum/data/tsts.data'
+
+CREATE INDEX tsts_idx ON tsts USING rum (t rum_tsvector_addon_ops, d)
+    WITH (attach = 'd', to = 't');
+</programlisting>
+      <para>
+        Now we can execute the following queries:
+      </para>
+      <programlisting language="sql">
+EXPLAIN (costs off)
+    SELECT id, d, d &lt;=&gt; '2016-05-16 14:21:25' FROM tsts WHERE t @@ 'wr&amp;qh' ORDER BY d &lt;=&gt; '2016-05-16 14:21:25' LIMIT 5;
+                                    QUERY PLAN
+-----------------------------------------------------------------------------------
+ Limit
+   -&gt;  Index Scan using tsts_idx on tsts
+         Index Cond: (t @@ '''wr'' &amp; ''qh'''::tsquery)
+         Order By: (d &lt;=&gt; 'Mon May 16 14:21:25 2016'::timestamp without time zone)
+(4 rows)
+
+SELECT id, d, d &lt;=&gt; '2016-05-16 14:21:25' FROM tsts WHERE t @@ 'wr&amp;qh' ORDER BY d &lt;=&gt; '2016-05-16 14:21:25' LIMIT 5;
+ id  |                d                |   ?column?
+-----+---------------------------------+---------------
+ 355 | Mon May 16 14:21:22.326724 2016 |      2.673276
+ 354 | Mon May 16 13:21:22.326724 2016 |   3602.673276
+ 371 | Tue May 17 06:21:22.326724 2016 |  57597.326724
+ 406 | Wed May 18 17:21:22.326724 2016 | 183597.326724
+ 415 | Thu May 19 02:21:22.326724 2016 | 215997.326724
+(5 rows)
+</programlisting>
+      <blockquote>
+        <para>
+          <emphasis role="strong">Warning:</emphasis> Currently RUM has
+          bogus behaviour when one creates an index using ordering over
+          pass-by-reference additional information. This is due to the
+          fact that posting trees have fixed length right bound and
+          fixed length non-leaf posting items. It isn’t allowed to
+          create such indexes.
+        </para>
+      </blockquote>
+    </sect3>
+    <sect3 id="rum_tsvector_hash_addon_ops">
+      <title>rum_tsvector_hash_addon_ops</title>
+      <para>
+        For type: <literal>tsvector</literal>
+      </para>
+      <para>
+        This operator class stores hash of <literal>tsvector</literal>
+        lexems with any supported by module field.
+      </para>
+      <para>
+        <emphasis role="strong">Doesn’t</emphasis> support prefix
+        search.
+      </para>
+    </sect3>
+    <sect3 id="rum_tsquery_ops">
+      <title>rum_tsquery_ops</title>
+      <para>
+        For type: <literal>tsquery</literal>
+      </para>
+      <para>
+        Stores branches of query tree in additional information. For
+        example we have the table:
+      </para>
+      <programlisting language="sql">
+CREATE TABLE query (q tsquery, tag text);
+
+INSERT INTO query VALUES ('supernova &amp; star', 'sn'),
+    ('black', 'color'),
+    ('big &amp; bang &amp; black &amp; hole', 'bang'),
+    ('spiral &amp; galaxy', 'shape'),
+    ('black &amp; hole', 'color');
+
+CREATE INDEX query_idx ON query USING rum(q);
+</programlisting>
+      <para>
+        Now we can execute the following fast query:
+      </para>
+      <programlisting language="sql">
+SELECT * FROM query
+    WHERE to_tsvector('black holes never exists before we think about them') @@ q;
+        q         |  tag
+------------------+-------
+ 'black'          | color
+ 'black' &amp; 'hole' | color
+(2 rows)
+</programlisting>
+    </sect3>
+    <sect3 id="rum_anyarray_ops">
+      <title>rum_anyarray_ops</title>
+      <para>
+        For type: <literal>anyarray</literal>
+      </para>
+      <para>
+        This operator class stores <literal>anyarray</literal> elements
+        with length of the array. Supports operators
+        <literal>&amp;&amp;</literal>, <literal>@&gt;</literal>,
+        <literal>&lt;@</literal>, <literal>=</literal>,
+        <literal>%</literal> operators. Supports ordering by
+        <literal>&lt;=&gt;</literal> operator. For example we have the
+        table:
+      </para>
+      <programlisting language="sql">
+CREATE TABLE test_array (i int2[]);
+
+INSERT INTO test_array VALUES ('{}'), ('{0}'), ('{1,2,3,4}'), ('{1,2,3}'), ('{1,2}'), ('{1}');
+
+CREATE INDEX idx_array ON test_array USING rum (i rum_anyarray_ops);
+</programlisting>
+      <para>
+        Now we can execute the query using index scan:
+      </para>
+      <programlisting language="sql">
+SET enable_seqscan TO off;
+
+EXPLAIN (COSTS OFF) SELECT * FROM test_array WHERE i &amp;&amp; '{1}' ORDER BY i &lt;=&gt; '{1}' ASC;
+                QUERY PLAN
+------------------------------------------
+ Index Scan using idx_array on test_array
+   Index Cond: (i &amp;&amp; '{1}'::smallint[])
+   Order By: (i &lt;=&gt; '{1}'::smallint[])
+(3 rows
+
+SELECT * FROM test_array WHERE i &amp;&amp; '{1}' ORDER BY i &lt;=&gt; '{1}' ASC;
+     i
+-----------
+ {1}
+ {1,2}
+ {1,2,3}
+ {1,2,3,4}
+(4 rows)
+</programlisting>
+    </sect3>
+    <sect3 id="rum_anyarray_addon_ops">
+      <title>rum_anyarray_addon_ops</title>
+      <para>
+        For type: <literal>anyarray</literal>
+      </para>
+      <para>
+        This operator class stores <literal>anyarray</literal> elements
+        with any supported by module field.
+      </para>
+    </sect3>
+  </sect2>
+</sect1>

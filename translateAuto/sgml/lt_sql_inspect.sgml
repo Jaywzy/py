@@ -1,0 +1,610 @@
+<!-- doc/src/sgml/lt_sql_inspect.sgml -->
+
+<sect1 id="lt_sql_inspect" xreflabel="lt_sql_inspect">
+ <title>lt_sql_inspect</title>
+
+ <indexterm zone="lt_sql_inspect">
+  <primary>lt_sql_inspect</primary>
+ </indexterm>
+
+ <para>
+  The <filename>lt_sql_inspect</filename> module provides two features: SQL best practices and SQL interception
+ </para>
+
+ <sect2>
+   <title>SQL best practices</title>
+    <sect3> 
+     <title>Overview</title>
+      <para>
+       This feature will provides rules to standardize sql writing.
+      </para>
+
+      <para>
+       There are two parts to this: LightDB DDL Specification Check and LightDB DML Specification Check.
+      </para>
+    </sect3>
+    <sect3> 
+     <title>Configuration Parameters</title>
+     <variablelist>  
+      <varlistentry id="guc-lightdb_best_practice_mode" xreflabel="lightdb_best_practice_mode">
+       <term><varname>lightdb_best_practice_mode</varname> (<type>String</type>)
+       <indexterm>
+        <primary><varname>lightdb_best_practice_mode</varname> configuration parameter</primary>
+       </indexterm>
+       </term>
+       <listitem>
+        <para>
+         lightdb_best_practice_mode is used to specify the rules to check sql.
+        </para>
+        <para>
+         Now it support following rules: keyword_not_allowed,bad_datatype,must_have_pk,must_have_gmt,no_more_100cols,no_paging.
+        </para>
+        <para>
+         This setting can be changed within individual sessions.
+        </para>
+       </listitem>
+      </varlistentry>
+   
+      <varlistentry id="guc-lightdb_best_practice_level" xreflabel="lightdb_best_practice_level">
+       <term><varname>lightdb_best_practice_level</varname> (<type>String</type>)
+       <indexterm>
+        <primary><varname>lightdb_best_practice_level</varname> configuration parameter</primary>
+       </indexterm>
+       </term>
+       <listitem>
+        <para>
+         lightdb_best_practice_level is used to specify the message level when check failed.  
+        </para>
+        <para>
+         It is used for both SQL best practices and SQL interception.
+        </para>
+        <para>
+         This setting can be changed within individual sessions.
+        </para>
+       </listitem>
+      </varlistentry>
+   
+     </variablelist>
+    </sect3>
+
+ <sect3>
+  <title>LightDB DDL Specification Check</title>
+
+  <para>
+   When you use DDL statements, LightDB will first check whether your 
+   statements comply with the specification.
+  </para>
+  
+  <para>
+  At present, there are five checks: keyword check 
+  (including table name, field name, library name and index name), 
+  field type check (float,double,text,real, uuid,bytea,boolean,bit,character), 
+  whether the table must contain primary key, 
+  whether the table contains fields of creation time and 
+  last modification time, and the number of columns for 
+  operation does not exceed 100.The DDL statement specification supports:
+  </para>
+<screen>
+CREATE DATABASE...
+CREATE TABLE...
+CREATE INDEX...
+ALTER TABLE...
+</screen>
+
+  <para>
+  The keyword list can be referenced
+  "https://www.postgresql.org/docs/current/sql-keywords-appendix.html"
+  </para>
+
+  <para>
+  When you use nonstandard statements, you will report warnings or errors directly.
+  For example:
+  </para>
+<screen>
+create database text;
+WARNING:  LightDB DDL check warn! keyword not allowed with [db name]:text
+
+create table text(id int);
+WARNING:  LightDB DDL check warn! keyword not allowed with [table name]:text
+WARNING:  LightDB DDL check warn! keyword not allowed with [column name]:id
+WARNING:  LightDB DDL check warn! no primary key!
+WARNING:  LightDB DDL check warn! no gmt_create or no gmt_modified!
+</screen>
+
+  <para>
+  Where 'text' is an nonstandard database name,So report a warning.
+  When creating a table, the table name is not standard, the column name is not standard, 
+  does not contain the primary key, does not contain the creation time and the last modification time, 
+  and the fields are warned. Of course, there is the upper limit of 100 operation columns, 
+  which is not listed here.
+  </para>
+  
+  <para>
+  By default, DDL syntax checking is not enabled,There are two ways to turn it on.
+  Global modification by modifying the configuration file:
+  </para>
+<screen>
+lightdb_best_practice_level = 'warn'
+lightdb_best_practice_mode = 'all'
+</screen>
+  <para>
+  A value of 'warn' for lightdb_best_practice_level indicates that the error level is warning. 
+  A value of 'error' indicates an error. When an nonstandard statement is detected, 
+  an error is reported directly：
+  </para>
+<screen>
+create database text;
+ERROR:  LightDB DDL check error! keyword not allowed with [db name]:text
+</screen>
+  <para>
+  If lightdb_best_practice_mode is configured as' all ', it means to check 5 types at the same time. 
+  Of course, you can combine the checks you want to configure at will, for example:
+  </para>
+<screen>
+lightdb_best_practice_mode = 'keyword_not_allowed,must_have_pk'
+</screen>
+  <para>
+  The above configuration means that only keywords and primary keys are checked.
+  </para>
+  <para>
+  Another configuration method is session level modification:
+  </para>
+<screen>
+set lightdb_best_practice_level to 'warn'; 
+set lightdb_best_practice_mode to 'all';
+</screen>
+  <para>
+  There are five kinds of fully open here, and there is another way:
+  </para>
+<screen>
+set lightdb_best_practice_mode to 'keyword_not_allowed,bad_datatype,must_have_pk,must_have_gmt,no_more_100cols';
+</screen>
+ </sect3> 
+
+  <sect3>
+  <title>LightDB DML Specification Check</title>
+  
+  <para>
+   When you use DML statements, LightDB will first check whether your 
+   statements comply with the specification.
+  </para>
+  
+  <para>
+  At present, there is one check, no paging check:
+  Remind the user when the user SQL does not specify query criteria or paging.
+  The usage of these checks is described in detail below.
+  <itemizedlist>
+  <listitem>
+   <para>
+   <literal>no_paging check</literal>.
+   Check is required in the following scenarios:
+    <itemizedlist>
+    <listitem>
+    <para>
+    When the query statement has no <literal>where</literal> condition, 
+    no <literal>limit</literal> or no <literal>offset</literal>.
+    </para>
+    </listitem>
+
+    <listitem>
+    <para>
+    When the update statement has no <literal>where</literal> condition.
+    </para>
+    </listitem>
+    
+    <listitem>
+    <para>
+    When the delete statement has no <literal>where</literal> condition.
+    </para>
+    </listitem>
+    </itemizedlist>
+   </para>
+  </listitem>
+  </itemizedlist>
+  </para>
+  <para>
+  How to use it? <literal>lightdb_best_practice_level</literal> and 
+  <literal>lightdb_best_practice_mode</literal> in the configuration file need to be configured.
+  </para>
+  <para>
+  By default, DML syntax checking is not enabled.
+  Global modification by modifying the configuration file:
+  </para>
+<screen>
+lightdb_best_practice_level = 'error'
+lightdb_best_practice_mode = 'all'
+</screen>
+  <para>
+  A value of 'warn' for lightdb_best_practice_level indicates that the error level is warning. 
+  A value of 'error' indicates an error. When an nonstandard statement is detected, 
+  an error is reported directly：
+  </para>
+<screen>
+select * from table1;
+ERROR:  LightDB DML check error! select sql not where/limit/offset clause!
+</screen>
+  <para>
+  If lightdb_best_practice_mode is configured as' all ', it means to check all types at the same time. 
+  Of course, you can combine the checks you want to configure at will, for example:
+  </para>
+<screen>
+lightdb_best_practice_mode = 'no_paging'
+</screen>
+ </sect3>
+
+ </sect2>
+
+ <sect2> 
+   <title>SQL interception</title>
+
+   <sect3> 
+    <title>Overview</title>
+
+     <para>
+      This feature will intercept risk sql that match the specified rule in <link linkend="guc-lt_sql_inspect-secure_mode">lt_sql_inspect.secure_mode</link>.
+     </para>
+
+    <para>
+     Only SQL that operates on the specified database will be blocked,
+     using <link linkend="guc-lt_sql_inspect-secure_enable_db">lt_sql_inspect.secure_enable_db</link> to specify the database 
+    </para>
+
+    <para>
+     You can define a time frame by <link linkend="guc-lt_sql_inspect-secure_enable_time">lt_sql_inspect.secure_enable_time</link> , and only in this time frame sql will be intercepted.
+     The time frame can only be within a day.
+    </para>
+
+    <para>
+     <link linkend="guc-lightdb_best_practice_level">lightdb_best_practice_level</link> controls the log level when SQL is intercepted. default is 'warn'.
+     A value of 'warn' for lightdb_best_practice_level indicates that the error level is warning. 
+     A value of 'error' indicates an error.
+    </para>
+
+    <para>
+     Refer to <link linkend="guc-lt_sql_inspect-secure_mode">lt_sql_inspect.secure_mode</link> for detail rules.
+    </para>
+  
+   </sect3> 
+  
+   <sect3> 
+  <title>Configuration Parameters</title>
+  <variablelist>
+
+    <varlistentry id="guc-lt_sql_inspect-secure_mode" xreflabel="lt_sql_inspect-secure_mode">
+      <term><varname>lt_sql_inspect.secure_mode</varname> (<type>String</type>)
+      <indexterm>
+       <primary><varname>lt_sql_inspect.secure_mode</varname> configuration parameter</primary>
+      </indexterm>
+      </term>
+      <listitem>
+       <para>
+        lt_sql_inspect.secure_mode specifies some SQL execution rules, such as intercepting SQL that meets the criteria.
+        You can specify multiple rules, separated by commas. 
+        The following rules are supported: select_without_where, update_without_where, delete_without_where, no_paging, high_risk_ddl.
+       </para>
+
+       <para>
+        This setting can be changed within individual sessions.
+       </para>
+
+       <itemizedlist>
+        <listitem>
+         <para>
+          select_without_where: Block a select query that queries only one table when it has no where condition, no limit and no offset.
+         </para>
+        </listitem>
+        <listitem>
+         <para>        
+          update_without_where: Block a update query that queries only one table when it has no where condition, no limit and no offset. 
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          delete_without_where: Block a delete query that queries only one table when it has no where condition, no limit and no offset.  
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          no_paging: Equivalent to using select_without_where, update_without_where, and delete_without_where together. 
+         </para>
+        </listitem>
+        <listitem>
+         <para>
+          high_risk_ddl: Block following ddl: drop table, truncate table, alter table add/drop column, alter table add/drop Constraint, alter table modify column(null/not null, default/no default, type).
+         </para>
+        </listitem>
+       </itemizedlist>
+
+      </listitem>
+
+     </varlistentry>
+
+
+   <varlistentry id="guc-lt_sql_inspect-secure_enable_time" xreflabel="lt_sql_inspect-secure_enable_time">
+    <term><varname>lt_sql_inspect.secure_enable_time</varname> (<type>String</type>)
+    <indexterm>
+     <primary><varname>lt_sql_inspect.secure_enable_time</varname> configuration parameter</primary>
+    </indexterm>
+    </term>
+    <listitem>
+     <para>
+      lt_sql_inspect.secure_enable_time specifies the time frame, and only in this time frame, sql will be intercepted.
+     </para>
+     <para>
+      Format is 'start_time - end_time'(example: '09:00 - 18:00' ).
+     </para>
+     <para>
+      This parameter can only be set in the <filename>lightdb.conf</filename> file or on the server command line, and can be reload.        
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry id="guc-lt_sql_inspect-secure_enable_db" xreflabel="lt_sql_inspect-secure_enable_db">
+    <term><varname>lt_sql_inspect.secure_db</varname> (<type>String</type>)
+    <indexterm>
+     <primary><varname>lt_sql_inspect.secure_enable_db</varname> configuration parameter</primary>
+    </indexterm>
+    </term>
+    <listitem>
+     <para>
+      lt_sql_inspect.secure_enable_db specifies the databases, and only on these databases, sql will be intercepted.
+     </para>
+     <para>
+      You can specify multiple databases, separated by commas.
+     </para>
+     <para>
+      This parameter can only be set in the <filename>lightdb.conf</filename> file or on the server command line, and can be reload.
+     </para>
+    </listitem>
+   </varlistentry>
+
+  </variablelist>
+   </sect3>
+  
+   <sect3>
+    <title>Rules</title>
+    <sect4>
+     <title>select_without_where</title>
+   
+     <para>
+      DQL involving only one table without where, limit and offset will be blocked.
+     </para>
+  
+     <para>
+      When querying table under pg_catalog, lt_catalog or ltcluster scheme, sql will not be blocked. 
+      Note that when the lightdb_best_practice_level is error, the query of table in other schemas(include tables created by extension) that meet the requirements will report errors.
+     </para>
+  
+     <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode=select_without_where;
+SET
+lightdb@lt_test=# select * from t1;
+ERROR:  lt_sql_inspect: SQL cannot execute, because a full table scan or modification may be performed on the table "t1"
+lightdb@lt_test=# select * from (select * from t1);
+ERROR:  lt_sql_inspect: SQL cannot execute, because a full table scan or modification may be performed on the table "t1"
+lightdb@lt_test=# select * from t1 limit 1;
+key1 | key2 
+------+------
+(0 rows)
+
+lightdb@lt_test=# select * from t1 offset 1;
+key1 | key2 
+------+------
+(0 rows)
+
+     </programlisting>
+   
+     <para>
+      DQL involving multi-table will not be blocked.
+     </para>
+     <programlisting>
+lightdb@lt_test=# select * from t1, t2;
+key1 | key2 | key1 
+------+------+------
+(0 rows)
+
+     </programlisting>
+   
+     <para>
+      This also applies to the view just like a subquery.
+     </para>
+     <programlisting>
+lightdb@lt_test=# create view t1_v as select * from t1;
+CREATE VIEW
+lightdb@lt_test=# select * from t1_v;
+ERROR:  lt_sql_inspect: SQL cannot execute, because a full table scan or modification may be performed on the table "t1"
+lightdb@lt_test=# select * from t1_v where key1=1;
+key1 | key2 
+------+------
+(0 rows)
+
+     </programlisting>
+   
+    </sect4>
+   
+    <sect4>
+     <title>update_without_where</title>
+   
+     <para>
+    Be similar to select_without_where, but for update statement.
+     </para>
+     <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode = 'update_without_where';
+SET
+lightdb@lt_test=# update t1 set key1=1;
+ERROR:  lt_sql_inspect: SQL cannot execute, because a full table scan or modification may be performed on the table "t1"
+lightdb@lt_test=# update t1 set key1=1 limit 1;
+UPDATE 0
+lightdb@lt_test=# update t1 set key1=1 offset 1;
+UPDATE 0
+lightdb@lt_test=# update t1 set key1=1 from t2 ;
+UPDATE 0
+lightdb@lt_test=# update t1 set key1=1 from t2 where t1.key1=t2.key1;
+UPDATE 0
+     </programlisting>  
+    </sect4>
+   
+     <sect4>
+     <title>delete_without_where</title>
+   
+     <para>
+       Be similar to select_without_where, but for delete statement.
+     </para>
+     <programlisting> 
+lightdb@lt_test=# set lt_sql_inspect.secure_mode = 'delete_without_where';
+SET
+lightdb@lt_test=# delete from t1 ;
+ERROR:  lt_sql_inspect: SQL cannot execute, because a full table scan or modification may be performed on the table "t1"
+lightdb@lt_test=# delete from t1 where key1=1;
+DELETE 0
+lightdb@lt_test=# delete from t1 limit 1;
+DELETE 0
+lightdb@lt_test=# delete from t1 offset 1;
+DELETE 0
+lightdb@lt_test=# delete from t1 using t2;
+DELETE 0
+lightdb@lt_test=# delete from t1 using t2 where t1.key1=t2.key1;
+DELETE 0
+     </programlisting> 
+    </sect4>
+
+    <sect4>
+     <title>no_paging</title>
+   
+     <para>
+      Equivalent to using select_without_where, update_without_where, and delete_without_where together. 
+     </para>
+  
+     <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode=no_paging;
+SET
+lightdb@lt_test=#   
+ERROR:  lt_sql_inspect: SQL cannot execute, because a full table scan or modification may be performed on the table "t1"
+lightdb@lt_test=# update t1 set key1=1;
+ERROR:  lt_sql_inspect: SQL cannot execute, because a full table scan or modification may be performed on the table "t1"
+lightdb@lt_test=# delete from t1 ;
+ERROR:  lt_sql_inspect: SQL cannot execute, because a full table scan or modification may be performed on the table "t1"
+
+     </programlisting>
+   
+    </sect4>
+
+     <sect4>
+     <title>high_risk_ddl</title>
+   
+     <para>
+      Currently the following ddl will be considered as a high risk ddl, and will be intercepted.
+     </para>
+   
+     <itemizedlist>
+      <listitem>
+       <para>
+        drop table 
+       </para>
+       <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode = high_risk_ddl;
+SET
+lightdb@lt_test=# drop table t1;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+       </programlisting>
+      </listitem>
+      <listitem>
+       <para>        
+        truncate table
+      </para>
+       <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode = high_risk_ddl;
+SET
+lightdb@lt_test=# truncate table t1;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+       </programlisting>
+      </listitem>
+      <listitem>
+       <para>
+        alter table add column
+       </para>
+       <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode = high_risk_ddl;
+SET
+lightdb@lt_test=# alter table t1 add column key3 int;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+       </programlisting>
+      </listitem>
+      <listitem>
+       <para>
+        alter table drop column
+       </para>
+       <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode = high_risk_ddl;
+SET
+lightdb@lt_test=# alter table t1 drop column key1;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+       </programlisting>
+      </listitem>
+      <listitem>
+       <para>
+        alter table add constraint
+       </para>
+       <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode = high_risk_ddl;
+SET
+lightdb@lt_test=# alter table t1 add constraint t_uq unique(key1);
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+       </programlisting>
+      </listitem>
+      <listitem>
+       <para>
+        alter table drop constraint
+       </para>
+       <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode = high_risk_ddl;
+SET
+lightdb@lt_test=# alter table t1 drop constraint t_uq;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+       </programlisting>
+      </listitem>
+   
+      <listitem>
+       <para>
+        alter table modify/alter column(only the types in the following example will be blocked, including null/not-null, default/non-default, and type).
+       </para>
+       <programlisting>
+lightdb@lt_test=# set lt_sql_inspect.secure_mode = high_risk_ddl;
+SET
+lightdb@lt_test=# alter table t1 modify key2 bigint;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+lightdb@lt_test=#
+lightdb@lt_test=# alter table t1 alter  key2 type text;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+lightdb@lt_test=#
+lightdb@lt_test=# alter table t1 modify key2 null;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+lightdb@lt_test=#
+lightdb@lt_test=# alter table t1 alter  key2 drop not null;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+lightdb@lt_test=#
+lightdb@lt_test=# alter table t1 modify key2 not null;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+lightdb@lt_test=#
+lightdb@lt_test=# alter table t1 alter  key2 set not null;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+lightdb@lt_test=#
+lightdb@lt_test=# alter table t1 modify key2 default 10;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+lightdb@lt_test=#
+lightdb@lt_test=# alter table t1 alter  key2 set default 10;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+lightdb@lt_test=#
+lightdb@lt_test=# alter table t1 alter  key2 drop default;
+ERROR:  lt_sql_inspect: SQL cannot execute, because it is a high risk ddl
+lightdb@lt_test=#
+       </programlisting>
+      </listitem>
+   
+     </itemizedlist>
+   
+    </sect4>
+
+   </sect3>
+ </sect2>
+</sect1>

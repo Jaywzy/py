@@ -1,0 +1,13 @@
+<!-- doc/src/sgml/ltcluster.sgml -->
+
+<sect1 id="ltcluster" xreflabel="ltcluster">
+ <title>ltcluster</title>
+
+ <indexterm zone="ltcluster">
+  <primary>ltcluster</primary>
+ </indexterm>
+
+ <para>
+  See <ulink url="http://www.light-pg.com/docs/ltcluster/&version;/index.html">ltcluster</ulink> for more details.
+ </para> 
+</sect1>

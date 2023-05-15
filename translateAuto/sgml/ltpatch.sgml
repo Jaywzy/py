@@ -1,0 +1,187 @@
+<!-- doc/src/sgml/ltpatch.sgml -->
+
+<sect1 id="ltpatch" xreflabel="lt_patch">
+ <title>lt_patch</title>
+
+ <indexterm zone="ltpatch">
+  <primary>lt_patch</primary>
+ </indexterm>
+
+ <para>
+  The <filename>lt_patch</filename> module provides a means for
+  tracking the information of all patches executed by
+  a server.
+ </para>
+
+ <para>
+  Before creating <literal>lt_patch</literal> you must first create
+  <xref linkend="file-fdw"/> extension and set 
+  <filename>LTHOME</filename> environment variable.
+ </para>
+
+ <para>
+   When <filename>lt_patch</filename> is loaded, it tracks
+   patches across all databases of the server.  To access and manipulate
+   these patch information, the module provides a table, <structname>lt_patch</structname>,
+   and the utility functions <function>lt_patch</function>.  These are not available globally but
+   can be enabled for a specific database with
+   <command>CREATE EXTENSION lt_patch</command>.
+ </para>
+
+ <sect2>
+  <title>The <structname>lt_patch</structname> table</title>
+
+  <para>
+   The information gathered by the module are made available via a
+   table named <structname>lt_patch</structname>.  This table
+   contains one row for each distinct path.  The columns of the table are shown in
+   <xref linkend="ltpatch-columns"/>.
+  </para>
+
+  <table id="ltpatch-columns">
+   <title><structname>lt_patch</structname> Columns</title>
+   <tgroup cols="1">
+    <thead>
+     <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       Column Type
+      </para>
+      <para>
+       Description
+      </para></entry>
+     </row>
+    </thead>
+
+    <tbody>
+     <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       <structfield>name</structfield> <type>varchar</type>
+      </para>
+      <para>
+       patch name
+      </para></entry>
+     </row>
+
+     <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       <structfield>dependency</structfield> <type>varchar</type>
+      </para>
+      <para>
+       dependency patch
+      </para></entry>
+     </row>
+
+     <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       <structfield>component_type</structfield> <type>varchar</type>
+      </para>
+      <para>
+       component type : PATCH BUGFIX
+      </para></entry>
+     </row>
+
+     <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       <structfield>apply_type</structfield> <type>varchar</type>
+      </para>
+      <para>
+       apply type : INSTANCE APP BOTH
+      </para></entry>
+     </row>
+
+     <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       <structfield>apply_version</structfield> <type>varchar</type>
+      </para>
+      <para>
+       apply version
+      </para></entry>
+     </row>
+
+     <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       <structfield>action</structfield> <type>varchar</type>
+      </para>
+      <para>
+       action : REMOVED INSTALLED
+      </para></entry>
+     </row>
+
+     <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       <structfield>status</structfield> <type>varchar</type>
+      </para>
+      <para>
+       status : "APP FAILED" "APP SUCCESS" "INSTANCE FAILED" "SUCCESS"
+      </para></entry>
+     </row>
+
+     <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       <structfield>create_time</structfield> <type>timestamp</type>
+      </para>
+      <para>
+       patch create time
+      </para></entry>
+     </row>
+
+       <row>
+      <entry role="catalog_table_entry"><para role="column_definition">
+       <structfield>update_time</structfield> <type>timestamp</type>
+      </para>
+      <para>
+       patch update time
+      </para></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+
+ </sect2>
+
+ <sect2>
+  <title>Functions</title>
+
+  <variablelist>
+
+   <varlistentry>
+    <term>
+     <function>lt_patch(showtext boolean) returns setof record</function>
+     <indexterm>
+      <primary>lt_patch</primary>
+      <secondary>function</secondary>
+     </indexterm>
+    </term>
+
+    <listitem>
+     <para>
+      The <structname>lt_patch</structname> table is defined in
+      terms of a function also named <function>lt_patch</function>.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </sect2>
+
+ <sect2>
+  <title>Sample Output</title>
+
+<screen>
+lightdb@postgres=# select * from lt_patch;
+      name      | dependency | component_type | apply_type | apply_version | action  | status |     create_time     |     update_time
+----------------+------------+----------------+------------+---------------+---------+--------+---------------------+---------------------
+ patch-1.0-8717 |            | patch          | BOTH       | 13.8-22.4     | removed |        | 2022-12-29 18:25:48 | 2022-12-29 19:24:33
+ 1.0-8719       |            | patch          | BOTH       | 13.8-22.4     | removed |        | 2022-12-29 19:58:39 | 2022-12-29 21:18:52
+(2 rows)
+
+lightdb@postgres=# select lt_patch();
+                                          lt_patch
+---------------------------------------------------------------------------------------------
+ (patch-1.0-8717,,patch,BOTH,13.8-22.4,removed,,"2022-12-29 18:25:48","2022-12-29 19:24:33")
+ (1.0-8719,,patch,BOTH,13.8-22.4,removed,,"2022-12-29 19:58:39","2022-12-29 21:18:52")
+(2 rows)
+
+</screen>
+ </sect2>
+
+</sect1>

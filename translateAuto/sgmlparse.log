@@ -1,0 +1,924 @@
+  32: This is info message
+ 626: Using proactor: IocpProactor
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/url {"url": "https://poe.com/LightDBDocBoy"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/url HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/cookie {"cookie": {"domain": "poe.com", "name": "p-b", "value": "02UeW4KINsy1VqimXehGfg%3D%3D", "expires": "", "path": "/", "httpOnly": false, "HostOnly": false, "Secure": false}}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/cookie HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/url {"url": "https://poe.com/LightDBDocBoy"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/url HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_paintbrushWraper__DHMNW"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_22"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_22/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_22"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_22/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'sect1', 2, 52)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'title', 3, 9)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'title', 3, 30)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'indexterm', 5, 34)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'primary', 6, 13)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'primary', 6, 36)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'indexterm', 7, 14)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 8, 8)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'filename', 9, 14)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'filename', 9, 38)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 12, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 13, 8)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 18, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'sect2', 20, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'title', 21, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'title', 21, 43)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'variablelist', 22, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varlistentry', 23, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'term', 24, 14)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 25, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 25, 54)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'indexterm', 26, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'primary', 27, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 27, 30)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 27, 65)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'primary', 27, 98)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'indexterm', 28, 22)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'term', 29, 15)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 30, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 31, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 33, 47)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 33, 61)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 34, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 34, 35)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 34, 57)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 34, 71)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 35, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 36, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varlistentry', 37, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varlistentry', 38, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'term', 39, 14)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 40, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 40, 58)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'indexterm', 41, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'primary', 42, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 42, 30)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 42, 69)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'primary', 42, 102)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'indexterm', 43, 22)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'term', 44, 15)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 45, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 46, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 48, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 48, 35)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 50, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 51, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varlistentry', 52, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varlistentry', 53, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'term', 54, 14)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 55, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 55, 53)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'indexterm', 56, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'primary', 57, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 57, 30)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 57, 64)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'primary', 57, 97)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'indexterm', 58, 22)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'term', 59, 15)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 60, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 61, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 62, 85)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 62, 98)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 62, 108)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 62, 121)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 62, 135)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 62, 149)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 63, 377)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 63, 391)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 64, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 65, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varlistentry', 66, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'variablelist', 67, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'sect2', 68, 10)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'sect2', 70, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'title', 71, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'title', 71, 24)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 72, 10)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 73, 57)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 73, 79)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 73, 94)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 73, 128)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 74, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 77, 17)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 78, 58)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 78, 84)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 79, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 81, 17)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 83, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 85, 17)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 87, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 95, 17)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 96, 15)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 96, 38)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'itemizedlist', 97, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 98, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 99, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 100, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 100, 34)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 102, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 103, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 104, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 105, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 106, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 106, 36)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 107, 41)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 107, 52)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 108, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 109, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 110, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 111, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 112, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 112, 37)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 114, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 115, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 116, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 117, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 118, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 118, 35)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 120, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 121, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 122, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 123, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 124, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 124, 35)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 125, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 126, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'itemizedlist', 127, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 131, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 161, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 162, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'sect2', 163, 10)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'sect2', 165, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'title', 166, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'title', 166, 28)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 167, 10)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'itemizedlist', 168, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 169, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 170, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 171, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 171, 54)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 173, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 174, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 175, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 176, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 177, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 177, 53)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 179, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 180, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'itemizedlist', 181, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 182, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'sect2', 183, 10)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'sect1', 185, 8)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'sect1', 2, 52)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'title', 3, 9)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'title', 3, 30)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'indexterm', 5, 34)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'primary', 6, 13)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'primary', 6, 36)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'indexterm', 7, 14)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 8, 8)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'filename', 9, 14)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'filename', 9, 38)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 12, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 13, 8)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 18, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'sect2', 20, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'title', 21, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'title', 21, 43)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'variablelist', 22, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varlistentry', 23, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'term', 24, 14)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 25, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 25, 54)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'indexterm', 26, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'primary', 27, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 27, 30)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 27, 65)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'primary', 27, 98)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'indexterm', 28, 22)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'term', 29, 15)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 30, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 31, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 33, 47)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 33, 61)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 34, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 34, 35)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 34, 57)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 34, 71)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 35, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 36, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varlistentry', 37, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varlistentry', 38, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'term', 39, 14)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 40, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 40, 58)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'indexterm', 41, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'primary', 42, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 42, 30)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 42, 69)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'primary', 42, 102)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'indexterm', 43, 22)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'term', 44, 15)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 45, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 46, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 48, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 48, 35)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 50, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 51, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varlistentry', 52, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varlistentry', 53, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'term', 54, 14)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 55, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 55, 53)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'indexterm', 56, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'primary', 57, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'varname', 57, 30)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varname', 57, 64)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'primary', 57, 97)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'indexterm', 58, 22)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'term', 59, 15)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 60, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 61, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 62, 85)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 62, 98)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 62, 108)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 62, 121)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 62, 135)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 62, 149)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 63, 377)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 63, 391)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 64, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 65, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'varlistentry', 66, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'variablelist', 67, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'sect2', 68, 10)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'sect2', 70, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'title', 71, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'title', 71, 24)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 72, 10)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 73, 57)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 73, 79)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 73, 94)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 73, 128)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 74, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 77, 17)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 78, 58)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 78, 84)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 79, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 81, 17)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 83, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 85, 17)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 87, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 95, 17)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 96, 15)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 96, 38)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'itemizedlist', 97, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 98, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 99, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 100, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 100, 34)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 102, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 103, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 104, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 105, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 106, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 106, 36)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 107, 41)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 107, 52)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 108, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 109, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 110, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 111, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 112, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 112, 37)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 114, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 115, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 116, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 117, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 118, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 118, 35)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 120, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 121, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 122, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 123, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 124, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 124, 35)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 125, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 126, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'itemizedlist', 127, 21)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'programlisting', 131, 16)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'programlisting', 161, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 162, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'sect2', 163, 10)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'sect2', 165, 9)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'title', 166, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'title', 166, 28)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 167, 10)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'itemizedlist', 168, 20)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 169, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 170, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 171, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 171, 54)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 173, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 174, 19)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'listitem', 175, 18)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'para', 176, 16)
+  76: ('.\\sgml\\lt-show-plans.sgml', 'startElement', 'literal', 177, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'literal', 177, 53)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 179, 17)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'listitem', 180, 19)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'itemizedlist', 181, 21)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'para', 182, 11)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'sect2', 183, 10)
+  90: ('.\\sgml\\lt-show-plans.sgml', 'endElement', 'sect1', 185, 8)
+ 626: Using proactor: IocpProactor
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_27"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_28"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_28/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_28"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_28/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_30"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_31"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_31/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_31"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_31/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_34"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_35"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_35/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_35"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_35/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_39"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_40"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_40/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_40"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_40/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_42"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_43"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_43/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_43"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_43/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_46"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_47"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_47/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_47"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_47/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_50"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_51"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_51/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_51"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_51/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_55"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_56"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_56/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_56"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_56/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_58"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_59"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_59/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_59"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_59/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_62"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_63"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_63/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_63"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_63/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_66"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_67"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_67/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_67"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_67/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_69"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_70"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_70/click {"id": "F6567A934A750E12C225E65BA3CA3C58_element_70"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_70/click HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/timeouts {"implicit": 1000}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/timeouts HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 200 95
+ 319: Remote response: status=200 | data={"value":{"element-6066-11e4-a52e-4f735466cecf":"F6567A934A750E12C225E65BA3CA3C58_element_23"}} | headers=HTTPHeaderDict({'Content-Length': '95', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear {"id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/clear HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value {"text": "\ue009V\ue007", "value": ["\ue009", "V", "\ue007"], "id": "F6567A934A750E12C225E65BA3CA3C58_element_23"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element/F6567A934A750E12C225E65BA3CA3C58_element_23/value HTTP/1.1" 200 14
+ 319: Remote response: status=200 | data={"value":null} | headers=HTTPHeaderDict({'Content-Length': '14', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 456: http://localhost:61133 "POST /session/749539384d213cd67cf4e46f7f0bb74b/element HTTP/1.1" 404 1083
+ 319: Remote response: status=404 | data={"value":{"error":"no such element","message":"no such element: Unable to locate element: {\"method\":\"xpath\",\"selector\":\"//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']\"}\n  (Session info: chrome=113.0.5672.93)","stacktrace":"Backtrace:\n\tGetHandleVerifier [0x00748893+48451]\n\t(No symbol) [0x006DB8A1]\n\t(No symbol) [0x005E5058]\n\t(No symbol) [0x00610467]\n\t(No symbol) [0x0061069B]\n\t(No symbol) [0x0063DD92]\n\t(No symbol) [0x0062A304]\n\t(No symbol) [0x0063C482]\n\t(No symbol) [0x0062A0B6]\n\t(No symbol) [0x00607E08]\n\t(No symbol) [0x00608F2D]\n\tGetHandleVerifier [0x009A8E3A+2540266]\n\tGetHandleVerifier [0x009E8959+2801161]\n\tGetHandleVerifier [0x009E295C+2776588]\n\tGetHandleVerifier [0x007D2280+612144]\n\t(No symbol) [0x006E4F6C]\n\t(No symbol) [0x006E11D8]\n\t(No symbol) [0x006E12BB]\n\t(No symbol) [0x006D4857]\n\tBaseThreadInitThunk [0x77560099+25]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B6E+286]\n\tRtlGetAppContainerNamedObjectPath [0x77C57B3E+238]\n"}} | headers=HTTPHeaderDict({'Content-Length': '1083', 'Content-Type': 'application/json; charset=utf-8', 'cache-control': 'no-cache'})
+ 346: Finished Request
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "xpath", "value": "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"}
+ 303: POST http://localhost:61133/session/749539384d213cd67cf4e46f7f0bb74b/element {"using": "css selector", "value": ".ChatMessageInputView_textInput__Aervw"}
+ 228: Starting new HTTP connection (2): localhost:61133
+ 594: Incremented Retry for (url='/session/749539384d213cd67cf4e46f7f0bb74b/element'): Retry(total=2, connect=None, read=None, redirect=None, status=None)
+ 812: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000260114961A0>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。')': /session/749539384d213cd67cf4e46f7f0bb74b/element
+ 228: Starting new HTTP connection (3): localhost:61133
+ 594: Incremented Retry for (url='/session/749539384d213cd67cf4e46f7f0bb74b/element'): Retry(total=1, connect=None, read=None, redirect=None, status=None)
+ 812: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000260114961D0>: Failed to establish a new connection: [WinError 10061] 由于目标计算机积极拒绝，无法连接。')': /session/749539384d213cd67cf4e46f7f0bb74b/element
+ 228: Starting new HTTP connection (4): localhost:61133

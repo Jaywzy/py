@@ -1,0 +1,185 @@
+<!-- doc/src/sgml/pg-show-plans.sgml -->
+<sect1 id="pg-show-plans" xreflabel="lt_show_plans">
+  <title>lt_show_plans</title>
+
+  <indexterm zone="pg-show-plans">
+    <primary>lt_show_plans</primary>
+  </indexterm>
+  <para>
+    <filename>lt_show_plans</filename> is a module which shows the query
+    plans of all currently running SQL statements.
+    You can select the output format of plans: TEXT or JSON.
+  </para>
+  <para>
+    When the server starts, lt_show_plans makes a hashtable on the
+    shared-memory in order to temporarily store query plans.
+    The hashtable size cannot be changed, so the plans are not stored
+    if the hashtable is full.
+  </para>
+
+  <sect2>
+    <title>Configuration Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term>
+          <varname>lt_show_plans.plan_format</varname>
+          <indexterm>
+            <primary><varname>lt_show_plans.plan_format</varname>configuration parameter</primary>
+          </indexterm>
+        </term>
+        <listitem>
+          <para>
+            It controls the output format of query plans.
+            It can be selected either <literal>text</literal> or
+            <literal>json</literal>. Default is <literal>text</literal>.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <varname>lt_show_plans.max_plan_length</varname>
+          <indexterm>
+            <primary><varname>lt_show_plans.max_plan_length</varname>configuration parameter</primary>
+          </indexterm>
+        </term>
+        <listitem>
+          <para>
+            It sets the maximum length of query plans. Default is
+            <literal>8192</literal> [byte]. Note that this parameter must be
+            set to an integer.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <varname>lt_show_plans.show_level</varname>
+          <indexterm>
+            <primary><varname>lt_show_plans.show_level</varname>configuration parameter</primary>
+          </indexterm>
+        </term>
+        <listitem>
+            <para>
+                It controls the level of query plans. You can select one of <literal>all</literal>,<literal>top</literal> and <literal>none</literal>.
+                "all" shows all level of the query plan. For example, when you execute a function defined by PL/pgSQL, the caller SQL statement (level 0) and the internal SQL statements in the function (level 1) are shown. "top" shows the top level of the query plan. "none" does not store the query plans, so the lt_show_plans view does not show anything. Default is <literal>none</literal>.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </sect2>
+
+  <sect2>
+    <title>Usage</title>
+    <para>
+      You must add the line shown below in your <literal>lightdb.conf</literal> (See <literal>lt_show_plans.show_level</literal> above).
+<programlisting>
+shared_preload_libraries = 'lt_show_plans'
+lt_show_plans.show_level = 'top'
+</programlisting>
+      After starting your server, you must issue <literal>CREATE EXTENSION</literal> statement shown below.
+<programlisting>
+testdb=# CREATE EXTENSION lt_show_plans;
+</programlisting>
+      After issuing, you must call the enable function shown below.
+<programlisting>
+    testdb=# select pg_show_plans_enable();
+</programlisting>
+      By issuing the following query, it shows the query plan and related information of the currently running SQL statements.
+<programlisting>
+testdb=# SELECT * FROM pg_show_plans;
+  pid  | level | userid | dbid  |                                 plan                                  
+-------+-------+--------+-------+-----------------------------------------------------------------------
+ 11473 |     0 |     10 | 16384 | Function Scan on pg_show_plans  (cost=0.00..10.00 rows=1000 width=56)
+ 11504 |     0 |     10 | 16384 | Function Scan on print_item  (cost=0.25..10.25 rows=1000 width=524)
+ 11504 |     1 |     10 | 16384 | Result  (cost=0.00..0.01 rows=1 width=4)
+(3 rows)
+</programlisting>
+      <literal>pg_show_plans</literal> View:
+      <itemizedlist>
+        <listitem>
+          <para>
+            <literal>pid</literal>: the pid of the process which the query is
+            running.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <literal>level</literal>: the level of the query which runs the
+            query. Top level is <literal>0</literal>.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <literal>userid</literal>: the userid of the user which runs the
+            query.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <literal>dbid</literal>: the database id of the database which the
+            query is running.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <literal>plan</literal>: the query plan of the running query.
+          </para>
+        </listitem>
+      </itemizedlist>
+      If you need the query plans of running SQL statements and also the
+      corresponding query string, you issue the following query which is
+      combined with pg_show_plans and pg_stat_activity.
+<programlisting>
+testdb=# \x
+Expanded display is on.
+testdb=# SELECT p.pid, p.level, p.plan, a.query FROM pg_show_plans p 
+   LEFT JOIN pg_stat_activity a
+   ON p.pid = a.pid AND p.level = 0 ORDER BY p.pid, p.level;
+-[ RECORD 1 ]-----------------------------------------------------------------------------------------
+pid   | 11473
+level | 0
+plan  | Sort  (cost=72.08..74.58 rows=1000 width=80)                                                  +
+      |   Sort Key: pg_show_plans.pid, pg_show_plans.level                                            +
+      |   ->  Hash Left Join  (cost=2.25..22.25 rows=1000 width=80)                                   +
+      |         Hash Cond: (pg_show_plans.pid = s.pid)                                                +
+      |         Join Filter: (pg_show_plans.level = 0)                                                +
+      |         ->  Function Scan on pg_show_plans  (cost=0.00..10.00 rows=1000 width=48)             +
+      |         ->  Hash  (cost=1.00..1.00 rows=100 width=44)                                         +
+      |               ->  Function Scan on pg_stat_get_activity s  (cost=0.00..1.00 rows=100 width=44)
+query | SELECT p.pid, p.level, p.plan, a.query FROM pg_show_plans p                                   +
+      |    LEFT JOIN pg_stat_activity a                                                               +
+      |    ON p.pid = a.pid AND p.level = 0 ORDER BY p.pid, p.level;
+-[ RECORD 2 ]-----------------------------------------------------------------------------------------
+pid   | 11517
+level | 0
+plan  | Function Scan on print_item  (cost=0.25..10.25 rows=1000 width=524)
+query | SELECT * FROM print_item(1,20);
+-[ RECORD 3 ]-----------------------------------------------------------------------------------------
+pid   | 11517
+level | 1
+plan  | Result  (cost=0.00..0.01 rows=1 width=4)
+query | 
+</programlisting>
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>Functions</title>
+    <para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            <literal>pg_show_plans_disable()</literal> disables the
+            feature. Only superuser can execute it.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <literal>pg_show_plans_enable()</literal> enables the
+            feature. Only superuser can execute it.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+  </sect2>
+
+</sect1>

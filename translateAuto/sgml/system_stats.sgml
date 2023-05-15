@@ -1,0 +1,610 @@
+<sect1 id="system_stats">
+  <title>system_stats</title>
+  <para>
+    <emphasis>system_stats</emphasis> is a LightDB extension that
+    provides functions to access system level statistics that can be
+    used for monitoring.
+  </para>
+  <sect2 id="security">
+    <title>Security</title>
+    <para>
+      Due to the nature of the information returned by these functions,
+      access is restricted to superusers and members of the
+      monitor_system_stats role which will be created when the extension
+      is installed. To allow users to access the functions without
+      granting them superuser access, add them to the
+      monitor_system_stats role. For example:
+    </para>
+    <programlisting>
+GRANT monitor_system_stats to nagios;
+</programlisting>
+  </sect2>
+  <sect2 id="system-stats-functions">
+    <title>Functions</title>
+    <para>
+      The following functions are provided to fetch system level
+      statistics for all platforms.
+    </para>
+    <sect3 id="pg_sys_os_info">
+      <title>pg_sys_os_info</title>
+      <para>
+        This interface allows the user to get operating system
+        statistics.
+      </para>
+    </sect3>
+    <sect3 id="pg_sys_cpu_info">
+      <title>pg_sys_cpu_info</title>
+      <para>
+        This interface allows the user to get CPU information.
+      </para>
+    </sect3>
+    <sect3 id="pg_sys_cpu_usage_info">
+      <title>pg_sys_cpu_usage_info</title>
+      <para>
+        This interface allows the user to get CPU usage information.
+        Values are a percentage of time spent by CPUs for all
+        operations.
+      </para>
+    </sect3>
+    <sect3 id="pg_sys_memory_info">
+      <title>pg_sys_memory_info</title>
+      <para>
+        This interface allows the user to get memory usage information.
+        All the values are in bytes.
+      </para>
+    </sect3>
+    <sect3 id="pg_sys_io_analysis_info">
+      <title>pg_sys_io_analysis_info</title>
+      <para>
+        This interface allows the user to get an I/O analysis of block
+        devices.
+      </para>
+    </sect3>
+    <sect3 id="pg_sys_disk_info">
+      <title>pg_sys_disk_info</title>
+      <para>
+        This interface allows the user to get the disk information.
+      </para>
+    </sect3>
+    <sect3 id="pg_sys_load_avg_info">
+      <title>pg_sys_load_avg_info</title>
+      <para>
+        This interface allows the user to get the average load of the
+        system over 1, 5, 10 and 15 minute intervals.
+      </para>
+    </sect3>
+    <sect3 id="pg_sys_process_info">
+      <title>pg_sys_process_info</title>
+      <para>
+        This interface allows the user to get process information.
+      </para>
+    </sect3>
+    <sect3 id="pg_sys_network_info">
+      <title>pg_sys_network_info</title>
+      <para>
+        This interface allows the user to get network interface
+        information.
+      </para>
+    </sect3>
+    <sect3 id="pg_sys_cpu_memory_by_process">
+      <title>pg_sys_cpu_memory_by_process</title>
+      <para>
+        This interface allows the user to get the CPU and memory
+        information for each process ID.
+      </para>
+    </sect3>
+  </sect2>
+  <sect2 id="detailed-output-of-each-functions">
+    <title>Detailed output of each functions</title>
+    <sect3 id="pg_sys_os_info-1">
+      <title>pg_sys_os_info</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            Name
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Version
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Host name
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Domain name
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Handle count
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Process count
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Thread count
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Architecture
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Last bootup time
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Uptime in seconds
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+    <sect3 id="pg_sys_cpu_info-1">
+      <title>pg_sys_cpu_info</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            Vendor
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Description
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Model name
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Processor type
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Logical processor
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Physical processor
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of cores
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Architecture
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Clock speed in hz
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            CPU type
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            CPU family
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Byte order
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            L1d cache size
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            L1i cache size
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            L2 cache size
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            L3 cache size
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+    <sect3 id="pg_sys_cpu_usage_info-1">
+      <title>pg_sys_cpu_usage_info</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            Percent time spent in processing usermode normal process
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent time spent in processing usermode niced process
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent time spent in kernel mode process
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent time spent in idle mode
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent time spent in io completion
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent time spent in servicing interrupt
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent time spent in servicing software interrupt
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent user time spent
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent processor time spent
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent privileged time spent
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Percent interrupt time spent
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+    <sect3 id="pg_sys_memory_info-1">
+      <title>pg_sys_memory_info</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            Total memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Used memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Free memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Total swap memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Used swap memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Free swap memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Total cache memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Total kernel memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Kernel paged memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Kernel non paged memory
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Total page file
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Available page file
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+    <sect3 id="pg_sys_io_analysis_info-1">
+      <title>pg_sys_io_analysis_info</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            Block device name
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Total number of reads
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Total number of writes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Read bytes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Written bytes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Time spent in milliseconds for reading
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Time spent in milliseconds for writing
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+    <sect3 id="pg_sys_disk_info-1">
+      <title>pg_sys_disk_info</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            File system of the disk
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            File system type
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Mount point for the file system
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Drive letter
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Drive type
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Total space in bytes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Used space in bytes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Available space in bytes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of total inodes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of used inodes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of free inodes
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+    <sect3 id="pg_sys_load_avg_info-1">
+      <title>pg_sys_load_avg_info</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            1 minute load average
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            5 minute load average
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            10 minute load average
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            15 minute load average
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+    <sect3 id="pg_sys_process_info-1">
+      <title>pg_sys_process_info</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            Number of total processes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of running processes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of sleeping processes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of stopped processes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of zombie processes
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+    <sect3 id="pg_sys_network_info-1">
+      <title>pg_sys_network_info</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            Name of the interface_name
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            ipv4 address of the interface
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of total bytes transmitted
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of total packets transmitted
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of transmit errors by this network device
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of packets dropped during transmission
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of total bytes received
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of total packets received
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of receive errors by this network device
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Number of packets dropped by this network device
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Interface speed in mbps
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+    <sect3 id="pg_sys_cpu_memory_by_process-1">
+      <title>pg_sys_cpu_memory_by_process</title>
+      <itemizedlist spacing="compact">
+        <listitem>
+          <para>
+            PID of the process
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Process name
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            CPU usage in bytes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Memory usage in bytes
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Total memory used in bytes
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect3>
+  </sect2>
+</sect1>

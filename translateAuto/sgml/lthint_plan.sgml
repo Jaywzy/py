@@ -1,0 +1,2828 @@
+<!-- doc/src/sgml/lt_hint_plan.sgml -->
+
+<sect1 id="pghint_plan" xreflabel="pghint_plan">
+    <title>lt_hint_plan</title>
+
+    <indexterm zone="pghint_plan">
+        <primary>lt_hint_plan</primary>
+    </indexterm>
+
+    <sect2>
+        <title>Name</title>
+
+        <para>
+            lt_hint_plan -- controls execution plan with hinting phrases in comment of special form.
+        </para>
+    </sect2>
+
+    <sect2>
+        <title>Synopsis</title>
+
+        <para>
+            LightDB uses cost based optimizer, which utilizes data statistics, not static rules. The
+            planner (optimizer) esitimates costs of each possible execution plans for a SQL statement then
+            the execution plan with the lowest cost finally be executed. The planner does its best to select
+            the best best execution plan, but not perfect, since it doesn't count some properties of the
+            data, for example, correlation between columns.
+        </para>
+
+        <para>
+            lt_hint_plan makes it possible to tweak execution plans using so-called "hints", which are
+            simple descriptions in the SQL comment of special form.
+        </para>
+    </sect2>
+
+    <sect2>
+        <title>Description</title>
+
+        <sect3>
+            <title>Basic Usage</title>
+
+            <para>
+                lt_hint_plan reads hinting phrases in a comment of special form given with the target SQL statement.
+                The special form is beginning by the character sequence "/*+" and ends with "*/". Hint phrases are
+                consists of hint name and following parameters enclosed by parentheses and delimited by spaces or a comma. Each
+                hinting phrases can be delimited by new lines for readability. the hint at the beginning of sql is called
+                the global level hint, and the hint in the statement is called the stmt level hint(only affect current query block without using qb_name hint).
+            </para>
+
+            <para>
+                In the example below , hash join is selected as the joning method and scanning ltbench_accounts by sequential scan method.
+            </para>
+
+<programlisting>
+lightdb@postgres=# /*+
+lightdb@postgres*#    HashJoin(a b)
+lightdb@postgres*#    SeqScan(a)
+lightdb@postgres*#  */
+lightdb@postgres-# EXPLAIN SELECT *
+lightdb@postgres-#    FROM ltbench_branches b
+lightdb@postgres-#    JOIN ltbench_accounts a ON b.bid = a.bid
+lightdb@postgres-#   ORDER BY a.aid;
+                                        QUERY PLAN
+---------------------------------------------------------------------------------------
+    Sort  (cost=31465.84..31715.84 rows=100000 width=197)
+    Sort Key: a.aid
+    ->  Hash Join  (cost=1.02..4016.02 rows=100000 width=197)
+            Hash Cond: (a.bid = b.bid)
+            ->  Seq Scan on ltbench_accounts a  (cost=0.00..2640.00 rows=100000 width=97)
+            ->  Hash  (cost=1.01..1.01 rows=1 width=100)
+                ->  Seq Scan on ltbench_branches b  (cost=0.00..1.01 rows=1 width=100)
+(7 rows)
+
+lightdb@postgres=#
+</programlisting>
+        </sect3>
+    </sect2>
+
+    <sect2>
+        <title>The hint table</title>
+
+        <para>
+            Hints are described in a comment in a special form in the above section. This is inconvenient in the case where
+            queries cannot be edited. In the case hints can be placed in a special table named "hint_plan.hints". The table
+            consists of the following columns.
+        </para>
+
+        <table id="hint-table">
+            <title>hint table</title>
+            <tgroup cols="2">
+                <colspec colname="col1" colwidth="1*"/>
+                <colspec colname="col2" colwidth="2*"/>
+                <thead>
+                    <row>
+                        <entry>column</entry>
+                        <entry>description</entry>
+                    </row>
+                </thead>
+
+                <tbody>
+                    <row>
+                        <entry><type>id</type></entry>
+                        <entry>
+                            Unique number to identify a row for a hint. This column is filled automatically by sequence.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry><type>norm_query_string</type></entry>
+                        <entry>
+                            A pattern matches to the query to be hinted. Constants in the query have to be replace with
+                            '?' as in the following example. White space is significant in the pattern.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry><type>application_name</type></entry>
+                        <entry>
+                            The value of application_name of sessions to apply the hint. The hint in the example below
+                            applies to sessions connected from psql. An empty string means sessions of any application_name.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry><type>hints</type></entry>
+                        <entry>
+                            Hint phrase. This must be a series of hints excluding surrounding comment marks.
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+        <para>
+            The following example shows how to operate with the hint table.
+        </para>
+
+<programlisting>
+lightdb@postgres=# INSERT INTO hint_plan.hints(norm_query_string, application_name, hints)
+lightdb@postgres-#     VALUES (
+lightdb@postgres(#         'EXPLAIN (COSTS false) SELECT * FROM t1 WHERE t1.id = ?;',
+lightdb@postgres(#         '',
+lightdb@postgres(#         'SeqScan(t1)'
+lightdb@postgres(#     );
+INSERT 0 1
+lightdb@postgres=# UPDATE hint_plan.hints
+lightdb@postgres-#    SET hints = 'IndexScan(t1)'
+lightdb@postgres-#  WHERE id = 1;
+UPDATE 1
+lightdb@postgres=# DELETE FROM hint_plan.hints
+lightdb@postgres-#  WHERE id = 1;
+DELETE 1
+lightdb@postgres=#
+</programlisting>
+
+        <para>
+            The hint table is owned by the creator user and having the default previledges at the time of creation. during
+            CREATE EXTENSION. Table hints are prioritized than comment hits.
+        </para>
+
+        <sect3>
+            <title>The types of hints</title>
+
+            <para>
+                Hinting phrases are classified into eight types based on what kind of object and how they can affect planning.
+                Scaning methods, join methods, joining order, row number correction, parallel query, GUC setting, query block name,
+                and other hints. You will see the lists of hint phrases of each type in Hint list.
+            </para>
+            <sect4>
+                <title>Hints for scan methods</title>
+
+                <para>
+                    Scan method hints enforce specific scanning method on the target table. lt_hint_plan recognizes the target table by alias names if any.
+                    They are 'SeqScan' , 'IndexScan' and so on in this kind of hint. 
+                </para>
+
+                <para>
+                    Scan hints are effective on ordinary tables, inheritance tables, UNLOGGED tables, temporary tables and system catalogs. External(foreign)
+                    tables, table functions, VALUES clause, CTEs, views and subquiries are not affected.
+                </para>
+
+<programlisting>
+lightdb@postgres=# /*+
+lightdb@postgres*#     SeqScan(t1)
+lightdb@postgres*#     IndexScan(t2 t2_pkey)
+lightdb@postgres*#  */
+lightdb@postgres-# SELECT * FROM table1 t1 JOIN table table2 t2 ON (t1.key = t2.key);
+</programlisting>
+
+                <para>
+                    For oracle compatibility, keywords of 'full' and 'index' are also supported. They are just aliases for 'seqscan', 'indexscan'.  
+                </para>
+
+<programlisting>
+lightdb@postgres=# EXPLAIN  SELECT* FROM t2, t1 WHERE t1.id = t2.id;
+                            QUERY PLAN                            
+------------------------------------------------------------------
+Hash Join  (cost=60.85..99.39 rows=2260 width=16)
+Hash Cond: (t2.id = t1.id)
+->  Seq Scan on t2  (cost=0.00..32.60 rows=2260 width=8)
+->  Hash  (cost=32.60..32.60 rows=2260 width=8)
+        ->  Seq Scan on t1  (cost=0.00..32.60 rows=2260 width=8)
+(5 rows)
+
+lightdb@postgres=# EXPLAIN  SELECT /*+index(t1)*/* FROM t2, t1 WHERE t1.id = t2.id;
+LOG:  lt_hint_plan:
+used hint:
+INDEX(t1@lt#0)
+not used hint:
+duplication hint:
+error hint:
+
+                                    QUERY PLAN                                     
+------------------------------------------------------------------------------------
+Hash Join  (cost=61.01..111.85 rows=2260 width=16)
+Hash Cond: (t1.id = t2.id)
+->  Index Scan using t1_pkey on t1 @"lt#0"  (cost=0.15..45.06 rows=2260 width=8)
+->  Hash  (cost=32.60..32.60 rows=2260 width=8)
+        ->  Seq Scan on t2 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+(5 rows)
+
+lightdb@postgres=# EXPLAIN  SELECT /*+full(t1)*/* FROM t2, t1 WHERE t1.id = t2.id;
+LOG:  lt_hint_plan:
+used hint:
+FULL(t1@lt#0)
+not used hint:
+duplication hint:
+error hint:
+
+                                QUERY PLAN                                
+--------------------------------------------------------------------------
+Hash Join  (cost=60.85..99.39 rows=2260 width=16)
+Hash Cond: (t1.id = t2.id)
+->  Seq Scan on t1 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+->  Hash  (cost=32.60..32.60 rows=2260 width=8)
+        ->  Seq Scan on t2 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+(5 rows)
+
+lightdb@postgres=# 
+</programlisting>
+            </sect4>
+
+            <sect4>
+                <title>Hints for join methods</title>
+
+                <para>
+                    This can affect on joins only on ordinary tables, inheritance tables, UNLOGGED tables, temporary
+                    tables, external (foreign) tables, system catalogs, table functions, VALUES command results and
+                    CTEs are allowed to be in the parameter list. But joins on views and sub query are not affected.
+                </para>
+
+                <para>
+                    For oracle compatibility, keywords of 'use_hash', 'use_nl', 'use_merge', 'no_use_hash', 'no_use_nl' and 'no_use_merge' are also supported.
+                </para>
+
+                <para>
+                    When <xref linkend="guc-lightdb-dblevel-syntax-compatible-type"/> is 'off', join method hints can specify two or more tables,
+                    and will enforce the join methods of the joins involving specified tables.
+                </para>
+
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) SELECT /*+leading(t1 t2 t3)*/* FROM t1, t2 ,t3 WHERE t1.id = t2.id and t2.id=t3.id;
+LOG:  lt_hint_plan:
+used hint:
+Leading(((t1@lt#0 t2@lt#0) t3@lt#0))
+not used hint:
+duplication hint:
+error hint:
+
+                QUERY PLAN                
+------------------------------------------
+Hash Join
+Hash Cond: (t1.id = t3.id)
+->  Hash Join
+        Hash Cond: (t1.id = t2.id)
+        ->  Seq Scan on t1 @"lt#0"
+        ->  Hash
+            ->  Seq Scan on t2 @"lt#0"
+->  Hash
+        ->  Seq Scan on t3 @"lt#0"
+(9 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) SELECT /*+leading(t1 t2 t3) use_nl(t1 t2) use_merge(t1 t2 t3)*/* FROM t1, t2 ,t3 WHERE t1.id = t2.id and t2.id=t3.id;
+LOG:  lt_hint_plan:
+used hint:
+USE_NL(t1@lt#0 t2@lt#0)
+USE_MERGE(t1@lt#0 t2@lt#0 t3@lt#0)
+Leading(((t1@lt#0 t2@lt#0) t3@lt#0))
+not used hint:
+duplication hint:
+error hint:
+
+                    QUERY PLAN                     
+----------------------------------------------------
+Merge Join
+Merge Cond: (t1.id = t3.id)
+->  Nested Loop
+        ->  Index Scan using t1_pkey on t1 @"lt#0"
+        ->  Index Scan using t2_pkey on t2 @"lt#0"
+            Index Cond: (id = t1.id)
+->  Index Scan using t3_pkey on t3 @"lt#0"
+(7 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                <para>
+                    When <xref linkend="guc-lightdb-dblevel-syntax-compatible-type"/> is not 'off', join method hints can specify one or more tables,
+                    and will instructs the optimizer to join each specified table with another row source using specified join method.
+                    The optimizer uses those hints when the referenced table is forced to be the inner table of a join. The hints are ignored if the referenced table is the outer table.
+                    It is recommended to be used with the join order hints('leading', 'ordered').
+                </para>
+
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) SELECT /*+leading(t1 t2 t3)*/* FROM t1, t2 ,t3 WHERE t1.id = t2.id and t2.id=t3.id;
+LOG:  lt_hint_plan:
+used hint:
+Leading(((t1@lt#0 t2@lt#0) t3@lt#0))
+not used hint:
+duplication hint:
+error hint:
+
+                QUERY PLAN                
+------------------------------------------
+Hash Join
+Hash Cond: (t1.id = t3.id)
+->  Hash Join
+        Hash Cond: (t1.id = t2.id)
+        ->  Seq Scan on t1 @"lt#0"
+        ->  Hash
+            ->  Seq Scan on t2 @"lt#0"
+->  Hash
+        ->  Seq Scan on t3 @"lt#0"
+(9 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) SELECT /*+leading(t1 t2 t3) use_nl(t2) use_merge(t3)*/* FROM t1, t2 ,t3 WHERE t1.id = t2.id and t2.id=t3.id;
+LOG:  lt_hint_plan:
+used hint:
+USE_NL(t2@lt#0)
+USE_MERGE(t3@lt#0)
+Leading(((t1@lt#0 t2@lt#0) t3@lt#0))
+not used hint:
+duplication hint:
+error hint:
+
+                    QUERY PLAN                     
+----------------------------------------------------
+Merge Join
+Merge Cond: (t1.id = t3.id)
+->  Nested Loop
+        ->  Index Scan using t1_pkey on t1 @"lt#0"
+        ->  Index Scan using t2_pkey on t2 @"lt#0"
+            Index Cond: (id = t1.id)
+->  Index Scan using t3_pkey on t3 @"lt#0"
+(7 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) SELECT /*+leading(t1 t2 t3) use_nl(t1) use_merge(t2)*/* FROM t1, t2 ,t3 WHERE t1.id = t2.id and t2.id=t3.id;
+LOG:  lt_hint_plan:
+used hint:
+USE_MERGE(t2@lt#0)
+Leading(((t1@lt#0 t2@lt#0) t3@lt#0))
+not used hint:
+USE_NL(t1@lt#0)
+duplication hint:
+error hint:
+
+                    QUERY PLAN                     
+----------------------------------------------------
+Hash Join
+Hash Cond: (t1.id = t3.id)
+->  Merge Join
+        Merge Cond: (t1.id = t2.id)
+        ->  Index Scan using t1_pkey on t1 @"lt#0"
+        ->  Index Scan using t2_pkey on t2 @"lt#0"
+->  Hash
+        ->  Seq Scan on t3 @"lt#0"
+(8 rows)
+
+lightdb@postgres=#
+</programlisting>
+
+                <para>
+                    When <xref linkend="guc-lightdb-dblevel-syntax-compatible-type"/> is not 'off', join method hints that specify more than one table can be seen as a group of join method hints that specify one table,
+                    so when there is a conflict, it only affects the tables involved. e.g: 'use_hash(a b)' and 'use_nl(a)' is conflicted, but for table b, use_hash is also used.   
+                </para>
+
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) SELECT /*+leading(t1 t2 t3) use_nl(t2 t3) use_merge(t2)*/* FROM t1, t2 ,t3 WHERE t1.id = t2.id and t2.id=t3.id;
+INFO:  lt_hint_plan: hint syntax error at or near "use_nl(t2 t3) use_merge(t2)"
+DETAIL:  Conflict join method hint.
+LOG:  lt_hint_plan:
+used hint:
+USE_NL(t3@lt#0) --> USE_NL(t2@lt#0 t3@lt#0)
+Leading(((t1@lt#0 t2@lt#0) t3@lt#0))
+not used hint:
+duplication hint:
+USE_NL(t2@lt#0) --> USE_NL(t2@lt#0 t3@lt#0)
+USE_MERGE(t2@lt#0)
+error hint:
+
+                QUERY PLAN                  
+----------------------------------------------
+Nested Loop
+->  Hash Join
+        Hash Cond: (t1.id = t2.id)
+        ->  Seq Scan on t1 @"lt#0"
+        ->  Hash
+            ->  Seq Scan on t2 @"lt#0"
+->  Index Scan using t3_pkey on t3 @"lt#0"
+        Index Cond: (id = t1.id)
+(8 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                <para>
+                    When <xref linkend="guc-lightdb-dblevel-syntax-compatible-type"/> is not 'off', join method hints may conflict with 'swap_join_inputs' hint without using 'leading' hint.
+                </para>
+
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) SELECT/*+leading(t1 t2) use_hash(t2) swap_join_inputs(t2)*/  * FROM t1, t2 WHERE t1.id = t2.id;
+LOG:  lt_hint_plan:
+used hint:
+USE_HASH(t2@lt#0)
+Leading((t1@lt#0 t2@lt#0))
+swap_join_inputs(t2@lt#0)
+not used hint:
+duplication hint:
+error hint:
+
+            QUERY PLAN             
+------------------------------------
+Hash Join
+Hash Cond: (t2.id = t1.id)
+->  Seq Scan on t2 @"lt#0"
+->  Hash
+        ->  Seq Scan on t1 @"lt#0"
+(5 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) SELECT/*+use_hash(t2) swap_join_inputs(t2)*/  * FROM t1, t2 WHERE t1.id = t2.id;
+INFO:  lt_hint_plan: join hint conflict with swap_join_inputs hint, ignore swap_join_inputs 
+DETAIL:  use USE_HASH 
+LOG:  lt_hint_plan:
+used hint:
+USE_HASH(t2@lt#0)
+not used hint:
+duplication hint:
+swap_join_inputs(t2@lt#0)
+error hint:
+
+            QUERY PLAN             
+------------------------------------
+Hash Join
+Hash Cond: (t1.id = t2.id)
+->  Seq Scan on t1 @"lt#0"
+->  Hash
+        ->  Seq Scan on t2 @"lt#0"
+(5 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+            </sect4>
+
+            <sect4>
+                <title>Hint for joining order</title>
+
+                <para>
+                    Normally this hint "Leading" enforces the order of join on two or more tables. There are two ways of enforcing.
+                    One is enforcing specific order of joining but not restricting direction at each join level. Another
+                    enfoces join direction additionaly. Details are seen in the hint list table.
+                </para>
+
+<programlisting>
+lightdb@postgres=# /*+
+lightdb@postgres*#     NestLoop(t1 t2)
+lightdb@postgres*#     MergeJoin(t1 t2 t3)
+lightdb@postgres*#     Leading(t1 t2 t3)
+lightdb@postgres*#  */
+lightdb@postgres-# SELECT * FROM table1 t1
+lightdb@postgres-#     JOIN table table2 t2 ON (t1.key = t2.key)
+lightdb@postgres-#     JOIN table table3 t3 ON (t2.key = t3.key);
+</programlisting>
+
+                <para>
+                    For oracle compatibility, 'ordered' hint is also supported.
+                    The ORDERED hint instructs LightDB to join tables in the order in which they appear in the FROM clause.
+                    LightDB's 'ordered' hint is just an alias for 'leading' hint, so it will not override 'leading' hints like oracle does.
+                </para>
+
+<programlisting>
+lightdb@postgres=# EXPLAIN  SELECT * FROM t3, t2, t1 WHERE t1.id = t2.id;
+                            QUERY PLAN                               
+------------------------------------------------------------------------
+Nested Loop  (cost=60.85..63982.64 rows=5107600 width=24)
+->  Hash Join  (cost=60.85..99.39 rows=2260 width=16)
+        Hash Cond: (t2.id = t1.id)
+        ->  Seq Scan on t2  (cost=0.00..32.60 rows=2260 width=8)
+        ->  Hash  (cost=32.60..32.60 rows=2260 width=8)
+            ->  Seq Scan on t1  (cost=0.00..32.60 rows=2260 width=8)
+->  Materialize  (cost=0.00..43.90 rows=2260 width=8)
+        ->  Seq Scan on t3  (cost=0.00..32.60 rows=2260 width=8)
+(8 rows)
+
+lightdb@postgres=# EXPLAIN  SELECT/*+ordered*/ * FROM t3, t2, t1 WHERE t1.id = t2.id;
+LOG:  lt_hint_plan:
+used hint:
+Leading(@lt#0 ((t3@lt#0 t2@lt#0) t1@lt#0))
+not used hint:
+duplication hint:
+error hint:
+
+                                QUERY PLAN                                   
+--------------------------------------------------------------------------------
+Hash Join  (cost=60.85..77409.29 rows=5107600 width=24)
+Hash Cond: (t2.id = t1.id)
+->  Nested Loop  (cost=0.00..63915.85 rows=5107600 width=16)
+        ->  Seq Scan on t3 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+        ->  Materialize  (cost=0.00..43.90 rows=2260 width=8)
+            ->  Seq Scan on t2 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+->  Hash  (cost=32.60..32.60 rows=2260 width=8)
+        ->  Seq Scan on t1 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+(8 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                <para>
+                    For oracle compatibility, 'leading' hint is also supported to specify only one table,
+                    The table specified is used to start the join.
+                </para>
+
+<programlisting>
+lightdb@postgres=# EXPLAIN  SELECT * FROM t3, t2, t1 WHERE t1.id = t2.id;
+                            QUERY PLAN                               
+------------------------------------------------------------------------
+Nested Loop  (cost=60.85..63982.64 rows=5107600 width=24)
+->  Hash Join  (cost=60.85..99.39 rows=2260 width=16)
+        Hash Cond: (t2.id = t1.id)
+        ->  Seq Scan on t2  (cost=0.00..32.60 rows=2260 width=8)
+        ->  Hash  (cost=32.60..32.60 rows=2260 width=8)
+            ->  Seq Scan on t1  (cost=0.00..32.60 rows=2260 width=8)
+->  Materialize  (cost=0.00..43.90 rows=2260 width=8)
+        ->  Seq Scan on t3  (cost=0.00..32.60 rows=2260 width=8)
+(8 rows)
+
+lightdb@postgres=# EXPLAIN  SELECT/*+leading(t1)*/ * FROM t3, t2, t1 WHERE t1.id = t2.id;
+LOG:  lt_hint_plan:
+used hint:
+Leading(t1@lt#0)
+not used hint:
+duplication hint:
+error hint:
+
+                                QUERY PLAN                                   
+--------------------------------------------------------------------------------
+Nested Loop  (cost=10000000060.85..10000063982.64 rows=5107600 width=24)
+->  Hash Join  (cost=60.85..99.39 rows=2260 width=16)
+        Hash Cond: (t1.id = t2.id)
+        ->  Seq Scan on t1 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+        ->  Hash  (cost=32.60..32.60 rows=2260 width=8)
+            ->  Seq Scan on t2 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+->  Materialize  (cost=0.00..43.90 rows=2260 width=8)
+        ->  Seq Scan on t3 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+(8 rows)
+
+lightdb@postgres=# EXPLAIN  SELECT/*+leading(t3)*/ * FROM t3, t2, t1 WHERE t1.id = t2.id;
+LOG:  lt_hint_plan:
+used hint:
+Leading(t3@lt#0)
+not used hint:
+duplication hint:
+error hint:
+
+                                        QUERY PLAN                                        
+
+-------------------------------------------------------------------------------------------
+-
+Nested Loop  (cost=10000000000.16..10000064316.68 rows=5107600 width=24)
+->  Seq Scan on t3 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+->  Materialize  (cost=10000000000.16..10000000444.73 rows=2260 width=16)
+        ->  Nested Loop  (cost=10000000000.16..10000000433.43 rows=2260 width=16)
+            ->  Seq Scan on t2 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+            ->  Index Scan using t1_pkey on t1 @"lt#0"  (cost=0.15..0.18 rows=1 width=8)
+                    Index Cond: (id = t2.id)
+(7 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+            </sect4>
+
+            <sect4>
+                <title>Hint for row number correction</title>
+
+                <para>
+                    This hint "Rows" corrects row number misestimation of joins that comes from restrictions of the planner.
+                </para>
+
+                <para>
+                    This hint "Rows" also corrects row number misestimation of table or subquery.
+                </para>
+<programlisting>
+lightdb@postgres=# /*+ Rows(a #10) */ SELECT... ; Sets rows of table result to 10
+lightdb@postgres=# /*+ Rows(a 10) */ SELECT... ; Sets rows of table result to 10
+lightdb@postgres=# /*+ Rows(a +10) */ SELECT... ; Increments row number of tableby 10
+lightdb@postgres=# /*+ Rows(a -10) */ SELECT... ; Subtracts 10 from the row number of table.
+lightdb@postgres=# /*+ Rows(a *10) */ SELECT... ; Makes the row number of table 10 times larger.
+lightdb@postgres=# /*+ Rows(a b #10) */ SELECT... ; Sets rows of join result to 10
+lightdb@postgres=# /*+ Rows(a b 10) */ SELECT... ; Sets rows of join result to 10
+lightdb@postgres=# /*+ Rows(a b +10) */ SELECT... ; Increments row number of join by 10
+lightdb@postgres=# /*+ Rows(a b -10) */ SELECT... ; Subtracts 10 from the row number of join.
+lightdb@postgres=# /*+ Rows(a b *10) */ SELECT... ; Makes the row number of join 10 times larger.
+
+lightdb@postgres=# /*+ cardinality(a #10) */ SELECT... ; Sets rows of table result to 10
+lightdb@postgres=# /*+ cardinality(a 10) */ SELECT... ; Sets rows of table result to 10
+lightdb@postgres=# /*+ cardinality(a +10) */ SELECT... ; Increments row number of tableby 10
+lightdb@postgres=# /*+ cardinality(a -10) */ SELECT... ; Subtracts 10 from the row number of table.
+lightdb@postgres=# /*+ cardinality(a *10) */ SELECT... ; Makes the row number of table 10 times larger.
+lightdb@postgres=# /*+ cardinality(a b #10) */ SELECT... ; Sets rows of join result to 10
+lightdb@postgres=# /*+ cardinality(a b 10) */ SELECT... ; Sets rows of join result to 10
+lightdb@postgres=# /*+ cardinality(a b +10) */ SELECT... ; Increments row number of join by 10
+lightdb@postgres=# /*+ cardinality(a b -10) */ SELECT... ; Subtracts 10 from the row number of join.
+lightdb@postgres=# /*+ cardinality(a b *10) */ SELECT... ; Makes the row number of join 10 times larger.
+</programlisting>
+
+
+                <para>
+                 For parameterized path, it is invaild, but it will affect the join cost base on parameterized path.
+                 It is diffent from oracle, oracle will not affect the join cost.
+                </para>
+
+<programlisting>
+lightdb@postgres=# explain select /*+ use_nl(a b) leading(a b)*/* from t1 a , t2 b where a.key1=b.key1;
+                                    QUERY PLAN                                    
+----------------------------------------------------------------------------------
+ Nested Loop  (cost=0.15..433.43 rows=2260 width=16)
+   ->  Seq Scan on t1 a @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+   ->  Index Scan using t2_pkey on t2 b @"lt#0"  (cost=0.15..0.18 rows=1 width=8)
+         Index Cond: (key1 = a.key1)
+(4 rows)
+
+lightdb@postgres=# explain select /*+ cardinality(b 1000)use_nl(a b) leading(a b)*/* from t1 a , t2 b where a.key1=b.key1;
+                                    QUERY PLAN                                    
+----------------------------------------------------------------------------------
+ Nested Loop  (cost=0.15..433.43 rows=1000 width=16)
+   ->  Seq Scan on t1 a @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+   ->  Index Scan using t2_pkey on t2 b @"lt#0"  (cost=0.15..0.18 rows=1 width=8)
+         Index Cond: (key1 = a.key1)
+(4 rows)
+
+chuhx@postgres=# 
+</programlisting>
+
+                <para>
+                 For subquery that cannot pull up, it will act on subquery;
+                 For a pulled up subquery, if there is only one table in the subquery, this will be applied to the tables in the subquery.
+                </para>
+
+<programlisting>
+chuhx@postgres=# explain with cte as (select distinct * from t1) select /*+hashjoin(t2, cte) cardinality(cte 1000) */* from t2,cte where cte.key1=t2.key1;
+                                QUERY PLAN                                
+--------------------------------------------------------------------------
+ Hash Join  (cost=104.75..152.57 rows=1000 width=16)
+   Hash Cond: (t1.key1 = t2.key1)
+   ->  HashAggregate  (cost=43.90..66.50 rows=2260 width=8)
+         Group Key: t1.key1, t1.key2
+         ->  Seq Scan on t1 @"lt#1"  (cost=0.00..32.60 rows=2260 width=8)
+   ->  Hash  (cost=32.60..32.60 rows=2260 width=8)
+         ->  Seq Scan on t2 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+(7 rows)
+
+chuhx@postgres=# explain with cte as (select * from t1) select /*+hashjoin(t2, cte) cardinality(cte 1000) */* from t2,cte where cte.key1=t2.key1;
+                                QUERY PLAN                                
+--------------------------------------------------------------------------
+ Hash Join  (cost=45.10..83.64 rows=1000 width=16)
+   Hash Cond: (t2.key1 = t1.key1)
+   ->  Seq Scan on t2 @"lt#0"  (cost=0.00..32.60 rows=2260 width=8)
+   ->  Hash  (cost=32.60..32.60 rows=1000 width=8)
+         ->  Seq Scan on t1 @"lt#1"  (cost=0.00..32.60 rows=1000 width=8)
+(5 rows)
+
+chuhx@postgres=# 
+</programlisting>
+
+            </sect4>
+
+            <sect4>
+                <title>Hint for parallel plan</title>
+
+                <para>
+                    This hint "Parallel" enforces parallel execution configuration on scans. The third parameter specifies
+                    the strength of enfocement. "soft" means that lt_hint_plan only changes max_parallel_worker_per_gather
+                    and leave all others to planner. "hard" changes other planner parameters so as to forcibly apply the
+                    number. This can affect on ordinary tables, inheritnce parents, unlogged tables and system catalogues.
+                    External tables, table functions, values clause, CTEs, views and subqueries are not affected. Internal
+                    tables of a view can be specified by its real name/alias as the target object. The following example
+                    shows that the query is enforced differently on each table.
+                </para>
+
+<programlisting>
+lightdb@postgres=# explain /*+ Parallel(c1 3 hard) Parallel(c2 5 hard) */
+        SELECT c2.a FROM c1 JOIN c2 ON (c1.a = c2.a);
+                                    QUERY PLAN
+-------------------------------------------------------------------------------
+    Hash Join  (cost=2.86..11406.38 rows=101 width=4)
+    Hash Cond: (c1.a = c2.a)
+    ->  Gather  (cost=0.00..7652.13 rows=1000101 width=4)
+            Workers Planned: 3
+            ->  Parallel Seq Scan on c1  (cost=0.00..7652.13 rows=322613 width=4)
+    ->  Hash  (cost=1.59..1.59 rows=101 width=4)
+            ->  Gather  (cost=0.00..1.59 rows=101 width=4)
+                Workers Planned: 5
+                ->  Parallel Seq Scan on c2  (cost=0.00..1.59 rows=59 width=4)
+
+lightdb@postgres=# EXPLAIN /*+ Parallel(tl 5 hard) */ SELECT sum(a) FROM tl;
+                                    QUERY PLAN
+-----------------------------------------------------------------------------------
+    Finalize Aggregate  (cost=693.02..693.03 rows=1 width=8)
+    ->  Gather  (cost=693.00..693.01 rows=5 width=8)
+            Workers Planned: 5
+            ->  Partial Aggregate  (cost=693.00..693.01 rows=1 width=8)
+                ->  Parallel Seq Scan on tl  (cost=0.00..643.00 rows=20000 width=4)
+</programlisting>
+            
+                <para>
+                    This hint "Parallel" can also to be used by specifying just an integer, indicating that it works for all tables in the current query block.  
+                </para>
+
+<programlisting>
+lightdb@postgres=# explain select /*+parallel(3)*/* from t1, t2 where t1.id=t2.id;
+
+                                    QUERY PLAN                                   
+    
+-----------------------------------------------------------------------------------
+----
+Hash Join  (cost=28.25..34.19 rows=2260 width=16)
+Hash Cond: (t1.id = t2.id)
+->  Gather  (cost=0.00..0.00 rows=2260 width=8)
+        Workers Planned: 3
+        ->  Parallel Seq Scan on t1 @"lt#0"  (cost=0.00..0.00 rows=729 width=8)
+->  Hash  (cost=0.00..0.00 rows=2260 width=8)
+        ->  Gather  (cost=0.00..0.00 rows=2260 width=8)
+            Workers Planned: 3
+            ->  Parallel Seq Scan on t2 @"lt#0"  (cost=0.00..0.00 rows=729 width
+=8)
+(9 rows)
+
+lightdb@postgres=# 
+</programlisting>            
+            </sect4>
+
+            <sect4>
+                <title>GUC parameters temporarily setting</title>
+
+                <para>
+                    'Set' hint changes GUC parameters just while planning. GUC parameter shown in Query Planning can have
+                    the expected effects on planning unless any other hint conflicts with the planner method configuration
+                    parameters. The last one among hints on the same GUC parameter makes effect. GUC parameters for
+                    lt_hint_plan are also settable by this hint but it won't work as your expectation.
+                </para>
+
+<programlisting>
+lightdb@postgres=# /*+ Set(random_page_cost 2.0) */
+lightdb@postgres-# SELECT * FROM table1 t1 WHERE key = 'value';
+...
+</programlisting>
+            </sect4>
+
+            <sect4>
+                <title>Query block name</title>
+
+                <para>
+                    Use the qb_name hint to define a name for a query block. This name can then be used in another query block 
+                    to hint tables appearing in the named query block. If two or more query blocks have the same name,
+                    or if the same query block is hinted twice with different names,all the names and the hints referencing them are ignored.
+                    Query blocks that are not named using this hint have unique system-generated names.
+                </para>
+
+<programlisting>
+lightdb@postgres=# explain select/*+indexscan(t2@qb)*/ * from t1 ,(select /*+qb_name(qb)*/* from t2 where id >10) as tt;
+LOG:  lt_hint_plan:
+used hint:
+IndexScan(t2@qb)
+not used hint:
+duplication hint:
+error hint:
+
+                                QUERY PLAN                                
+--------------------------------------------------------------------------
+Nested Loop  (cost=0.13..3.21 rows=3 width=532)
+->  Index Scan using idx_t2_id on t2  (cost=0.13..2.15 rows=1 width=8)
+        Index Cond: (id > 10)
+->  Seq Scan on t1  (cost=0.00..1.03 rows=3 width=524)
+(4 rows)
+
+lightdb@postgres=# 
+lightdb@postgres=# explain select/*+indexscan(t2@qb) indexscan(t3@qb1)*/ * from t1 ,(select /*+qb_name(qb)*/* from t2 where id >10) as tt where exists (select/*+qb_name(qb1)*/ * from t3 where id>1);
+                                    QUERY PLAN                                    
+
+-----------------------------------------------------------------------------------
+-
+Result  (cost=2.28..5.35 rows=3 width=532)
+One-Time Filter: $0
+InitPlan 1 (returns $0)
+    ->  Index Scan using idx_t3_id on t3 @qb1  (cost=0.13..2.15 rows=1 width=0)
+        Index Cond: (id > 1)
+->  Nested Loop  (cost=2.28..5.35 rows=3 width=532)
+        ->  Index Scan using idx_t2_id on t2 @qb  (cost=0.13..2.15 rows=1 width=8)
+            Index Cond: (id > 10)
+        ->  Seq Scan on t1 @"lt#0"  (cost=0.00..1.03 rows=3 width=524)
+(9 rows)
+
+lightdb@postgres=# 
+</programlisting>
+            </sect4>
+
+            <sect4>
+                <title>Other hints</title>
+
+                <para>
+                    Hints that cannot be classified into the above hints .
+                </para>
+                
+                <sect5>
+                    <title>Hint for no merge</title>
+
+                    <para>
+                        This hint "NO_MERGE" instructs the optimizer not to combine the outer query and any inline view queries into a single query.
+                    </para>
+                    
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) select * from t1, (select /*+no_merge*/t2.id from t2,t3) tt where t1.id=tt.id;
+LOG:  lt_hint_plan:
+used hint:
+no_merge
+not used hint:
+duplication hint:
+error hint:
+
+                QUERY PLAN                
+------------------------------------------
+Hash Join
+Hash Cond: (t2.id = t1.id)
+->  Nested Loop
+        ->  Seq Scan on t2 @"lt#0"
+        ->  Materialize
+            ->  Seq Scan on t3 @"lt#0"
+->  Hash
+        ->  Seq Scan on t1 @"lt#1"
+(8 rows)
+</programlisting>
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) select/*+ no_merge(tt)*/ * from t1, (select t2.id from t2,t3) tt where t1.id=tt.id;
+LOG:  lt_hint_plan:
+used hint:
+no_merge(tt@lt#0)
+not used hint:
+duplication hint:
+error hint:
+
+            QUERY PLAN             
+------------------------------------
+Hash Join
+Hash Cond: (t2.id = t1.id)
+->  Nested Loop
+        ->  Seq Scan on t2
+        ->  Materialize
+            ->  Seq Scan on t3
+->  Hash
+        ->  Seq Scan on t1 @"lt#0"
+(8 rows)
+
+lightdb@postgres=# 
+</programlisting>
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) select/*+ no_merge(@qb)*/ * from t1, (select/*+qb_name(qb)*/ t2.id from t2,t3) tt where t1.id=tt.id;
+LOG:  lt_hint_plan:
+used hint:
+no_merge(@qb)
+not used hint:
+duplication hint:
+error hint:
+
+            QUERY PLAN              
+--------------------------------------
+Hash Join
+Hash Cond: (t2.id = t1.id)
+->  Nested Loop
+        ->  Seq Scan on t2 @qb
+        ->  Materialize
+            ->  Seq Scan on t3 @qb
+->  Hash
+        ->  Seq Scan on t1 @"lt#0"
+(8 rows)
+
+lightdb@postgres=# 
+</programlisting>
+                </sect5>                  
+
+                <sect5>
+                    <title>Hints for group by method(hash/sort)</title>
+
+                    <para>
+                        The hint "use_hash_aggregation" instructs the optimizer to use hash aggregation when group by. 
+                        The hint "no_use_hash_aggregation" instructs the optimizer not to use hash aggregation when group by, then use sort.
+                    </para>
+  
+                    <para>
+                        There are two ways to use these hints. The first one has no parameters, specifying whether the current statement uses the hash algorithm,
+                        and the second one is combined with the query block name.                        
+                    </para>
+
+                    <para>
+                        The following example shows the effect of the use_hash_aggregation hint.   
+                    </para>   
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false)  select max(id) from t1 where id>1 group by id order by id;
+                QUERY PLAN                 
+-------------------------------------------
+GroupAggregate
+Group Key: id
+->  Index Only Scan using t1_pkey on t1
+        Index Cond: (id > 1)
+(4 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false)  select/*+ use_hash_aggregation*/ max(id) from t1 where id>1 group by id order by id;
+            QUERY PLAN             
+------------------------------------
+Sort
+Sort Key: id
+->  HashAggregate
+        Group Key: id
+        ->  Seq Scan on t1 @"lt#0"
+            Filter: (id > 1)
+(6 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                    <para>
+                        The following example shows the effect of the no_use_hash_aggregation hint.   
+                    </para>  
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false)  select max(id) from t1 where id>1 group by id;
+        QUERY PLAN        
+--------------------------
+HashAggregate
+Group Key: id
+->  Seq Scan on t1
+        Filter: (id > 1)
+(4 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false)  select/*+ no_use_hash_aggregation*/ max(id) from t1 where id>1 group by id;
+                    QUERY PLAN                     
+---------------------------------------------------
+GroupAggregate
+Group Key: id
+->  Index Only Scan using t1_pkey on t1 @"lt#0"
+        Index Cond: (id > 1)
+(4 rows)
+
+lightdb@postgres=# 
+</programlisting>
+                </sect5>                  
+
+                <sect5>
+                    <title>Hints for special join(semijoin/antijoin)</title>
+
+                    <para>
+                        Hints for semi-join are "semijoin", "hash_sj", "nl_sj", "merge_sj" and "no_semijoin",
+                        which are used to control whether to use semi-join or specify the algorithm for semi-join.
+                        Hints for anti-join are "hash_aj", "nl_aj", "merge_aj", which are used to specify the algorithm for anti-join.                       
+                     </para>
+  
+                    <para>
+                        There are two ways to use these hints. The first one has no parameter and must be placed in sublink,
+                        and the second one is combined with the query block name.                        
+                    </para>
+
+
+                    <para>
+                        The following example shows the effect of the hints with semi-join.   
+                    </para>
+<programlisting>
+lightdb@postgres=# create table test1 (key1 int primary key, key2 int);
+CREATE TABLE
+lightdb@postgres=# create table test2 (key1 int primary key, key2 int);
+CREATE TABLE
+lightdb@postgres=# 
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where exists (select * from test2 where test1.key1=test2.key1);
+                QUERY PLAN               
+----------------------------------------
+Hash Join
+Hash Cond: (test1.key1 = test2.key1)
+->  Seq Scan on test1
+->  Hash
+        ->  Seq Scan on test2
+(5 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where exists (select /*+semijoin*/* from test2 where test1.key1=test2.key1);
+                    QUERY PLAN                        
+---------------------------------------------------------
+Merge Semi Join
+Merge Cond: (test1.key1 = test2.key1)
+->  Index Scan using test1_pkey on test1 @"lt#1"
+->  Index Only Scan using test2_pkey on test2 @"lt#0"
+(4 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where exists (select /*+hash_sj*/* from test2 where test1.key1=test2.key1);
+            QUERY PLAN               
+----------------------------------------
+Hash Semi Join
+Hash Cond: (test1.key1 = test2.key1)
+->  Seq Scan on test1 @"lt#1"
+->  Hash
+        ->  Seq Scan on test2 @"lt#0"
+(5 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                    <para>
+                        The following example shows the effect of the hints without semi-join.   
+                    </para>
+<programlisting>
+lightdb@postgres=# create table tt1 (id int, t int, name varchar(255));
+CREATE TABLE
+lightdb@postgres=# create table tt2 (id int , salary int);
+CREATE TABLE
+lightdb@postgres=# create index idx_t1_id on tt1(id);
+CREATE INDEX
+lightdb@postgres=# create index idx_t2_id on tt2(id);
+CREATE INDEX
+lightdb@postgres=#
+lightdb@postgres=# EXPLAIN (COSTS false)  select * from tt1 where exists (select * from tt2 where tt1.id=tt2.id);
+                QUERY PLAN                  
+----------------------------------------------
+Nested Loop Semi Join
+->  Seq Scan on tt1
+->  Index Only Scan using idx_t2_id on tt2
+        Index Cond: (id = tt1.id)
+(4 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false)  select * from tt1 where exists (select /*+no_semijoin*/* from tt2 where tt1.id=tt2.id);
+                QUERY PLAN                 
+-------------------------------------------
+Hash Join
+Hash Cond: (tt1.id = tt2.id)
+->  Seq Scan on tt1 @"lt#1"
+->  Hash
+        ->  HashAggregate
+            Group Key: tt2.id
+            ->  Seq Scan on tt2 @"lt#0"
+(7 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                    <para>
+                        The following example shows the effect of the hints with anti-join.   
+                    </para>
+<programlisting>
+lightdb@postgres=# create table tt1 (id int, t int, name varchar(255));
+CREATE TABLE
+lightdb@postgres=# create table tt2 (id int , salary int);
+CREATE TABLE
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where not exists (select 1 from test2 where test1.key1=test2.key1);
+            QUERY PLAN               
+----------------------------------------
+Hash Anti Join
+Hash Cond: (test1.key1 = test2.key1)
+->  Seq Scan on test1
+->  Hash
+        ->  Seq Scan on test2
+(5 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where not exists (select/*+hash_aj*/ 1 from test2 where test1.key1=test2.key1);
+            QUERY PLAN               
+----------------------------------------
+Hash Anti Join
+Hash Cond: (test1.key1 = test2.key1)
+->  Seq Scan on test1 @"lt#1"
+->  Hash
+        ->  Seq Scan on test2 @"lt#0"
+(5 rows)
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where not exists (select/*+nl_aj*/ 1 from test2 where test1.key1=test2.key1);
+                    QUERY PLAN                        
+---------------------------------------------------------
+Nested Loop Anti Join
+->  Seq Scan on test1 @"lt#1"
+->  Index Only Scan using test2_pkey on test2 @"lt#0"
+        Index Cond: (key1 = test1.key1)
+(4 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where not exists (select/*+merge_aj*/ 1 from test2 where test1.key1=test2.key1);
+                    QUERY PLAN                        
+---------------------------------------------------------
+Merge Anti Join
+Merge Cond: (test1.key1 = test2.key1)
+->  Index Scan using test1_pkey on test1 @"lt#1"
+->  Index Only Scan using test2_pkey on test2 @"lt#0"
+(4 rows)
+
+lightdb@postgres=#                        
+</programlisting>
+                    <para>
+                        "no_semijoin" doesn't prevent pulling up sublink, instead it dose not chooses semijoin paths when other paths can be chosen.                        
+                    </para>
+<programlisting>
+no_semijoin invalid：
+
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where exists (select /*+no_semijoin*/* from test2 where test1.key1>test2.key2);
+LOG:  lt_hint_plan:
+used hint:
+no_semijoin
+not used hint:
+duplication hint:
+error hint:
+
+                QUERY PLAN                
+------------------------------------------
+Nested Loop Semi Join
+Join Filter: (test1.key1 > test2.key2)
+->  Seq Scan on test1 @"lt#1"
+->  Materialize
+        ->  Seq Scan on test2 @"lt#0"
+(5 rows)
+
+lightdb@postgres=#
+</programlisting>
+                    <para>
+                        When used with join method hint, join method hint will be ignored. 
+                        The following example shows it.   
+                    </para>
+<programlisting>
+lightdb@postgres=# explain select/*+nestloop(test1 test2@qb)*/ * from test1 where exists (select /*+semijoin qb_name(qb)*/* from test2 where test1.key1=test2.key1);
+INFO:  lt_hint_plan: join type hint is conflicted with special join hint,ignore join type hint 
+DETAIL:  join type hint: NestLoop, special join hint: semijoin(@qb) 
+LOG:  lt_hint_plan:
+used hint:
+semijoin
+not used hint:
+duplication hint:
+NestLoop(test1@lt#0 test2@qb)
+error hint:
+
+                                        QUERY PLAN                                 
+        
+-----------------------------------------------------------------------------------
+--------
+Merge Semi Join  (cost=0.31..124.01 rows=2260 width=8)
+Merge Cond: (test1.key1 = test2.key1)
+->  Index Scan using test1_pkey on test1 @"lt#0"  (cost=0.15..45.06 rows=2260 wi
+dth=8)
+->  Index Only Scan using test2_pkey on test2 @qb  (cost=0.15..45.06 rows=2260 w
+idth=4)
+(4 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                    <para>
+                        When used with the leading hint, parts of the leading hint that conflict with these hints will be ignored, 
+                        but this may still render these hints ineffective. When there are conflicts, the result may not be as you expected,
+                        so the best way is resolve the conflict. The following example shows the conflict.
+                    </para>
+<programlisting>
+lightdb@postgres=# explain select/*+leading(test2@qb test1 )*/ * from test1 where exists (select /*+semijoin qb_name(qb)*/* from test2 where test1.key1=test2.key1);
+INFO:  lt_hint_plan: special join hint conflict with sub of leading hint, ignore sub of leading hint 
+DETAIL:  use special join hint: semijoin(@qb), the sub of leading has 2 relation
+LOG:  lt_hint_plan:
+used hint:
+Leading((test2@qb test1@lt#0))
+semijoin
+not used hint:
+duplication hint:
+error hint:
+
+                                        QUERY PLAN                                 
+        
+-----------------------------------------------------------------------------------
+--------
+Merge Semi Join  (cost=0.31..124.01 rows=2260 width=8)
+Merge Cond: (test1.key1 = test2.key1)
+->  Index Scan using test1_pkey on test1 @"lt#0"  (cost=0.15..45.06 rows=2260 wi
+dth=8)
+->  Index Only Scan using test2_pkey on test2 @qb  (cost=0.15..45.06 rows=2260 w
+idth=4)
+(4 rows)
+
+lightdb@postgres=#
+</programlisting> 
+                </sect5>
+
+                <sect5>
+                    <title>Hint for specify outer table of hashjoin</title>
+
+                    <para>
+                        This hint "swap_join_inputs" specifies the outer table of hashjoin.
+                    </para>
+
+                    <para>
+                        The following example shows the effect of "swap_join_inputs".   
+                    </para>
+<programlisting>
+lightdb@postgres=# create table test1 (key1 int primary key, key2 int);
+CREATE TABLE
+lightdb@postgres=# create table test2 (key1 int primary key, key2 int);
+CREATE TABLE
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1, test2 where test1.key1 = test2.key1;
+            QUERY PLAN               
+----------------------------------------
+Hash Join
+Hash Cond: (test1.key1 = test2.key1)
+->  Seq Scan on test1
+->  Hash
+        ->  Seq Scan on test2
+(5 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select /*+swap_join_inputs(test2)*/* from test1, test2 where test1.key1 = test2.key1;
+LOG:  lt_hint_plan:
+used hint:
+swap_join_inputs(test2@lt#0)
+not used hint:
+duplication hint:
+error hint:
+
+            QUERY PLAN               
+----------------------------------------
+Hash Join
+Hash Cond: (test2.key1 = test1.key1)
+->  Seq Scan on test2 @"lt#0"
+->  Hash
+        ->  Seq Scan on test1 @"lt#0"
+(5 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                    <para>
+                        Using this hint will enforce SQL to use hashjoin if possible. The following example shows it.  
+                    </para>
+<programlisting>
+lightdb@postgres=# create table t_1(key1 int not null);
+CREATE TABLE
+lightdb@postgres=# create table t_2(key1 int not null);
+CREATE TABLE
+lightdb@postgres=# explain select /*swap_join_inputs(t_2)*/* from t_1,t_2 where t_1.key1=t_2.key1;
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+Merge Join  (cost=359.57..860.00 rows=32512 width=8)
+Merge Cond: (t_1.key1 = t_2.key1)
+->  Sort  (cost=179.78..186.16 rows=2550 width=4)
+        Sort Key: t_1.key1
+        ->  Seq Scan on t_1  (cost=0.00..35.50 rows=2550 width=4)
+->  Sort  (cost=179.78..186.16 rows=2550 width=4)
+        Sort Key: t_2.key1
+        ->  Seq Scan on t_2  (cost=0.00..35.50 rows=2550 width=4)
+(8 rows)
+
+lightdb@postgres=# explain select /*+swap_join_inputs(t_2)*/* from t_1,t_2 where t_1.key1=t_2.key1;
+LOG:  lt_hint_plan:
+used hint:
+swap_join_inputs(t_2@lt#0)
+not used hint:
+duplication hint:
+error hint:
+
+                                QUERY PLAN                                 
+---------------------------------------------------------------------------
+Hash Join  (cost=67.38..1247.18 rows=32512 width=8)
+Hash Cond: (t_2.key1 = t_1.key1)
+->  Seq Scan on t_2 @"lt#0"  (cost=0.00..35.50 rows=2550 width=4)
+->  Hash  (cost=35.50..35.50 rows=2550 width=4)
+        ->  Seq Scan on t_1 @"lt#0"  (cost=0.00..35.50 rows=2550 width=4)
+(5 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                    <para>
+                        When used with the leading hint, parts of the leading hint that conflict with these hints will be ignored.
+                        The following example shows it.
+                    </para>
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) select /*+ leading(test1 test2)  swap_join_inputs(test2)*/* from test1, test2 where test1.key1 = test2.key1;
+INFO:  lt_hint_plan: leading hint conflict with swap_join_inputs hint, ignore leading hint 
+DETAIL:  use swap_join_hint(test2@lt#0) 
+LOG:  lt_hint_plan:
+used hint:
+Leading((test1@lt#0 test2@lt#0))
+swap_join_inputs(test2@lt#0)
+not used hint:
+duplication hint:
+error hint:
+
+            QUERY PLAN               
+----------------------------------------
+Hash Join
+Hash Cond: (test2.key1 = test1.key1)
+->  Seq Scan on test2 @"lt#0"
+->  Hash
+        ->  Seq Scan on test1 @"lt#0"
+(5 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                    <para>
+                        When used with the join method hint, this hint can't be used if the join method hint specifies a non-hashjoin method.
+                        The following example shows it.
+                    </para>
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) select /*+ nestloop(test1 test2)  swap_join_inputs(test2)*/* from test1, test2 where test1.key1 = test2.key1;
+LOG:  lt_hint_plan:
+used hint:
+NestLoop(test1@lt#0 test2@lt#0)
+not used hint:
+swap_join_inputs(test2@lt#0)
+duplication hint:
+error hint:
+
+                    QUERY PLAN                     
+----------------------------------------------------
+Nested Loop
+->  Seq Scan on test1 @"lt#0"
+->  Index Scan using test2_pkey on test2 @"lt#0"
+        Index Cond: (key1 = test1.key1)
+(4 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                    <para>
+                        This hint shouldn't be used for semij-join and anti-join, becase semi-join and anti-join can't change outer table.
+                        When used with semi-join and anti-join hint, this hint will be ignored. The following example shows it.
+                    </para>
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) select/*+swap_join_inputs(test2@qb)*/ * from test1 where exists ( select/*+semijoin qb_name(qb)*/ * from test2 where test1.key1 = test2.key1);
+INFO:  lt_hint_plan: special join hint conflict with swap_join_inputs hint, ignore swap_join_inputs hint 
+DETAIL:  ignore swap_join_hint(test2@qb), use semijoin(@qb) 
+LOG:  lt_hint_plan:
+used hint:
+semijoin
+not used hint:
+duplication hint:
+swap_join_inputs(test2@qb)
+error hint:
+
+                    QUERY PLAN                      
+-----------------------------------------------------
+Merge Semi Join
+Merge Cond: (test1.key1 = test2.key1)
+->  Index Scan using test1_pkey on test1 @"lt#0"
+->  Index Only Scan using test2_pkey on test2 @qb
+(4 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                </sect5>
+
+                <sect5>
+                    <title>Hint to preserve the order of predicate evaluation</title>
+
+                    <para>
+                        This hint "ordered_predicates" forces the optimizer to preserve the order of predicate evaluation, except for predicates used as index keys.
+                        Use this hint for the WHERE clause of SELECT statements.
+                    </para>
+                    <para>
+                        You can override these default evaluation rules using the ordered_predicates hint, and your WHERE clause items will then be evaluated in the order that they appear in the query.
+                        The ordered_predicates hint is commonly used in cases where a function is used in the WHERE clause of a query.
+                        It is also very useful in cases where you know the most restrictive predicates and you want Lightdb to evaluate these first.
+                    </para>
+
+                    <para>
+                        The following example shows the effect of "ordered_predicates".   
+                    </para>
+<programlisting>
+lightdb@postgres=# create table test1 (key1 int, key2 int);
+CREATE TABLE
+lightdb@postgres=# create table test2 (key1 int, key2 int);
+CREATE TABLE
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where mod(key1,10)=2 and key2=2;
+                   QUERY PLAN                   
+------------------------------------------------
+ Seq Scan on test1
+   Filter: ((key2 = 2) AND (mod(key1, 10) = 2))
+(2 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select /*+ordered_predicates*/* from test1 where mod(key1,10)=2 and key2=2;
+                   QUERY PLAN                   
+------------------------------------------------
+ Seq Scan on test1 @"lt#0"
+   Filter: ((mod(key1, 10) = 2) AND (key2 = 2))
+(2 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                    <para>
+                        This hint will not affect predicates that transitively generated by the optimizer.
+                    </para>
+
+                    <para>
+                        In the following example, "b.key2 = 1" is regenerated by the optimizer, so it's order can't be reserved. 
+                    </para>
+<programlisting>
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 a left join test2 b on a.key1=b.key1 and a.key2=b.key2 where mod(b.key2, 10) = 2 and b.key2 = 1; 
+                      QUERY PLAN                      
+------------------------------------------------------
+ Nested Loop
+   Join Filter: (a.key1 = b.key1)
+   ->  Seq Scan on test2 b
+         Filter: ((key2 = 1) AND (mod(key2, 10) = 2))
+   ->  Seq Scan on test1 a
+         Filter: (key2 = 1)
+(6 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select/*+ordered_predicates*/ * from test1 a left join test2 b on a.key1=b.key1 and a.key2=b.key2 where mod(b.key2, 10) = 2 and b.key2 = 1; 
+                      QUERY PLAN                      
+------------------------------------------------------
+ Nested Loop
+   Join Filter: (a.key1 = b.key1)
+   ->  Seq Scan on test2 b @"lt#0"
+         Filter: ((key2 = 1) AND (mod(key2, 10) = 2))
+   ->  Seq Scan on test1 a @"lt#0"
+         Filter: (key2 = 1)
+(6 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+                </sect5>
+
+                <sect5>
+                    <title>Hint to control optimization about pull up sublink</title>
+
+                    <para>
+                        The optimization about pull up sublink is an RBO. it will pull up sublink if it is possible.
+                        So there is no need to implement "unnest" hint, we only support syntax here.
+                    </para>
+
+                    <para>
+                        The "no_unnest" hint can be used to force to not pull up sublink.
+                    </para>
+
+                    <para>
+                        The following example shows the effect of "no_unnest".   
+                    </para>
+<programlisting>
+lightdb@postgres=# create table test1 (key1 int, key2 int);
+CREATE TABLE
+lightdb@postgres=# create table test2 (key1 int, key2 int);
+CREATE TABLE
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where exists(select * from test2 where test1.key1=test2.key1);
+               QUERY PLAN               
+----------------------------------------
+ Hash Join
+   Hash Cond: (test1.key1 = test2.key1)
+   ->  Seq Scan on test1
+   ->  Hash
+         ->  HashAggregate
+               Group Key: test2.key1
+               ->  Seq Scan on test2
+(7 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1 where exists(select/*+no_unnest*/ * from test2 where test1.key1=test2.key1);
+                       QUERY PLAN                        
+---------------------------------------------------------
+ Seq Scan on test1 @"lt#1"
+   Filter: (alternatives: SubPlan 1 or hashed SubPlan 2)
+   SubPlan 1
+     ->  Seq Scan on test2 @"lt#0"
+           Filter: (test1.key1 = key1)
+   SubPlan 2
+     ->  Seq Scan on test2 test2_1 @"lt#0"
+(7 rows)
+
+lightdb@postgres=# 
+</programlisting>
+                </sect5>
+
+                <sect5>
+                    <title>Hint to control parallel join mode </title>
+
+                    <para>
+                        Now 'pq_distribute' hint is only use for parallel hash join,
+                        and only this usage ('pq_distribute(inner_table none broadcast)') works.
+                    </para>
+
+                    <para>
+                        The usage ('pq_distribute(inner_table hash hash)') is supported, but not work.
+                    </para>
+
+                    <para>
+                        When used with 'leading' hint, it will be used only if the specified table is the inner table after using 'leading' hint.
+                    </para>
+
+                    <para>
+                        The following example shows the effect of "pq_distribute".   
+                    </para>
+<programlisting>
+lightdb@postgres=# create table t1 (id int, val text);
+CREATE TABLE
+lightdb@postgres=# create table t2 (id int, val text);
+CREATE TABLE
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+lightdb@lt_test-# EXPLAIN (COSTS false) SELECT /*+ leading(t1 t2) hashjoin(t1 t2)*/ * FROM t1 join t2 on t1.id=t2.id;
+                    QUERY PLAN                     
+---------------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Parallel Hash Join
+         Hash Cond: (t1.id = t2.id)
+         ->  Parallel Seq Scan on t1 @"lt#0"
+         ->  Parallel Hash
+               ->  Parallel Seq Scan on t2 @"lt#0"
+(7 rows)
+
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+lightdb@lt_test-# EXPLAIN (COSTS false) select/*+leading(t1 t2) hashjoin(t1 t2) pq_distribute(t2 none broadcast)*/ * from t1 join t2 on t1.id=t2.id;
+                 QUERY PLAN                  
+---------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Hash Join
+         Hash Cond: (t1.id = t2.id)
+         ->  Parallel Seq Scan on t1 @"lt#0"
+         ->  Hash
+               ->  Seq Scan on t2 @"lt#0"
+(7 rows)
+
+lightdb@lt_test=#  
+</programlisting>
+
+                    <para>
+                        When used with 'swap_join_inputs' hint, it will always be used if 'swap_join_inputs' hint is used.
+                        It is different from oracle, in oracle, 'pq_distribute' will not work if the specified table is the inner table after using 'swap_join_inputs'.
+                    </para>
+
+<programlisting>
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+EXPLAIN (COSTS false) select/*+leading(t1 t2) hashjoin(t1 t2) pq_distribute(t1 none broadcast)*/ * from t1 join t2 on t1.id=t2.id;
+                    QUERY PLAN                     
+---------------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Parallel Hash Join
+         Hash Cond: (t1.id = t2.id)
+         ->  Parallel Seq Scan on t1 @"lt#0"
+         ->  Parallel Hash
+               ->  Parallel Seq Scan on t2 @"lt#0"
+(7 rows)
+
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+EXPLAIN (COSTS false) select/*+leading(t1 t2) hashjoin(t1 t2) pq_distribute(t1 none broadcast) swap_join_inputs(t2)*/ * from t1 join t2 on t1.id=t2.id;
+                 QUERY PLAN                  
+---------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Hash Join
+         Hash Cond: (t2.id = t1.id)
+         ->  Parallel Seq Scan on t2 @"lt#0"
+         ->  Hash
+               ->  Seq Scan on t1 @"lt#0"
+(7 rows)
+
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+EXPLAIN (COSTS false) select/*+leading(t1 t2) hashjoin(t1 t2) pq_distribute(t2 none broadcast) swap_join_inputs(t2)*/ * from t1 join t2 on t1.id=t2.id;
+                 QUERY PLAN                  
+---------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Hash Join
+         Hash Cond: (t2.id = t1.id)
+         ->  Parallel Seq Scan on t2 @"lt#0"
+         ->  Hash
+               ->  Seq Scan on t1 @"lt#0"
+(7 rows)
+
+lightdb@lt_test=#  
+</programlisting>
+
+                    <para>
+                        Without specifying the order of join, 'pq_distribute' hint might be used but doesn't work,
+                        beacuse it can only work when the specified table is the inner table and the join is an parallel hash join.
+                        If the cost of another path which the specified table is the outer table is lower, the optimizer will choose another path.
+                    </para>
+<programlisting>
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+EXPLAIN (COSTS false) select/*+hashjoin(t1 t2)pq_distribute(t2 none broadcast)*/ * from t1 join t2 on t1.id=t2.id;
+                    QUERY PLAN                     
+---------------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Parallel Hash Join
+         Hash Cond: (t2.id = t1.id)
+         ->  Parallel Seq Scan on t2 @"lt#0"
+         ->  Parallel Hash
+               ->  Parallel Seq Scan on t1 @"lt#0"
+(7 rows)
+
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+EXPLAIN (COSTS false) select/*+hashjoin(t1 t2)pq_distribute(t1 none broadcast)*/ * from t1 join t2 on t1.id=t2.id;
+                    QUERY PLAN                     
+---------------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Parallel Hash Join
+         Hash Cond: (t1.id = t2.id)
+         ->  Parallel Seq Scan on t1 @"lt#0"
+         ->  Parallel Hash
+               ->  Parallel Seq Scan on t2 @"lt#0"
+(7 rows)
+
+lightdb@lt_test=# /*+set(parallel_tuple_cost 0) set(parallel_setup_cost 0) set(min_parallel_table_scan_size 0) set(min_parallel_index_scan_size 0) set(max_parallel_workers_per_gather 8)*/
+EXPLAIN (COSTS false) select/*+hashjoin(t1 t2)pq_distribute(t1 none broadcast) pq_distribute(t2 none broadcast)*/ * from t1 join t2 on t1.id=t2.id;
+                 QUERY PLAN                  
+---------------------------------------------
+ Gather
+   Workers Planned: 3
+   ->  Hash Join
+         Hash Cond: (t1.id = t2.id)
+         ->  Parallel Seq Scan on t1 @"lt#0"
+         ->  Hash
+               ->  Seq Scan on t2 @"lt#0"
+(7 rows)
+
+lightdb@lt_test=#   
+</programlisting>
+
+                </sect5>
+
+            </sect4>                
+        </sect3>
+
+        <sect3>
+            <title>GUC parameters for lt_hint_plan</title>
+
+            <para>
+                GUC parameters below affect the behavior of lt_hint_plan.
+            </para>
+
+            <table id="GUC-lt_hint_plan">
+                <title>GUC parameters for lt_hint_plan</title>
+                <tgroup cols="3">
+                    <colspec colname="col1" colwidth="1*"/>
+                    <colspec colname="col2" colwidth="2*"/>
+                    <colspec colname="col3" colwidth="3*"/>
+                    <thead>
+                        <row>
+                            <entry>Parameter name</entry>
+                            <entry>description</entry>
+                            <entry>Default</entry>
+                        </row>
+                    </thead>
+
+                    <tbody>
+                        <row>
+                            <entry>lt_hint_plan.enable_hint</entry>
+                            <entry>
+                                True enbles lt_hint_plan.
+                            </entry>
+                            <entry>on</entry>
+                        </row>
+
+                        <row>
+                            <entry>lt_hint_plan.enable_hint_table</entry>
+                            <entry>
+                                True enbles hinting by table. true or false.
+                            </entry>
+                            <entry>off</entry>
+                        </row>
+
+                        <row>
+                            <entry>lt_hint_plan.parse_messages</entry>
+                            <entry>
+                                Specifies the log level of hint parse error. Valid values are error,
+                                warning, notice, info, log, debug.
+                            </entry>
+                            <entry>INFO</entry>
+                        </row>
+
+                        <row>
+                            <entry>lt_hint_plan.debug_print</entry>
+                            <entry>
+                                Controls debug print and verbosity. Valid vaiues are off, on, detailed and verbose.
+                            </entry>
+                            <entry>off</entry>
+                        </row>
+
+                        <row>
+                            <entry>lt_hint_plan.message_level</entry>
+                            <entry>
+                                Specifies message level of debug print. Valid values are error, warning, notice, info, log, debug.
+                            </entry>
+                            <entry>INFO</entry>
+                        </row>
+
+                        <row>
+                            <entry>lt_hint_plan.show_qb_name_info</entry>
+                            <entry>
+                                Show qb name info in debug print.
+                            </entry>
+                            <entry>on</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </sect3>
+    </sect2>
+
+    <sect2>
+        <title>Details in hinting</title>
+
+        <sect3>
+            <title>Syntax and placement</title>
+
+            <para>
+                For global level hint, lt_hint_plan reads only the first block comment at sql head(before first character of sql)
+            </para>
+<programlisting>
+lightdb@postgres=# /*+ indexscan(b)*/ explain select * from ltbench_accounts b where b.aid>10;
+                                        QUERY PLAN                          
+                
+-----------------------------------------------------------------------------------
+---------------------
+Index Scan using ltbench_accounts_pkey on ltbench_accounts b  (cost=0.29..3666.12 
+rows=99990 width=97)
+Index Cond: (aid > 10)
+(2 rows)
+
+lightdb@postgres=# 
+</programlisting>
+
+            <para>    
+                For stmt level hint, lt_hint_plan reads hints from only the first block comment after select, update, delete, insert keyword. 
+                hint only works on current query block without using qb_name. 
+                In the following example HashJoin(a b) and SeqScan(a) are parsed as hints but IndexScan(a) and IndexScan(b) are not.
+            </para>
+
+<programlisting>
+lightdb@postgres=# /*+
+lightdb@postgres*#    HashJoin(a b) 
+lightdb@postgres*#  */
+lightdb@postgres-# /*+ IndexScan(a) */
+lightdb@postgres-# EXPLAIN SELECT /*+ SeqScan(a) */ *
+lightdb@postgres-#    FROM /*+ IndexScan(b) */ltbench_branches b
+lightdb@postgres-#    JOIN ltbench_accounts a ON b.bid = a.bid
+lightdb@postgres-#   ORDER BY a.aid;
+                                        QUERY PLAN
+-----------------------------------------------------------------------------------
+----
+Sort  (cost=24236.84..24486.84 rows=100000 width=461)
+Sort Key: a.aid
+->  Hash Join  (cost=1.02..4016.02 rows=100000 width=461)
+        Hash Cond: (a.bid = b.bid)
+        ->  Seq Scan on ltbench_accounts a  (cost=0.00..2640.00 rows=100000 width=
+97)
+        ->  Hash  (cost=1.01..1.01 rows=1 width=364)
+            ->  Seq Scan on ltbench_branches b  (cost=0.00..1.01 rows=1 width=36
+4)
+(7 rows)
+
+lightdb@postgres=#
+</programlisting>
+        </sect3>
+
+        <sect3>
+            <title>Using with PL/pgSQL</title>
+
+            <para>
+                lt_hint_plan works for queries in PL/pgSQL scripts with some restrictions.
+            </para>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Hints affect only on the following kind of queires.
+                    </para>
+
+                    <itemizedlist>
+                        <listitem>
+                            <para>
+                                Queries that returns one row. (SELECT, INSERT, UPDATE and DELETE)
+                            </para>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                Queries that returns multiple rows. (RETURN QUERY)
+                            </para>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                Dynamic SQL statements. (EXECUTE)
+                            </para>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                Cursor open. (OPEN)
+                            </para>
+                        </listitem>
+
+                        <listitem>
+                            <para>
+                                Loop over result of a query (FOR)
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        A hint comment have to be placed after the first word in a query as the following since
+                        preceding comments are not sent as a part of the query.
+                    </para>
+                </listitem>
+            </itemizedlist>
+
+<programlisting>
+lightdb@postgres=# CREATE FUNCTION hints_func(integer) RETURNS integer AS $$
+lightdb@postgres$# DECLARE
+lightdb@postgres$#     id  integer;
+lightdb@postgres$#     cnt integer;
+lightdb@postgres$# BEGIN
+lightdb@postgres$#     SELECT /*+ NoIndexScan(a) */ aid
+lightdb@postgres$#         INTO id FROM ltbench_accounts a WHERE aid = $1;
+lightdb@postgres$#     SELECT /*+ SeqScan(a) */ count(*)
+lightdb@postgres$#         INTO cnt FROM ltbench_accounts a;
+lightdb@postgres$#     RETURN id + cnt;
+lightdb@postgres$# END;
+lightdb@postgres$# $$ LANGUAGE plpgsql;
+</programlisting>
+        </sect3>
+
+        <sect3>
+            <title>Letter case in the object names</title>
+
+            <para>
+                Like the way LightDB handles object names, lt_hint_plan will convert object names to lowercase. Therefore an object name TBL in a hint
+                matches TBL, tbl or Tbl in database.
+                With quotes, lt_hint_plan will not convert object names to lowercase. Therefore an object name "TBL" in a hint
+                matches only "TBL" in database and does not match any unquoted names like TBL, tbl or Tbl.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Escaping special chacaters in object names</title>
+
+            <para>
+                The objects as the hint parameter should be enclosed by double quotes if they includes parentheses,
+                double quotes and white spaces. The escaping rule is the same as LightDB.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Distinction between multiple occurances of a table</title>
+
+            <para>
+                lt_hint_plan identifies the target object by using aliases if exists. This behavior is usable to
+                point a specific occurance among multiple occurances of one table.
+            </para>
+
+<programlisting>
+lightdb@postgres=# /*+ HashJoin(t1 t1) */
+lightdb@postgres-# EXPLAIN SELECT * FROM s1.t1
+lightdb@postgres-# JOIN public.t1 ON (s1.t1.id=public.t1.id);
+INFO:  hint syntax error at or near "HashJoin(t1 t1)"
+DETAIL:  Relation name "t1" is ambiguous.
+...
+lightdb@postgres=# /*+ HashJoin(pt st) */
+lightdb@postgres-# EXPLAIN SELECT * FROM s1.t1 st
+lightdb@postgres-# JOIN public.t1 pt ON (st.id=pt.id);
+                                QUERY PLAN
+---------------------------------------------------------------------
+    Hash Join  (cost=64.00..1112.00 rows=28800 width=8)
+    Hash Cond: (st.id = pt.id)
+    ->  Seq Scan on t1 st  (cost=0.00..34.00 rows=2400 width=4)
+    ->  Hash  (cost=34.00..34.00 rows=2400 width=4)
+            ->  Seq Scan on t1 pt  (cost=0.00..34.00 rows=2400 width=4)
+</programlisting>
+        </sect3>
+
+        <sect3>
+            <title>Underlying tables of views or rules</title>
+
+            <para>
+                Hints are applicable on views itself, and they can affect the queries within if the object names match
+                the object names in the expanded query on the view when used as global level hint.
+                but for stmt level hint, it need use qb_name hint to manipulate talbes in view.
+            </para>
+
+<programlisting>
+create view test_v as select/*+qb_name(qb)*/ * from t1 where id >10;
+EXPLAIN (COSTS false) select/*+indexscan(t1)*/ * from test_v;
+LOG:  lt_hint_plan:
+used hint:
+not used hint:
+IndexScan(t1@lt#0)
+duplication hint:
+error hint:
+
+    QUERY PLAN      
+---------------------
+Seq Scan on t1 @qb
+Filter: (id > 10)
+(2 rows)
+
+EXPLAIN (COSTS false) select/*+indexscan(t1@qb)*/ * from test_v;
+LOG:  lt_hint_plan:
+used hint:
+IndexScan(t1@qb)
+not used hint:
+duplication hint:
+error hint:
+
+            QUERY PLAN             
+------------------------------------
+Index Scan using t1_pkey on t1 @qb
+Index Cond: (id > 10)
+(2 rows)
+
+/*+indexscan(t1)*/
+EXPLAIN (COSTS false) select * from test_v;
+LOG:  lt_hint_plan:
+used hint:
+IndexScan(t1@lt#-1)
+not used hint:
+duplication hint:
+error hint:
+
+            QUERY PLAN             
+------------------------------------
+Index Scan using t1_pkey on t1 @qb
+Index Cond: (id > 10)
+(2 rows)
+</programlisting>
+        </sect3>
+
+        <sect3>
+            <title>Inheritance tables</title>
+
+            <para>
+                Hints can point only the parent of an inheritance tables and the hint affect all the
+                inheritance. Hints simultaneously point directly to children are not in effect.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Hinting on multistatements</title>
+
+            <para>
+                For global level hint, one multistatement can have exactly one hint comment and the hints affects all of the individual statement
+                in the multistatement. Notice that the seemingly multistatement on the interactive interface of psql is
+                internally a sequence of single statements so hints affects only on the statement just following.
+                For stmt level hint, it is same with single statement.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>VALUES expressions</title>
+
+            <para>
+                VALUES expressions in FROM clause are named as *VALUES* internally so it is hintable if it is the only
+                VALUES in a query. Two or more VALUES expressions in a query seems distinguishable looking its explain
+                result. But in reality it is mere a cosmetic and they are not distinguisable.
+            </para>
+
+<programlisting>
+lightdb@postgres=# /*+ MergeJoin(*VALUES*_1 *VALUES*) */
+        EXPLAIN SELECT * FROM (VALUES (1, 1), (2, 2)) v (a, b)
+        JOIN (VALUES (1, 5), (2, 8), (3, 4)) w (a, c) ON v.a = w.a;
+INFO:  lt_hint_plan: hint syntax error at or near "MergeJoin(*VALUES*_1 *VALUES*) "
+DETAIL:  Relation name "*VALUES*" is ambiguous.
+                                QUERY PLAN
+-------------------------------------------------------------------------
+    Hash Join  (cost=0.05..0.12 rows=2 width=16)
+    Hash Cond: ("*VALUES*_1".column1 = "*VALUES*".column1)
+    ->  Values Scan on "*VALUES*_1"  (cost=0.00..0.04 rows=3 width=8)
+    ->  Hash  (cost=0.03..0.03 rows=2 width=8)
+            ->  Values Scan on "*VALUES*"  (cost=0.00..0.03 rows=2 width=8)
+</programlisting>
+        </sect3>
+
+        <sect3>
+            <title>Cost value in explain may wrong</title>
+
+            <para>
+                lt_hint_plan makes the execution plan choose the desired path
+                by increasing the cost of the undesired path (cost += disable_cost, disable_cost=1.0e10).
+            </para>
+            
+            <para>
+                Sometimes even if hint is used, sql will not execute as hinted because the desired path is not available,
+                such as using indexscan hint on a table without index. In this case the cost in explain is not accurate.
+            </para>
+
+            <para>
+                The actual cost can be obtained by subtracting the disable_cost. 
+            </para>
+
+<programlisting>
+lightdb@postgres=# create table test(id int);
+CREATE TABLE
+lightdb@postgres=# explain select * from test where id=1;
+                    QUERY PLAN                      
+------------------------------------------------------
+Seq Scan on test  (cost=0.00..41.88 rows=13 width=4)
+Filter: (id = 1)
+(2 rows)
+
+lightdb@postgres=# explain select /*+indexscan(test)*/* from test where id=1;
+                                QUERY PLAN                                    
+---------------------------------------------------------------------------------
+Seq Scan on test @"lt#0"  (cost=10000000000.00..10000000041.88 rows=13 width=4)
+Filter: (id = 1)
+(2 rows)
+
+lightdb@postgres=# 
+</programlisting>
+        </sect3>
+    </sect2>
+
+    <sect2>
+        <title>Subqueries</title>
+
+        <para>
+            Subqueries in the following context occasionally can be hinted using the name "ANY_subquery".
+        </para>
+
+<programlisting>
+IN (SELECT ... {LIMIT | OFFSET ...} ...)
+= ANY (SELECT ... {LIMIT | OFFSET ...} ...)
+= SOME (SELECT ... {LIMIT | OFFSET ...} ...)
+</programlisting>
+
+        <para>
+            For these syntaxes, planner internally assigns the name to the subquery when planning joins on tables
+            including it, so join hints are applicable on such joins using the implicit name as the following.
+        </para>
+
+<programlisting>
+lightdb@postgres=# /*+HashJoin(a1 ANY_subquery)*/
+lightdb@postgres=# EXPLAIN SELECT *
+lightdb@postgres=#    FROM ltbench_accounts a1
+lightdb@postgres=#   WHERE aid IN (SELECT bid FROM ltbench_accounts a2 LIMIT 10);
+                                            QUERY PLAN
+
+---------------------------------------------------------------------------------------------
+    Hash Semi Join  (cost=0.49..2903.00 rows=1 width=97)
+    Hash Cond: (a1.aid = a2.bid)
+    ->  Seq Scan on ltbench_accounts a1  (cost=0.00..2640.00 rows=100000 width=97)
+    ->  Hash  (cost=0.36..0.36 rows=10 width=4)
+            ->  Limit  (cost=0.00..0.26 rows=10 width=4)
+                ->  Seq Scan on ltbench_accounts a2  (cost=0.00..2640.00 rows=100000 width=4)
+</programlisting>
+
+        <sect3>
+            <title>Using IndexOnlyScan hint</title>
+
+            <para>
+                Index scan may unexpectedly performed on another index when the index specifed in IndexOnlyScan hint cannot perform index only scan.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Behavior of NoIndexScan</title>
+
+            <para>
+                NoIndexScan hint involes NoIndexOnlyScan.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Parallel hint and UNION</title>
+
+            <para>
+                A UNION can run in parallel only when all underlying subqueries are parallel-safe. Conversely enforcing parallel on any of the
+                subqueries let a parallel-executable UNION run in parallel. Meanwhile, a parallel hint with zero workers hinhibits a scan from
+                executed in parallel.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Setting lt_hint_plan parameters by Set hints</title>
+
+            <para>
+                lt_hint_plan paramters change the behavior of itself so some parameters doesn't work as expected.
+            </para>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        Hints to change enable_hint, enable_hint_tables are ignored even though they are
+                        reported as "used hints" in debug logs.
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        Setting debug_print and message_level works from midst of the processing of the target query.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </sect3>
+
+        <sect3>
+            <title>Scan and Join Hints on Subqueries</title>
+
+            <para>
+                Scan hints, join hints(include join method and join order hints) and rows hint on referenced subquery(Mergeable) are ignored unless the subquery contains a single table.
+                If the subquery contains a single table, the scan path hint or join hint on it applies to the table inside the subquery.
+            </para>
+
+<programlisting>
+lightdb@postgres=# create table test1(id int primary key, value int);
+CREATE TABLE
+lightdb@postgres=# create table test2(id int primary key, value int);
+CREATE TABLE
+lightdb@postgres=# EXPLAIN (COSTS false) select * from test1,(select * from (select * from test2) x) y where test1.id=y.id;
+            QUERY PLAN             
+------------------------------------
+Hash Join
+Hash Cond: (test1.id = test2.id)
+->  Seq Scan on test1
+->  Hash
+        ->  Seq Scan on test2
+(5 rows)
+
+lightdb@postgres=# EXPLAIN (COSTS false) select /*+indexscan(y)*/* from test1,(select * from (select * from test2) x) y where test1.id=y.id;
+                    QUERY PLAN                     
+----------------------------------------------------
+Hash Join
+Hash Cond: (test2.id = test1.id)
+->  Index Scan using test2_pkey on test2 @"lt#2"
+->  Hash
+        ->  Seq Scan on test1 @"lt#0"
+(5 rows)
+
+lightdb@postgres=# 
+</programlisting>
+        </sect3>        
+    </sect2>
+
+
+    <sect2>
+        <title>Compatible with canopy</title>
+
+        <para>
+            Now lt_hint_plan is compatible with canopy, it can be used to control execution plan involving Distributed Tables and Reference Tables.
+        </para>
+
+        <sect3>
+            <title>Hint state</title>
+
+            <para>
+                To view the usage state of hints on data nodes, first you need to turn on debug_print on datanode, then set canopy.log_remote_commands to on,
+                and finally set canopy.worker_min_messages to 'log' and client_min_messages to 'log' or
+                set lt_hint_plan.message_level to 'notice'. The following example shows it.
+            </para>
+<programlisting>
+lightdb@postgres=# CREATE TABLE t1 (id int PRIMARY KEY, val int);
+CREATE TABLE
+lightdb@postgres=# SELECT create_distributed_table('t1', 'id');
+create_distributed_table 
+--------------------------
+
+(1 row)
+
+lightdb@postgres=# set lt_hint_plan.message_level = 'notice';
+SET
+lightdb@postgres=# set canopy.log_remote_commands=on;
+SET
+lightdb@postgres=# explain select /*+indexscan(t1)*/* from t1 where id=10;
+NOTICE:  lt_hint_plan:
+used hint:
+not used hint:
+IndexScan(t1@lt#0)
+duplication hint:
+error hint:
+
+NOTICE:  issuing BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;SELECT assign_distributed_transaction_id(0, 24, '2022-03-14 15:49:45.634614+08');
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 2
+NOTICE:  issuing SAVEPOINT canopy_explain_savepoint
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 2
+NOTICE:  issuing /*+ IndexScan(t1) */EXPLAIN (ANALYZE FALSE, VERBOSE FALSE, COSTS TRUE, BUFFERS FALSE, WAL FALSE, TIMING FALSE, SUMMARY FALSE, FORMAT TEXT) SELECT id, val FROM public.t1_102044 t1 WHERE (id OPERATOR(pg_catalog.=) 10)
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 2
+NOTICE:  lt_hint_plan:
+used hint:
+IndexScan(t1@lt#-1)
+not used hint:
+duplication hint:
+error hint:
+DETAIL:  from 192.168.247.128:6432
+NOTICE:  issuing ROLLBACK TO SAVEPOINT canopy_explain_savepoint
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 2
+NOTICE:  issuing COMMIT
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 2
+                                        QUERY PLAN                               
+            
+-----------------------------------------------------------------------------------
+------------
+Custom Scan (Canopy Adaptive)  (cost=0.00..0.00 rows=0 width=0)
+Task Count: 1
+Tasks Shown: All
+->  Task
+        Node: host=192.168.247.128 port=6432 dbname=postgres
+        ->  Index Scan using t1_pkey_102044 on t1_102044 t1  (cost=0.15..2.17 rows
+=1 width=8)
+            Index Cond: (id = 10)
+(7 rows)
+
+lightdb@postgres=# 
+</programlisting>
+        </sect3>
+
+        <sect3>
+            <title>Limitations</title>
+
+            <para>
+                CTEs and subqueries that cannot be pushed down and do not contain references to the outer query
+                are planned by recursively calling the planner function with the subquery as the parse tree. 
+                The resulting plan are executed independently, and SQL statement has been splited. Therefore hints that act on both out query and subquery,
+                and no_merge, semijoin/antijoin hints that act on subqueries will have no effect. The following example shows it.
+            </para>
+
+<programlisting>
+lightdb@postgres=# CREATE TABLE t1 (id int PRIMARY KEY, val int);
+CREATE TABLE
+lightdb@postgres=# CREATE TABLE t2 (id int PRIMARY KEY, val int);
+CREATE TABLE
+lightdb@postgres=# SELECT create_distributed_table('t1', 'id');
+create_distributed_table 
+--------------------------
+
+(1 row)
+
+lightdb@postgres=# SELECT create_distributed_table('t2', 'id');
+create_distributed_table 
+--------------------------
+
+(1 row)
+
+lightdb@postgres=# 
+lightdb@postgres=# explain select /*+indexscan(t2@qb) hashjoin(t1 t2@qb)*/* from t1, (select/*+qb_name(qb)*/ * from t2 where t2.id >11) x where t1.id=10;
+INFO:  lt_hint_plan: disable hint after spliting sql , hint: "HashJoin" 
+DETAIL:  it is invalid because of split SQL, defined at "hashjoin(t1 t2@qb)"
+NOTICE:  lt_hint_plan:
+used hint:
+IndexScan(t2@qb)
+not used hint:
+duplication hint:
+error hint:
+
+NOTICE:  lt_hint_plan:
+used hint:
+IndexScan(t2@qb)
+HashJoin(t1@lt#0 t2@qb)
+not used hint:
+duplication hint:
+error hint:
+
+NOTICE:  issuing BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;SELECT assign_distributed_transaction_id(0, 36, '2022-03-14 16:06:20.313852+08');
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 3
+NOTICE:  issuing SAVEPOINT canopy_explain_savepoint
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 3
+NOTICE:  issuing /*+ IndexScan(t2) */EXPLAIN (ANALYZE FALSE, VERBOSE FALSE, COSTS TRUE, BUFFERS FALSE, WAL FALSE, TIMING FALSE, SUMMARY FALSE, FORMAT TEXT) SELECT id, val FROM public.t2_102136 t2 WHERE (id OPERATOR(pg_catalog.>) 11)
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 3
+NOTICE:  lt_hint_plan:
+used hint:
+IndexScan(t2@lt#-1)
+not used hint:
+duplication hint:
+error hint:
+DETAIL:  from 192.168.247.128:6432
+NOTICE:  issuing ROLLBACK TO SAVEPOINT canopy_explain_savepoint
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 3
+NOTICE:  issuing SAVEPOINT canopy_explain_savepoint
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 3
+NOTICE:  issuing EXPLAIN (ANALYZE FALSE, VERBOSE FALSE, COSTS TRUE, BUFFERS FALSE, WAL FALSE, TIMING FALSE, SUMMARY FALSE, FORMAT TEXT) SELECT t1.id, t1.val, x.id, x.val FROM public.t1_102108 t1, (SELECT intermediate_result.id, intermediate_result.val FROM read_intermediate_result('11_1'::text, 'binary'::canopy_copy_format) intermediate_result(id integer, val integer)) x WHERE (t1.id OPERATOR(pg_catalog.=) 10)
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 3
+NOTICE:  issuing ROLLBACK TO SAVEPOINT canopy_explain_savepoint
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 3
+NOTICE:  issuing COMMIT
+DETAIL:  on server lightdb@192.168.247.128:6432 connectionId: 3
+                                                    QUERY PLAN                   
+                                    
+-----------------------------------------------------------------------------------
+------------------------------------
+Custom Scan (Canopy Adaptive)  (cost=0.00..0.00 rows=0 width=0)
+->  Distributed Subplan 11_1
+        ->  Custom Scan (Canopy Adaptive)  (cost=0.00..0.00 rows=100000 width=8)
+            Task Count: 32
+            Tasks Shown: One of 32
+            ->  Task
+                    Node: host=192.168.247.128 port=6432 dbname=postgres
+                    ->  Index Scan using t2_pkey_102136 on t2_102136 t2  (cost=0.1
+5..24.33 rows=753 width=8)
+                        Index Cond: (id > 11)
+Task Count: 1
+Tasks Shown: All
+->  Task
+        Node: host=192.168.247.128 port=6432 dbname=postgres
+        ->  Nested Loop  (cost=0.16..22.17 rows=1000 width=16)
+            ->  Index Scan using t1_pkey_102108 on t1_102108 t1  (cost=0.15..2.1
+7 rows=1 width=8)
+                    Index Cond: (id = 10)
+            ->  Function Scan on read_intermediate_result intermediate_result  (
+cost=0.00..10.00 rows=1000 width=8)
+(17 rows)
+
+lightdb@postgres=# 
+</programlisting>
+        </sect3>
+   </sect2>
+
+    <sect2>
+        <title>Errors</title>
+
+        <para>
+            lt_hint_plan stops parsing on any error and uses hints already parsed on the most cases. 
+            Errors will only be reported when it is an explain SQL.
+            Followings are the typical errors.
+        </para>
+
+        <sect3>
+            <title>Syntax errors</title>
+
+            <para>
+                Any syntactical errors or wrong hint names are reported as an syntax error. These errors are reported in the server log
+                with the message level which specified by lt_hint_plan.message_level if lt_hint_plan.debug_print is on and aboves.
+                Keyword that started with digit will not be a hint name, it will not be reported as an syntax error, but will be ignored.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Object misspecifications</title>
+
+            <para>
+                Object misspecifications results silent ingorance of the hints. This kind of error is reported as "not used hints"
+                in the server log by the same condtion to syntax errors.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Redundant or conflicting hints</title>
+
+            <para>
+                For same query block, one hint will be active when redundant hints, no hint will be active 
+                when hints conflicting with each other. 
+                For diffent query block, when redundant hints or hints conflicting with each other,
+                only sub query's hint will be active.
+                No matter when redundant hints or hints conflicting with each other, This kind of error is reported as "duplication hints"
+                in the server log by the same condition to syntax errors.
+                if qb_name hint conflict , both will be ignored.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Nested comments</title>
+
+            <para>
+                For global level hint, hint comment cannot include another block comment within. If lt_hint_plan finds it, differently from other erros, it stops
+                parsing and abandans all hints already parsed. This kind of error is reported in the same manner as other errors.
+                For stmt level hint, hint comment cannot include another block comment within. it will ignore '/*' in hint comment. if report error,
+                it only affect current query block's hint.
+<programlisting>
+lightdb@postgres=# explain select * from t1 ,(select * from t2 where id >10) as tt where exists (select /*+ /*+seqscan(t1)*/*/* from t3 where id>1);;
+INFO:  lt_hint_plan: hint syntax error at or near "+seqscan(t1)"
+DETAIL:  Unrecognized hint keyword "+seqscan".
+                            QUERY PLAN                               
+------------------------------------------------------------------------
+Result  (cost=1.04..3.13 rows=3 width=532)
+One-Time Filter: $0
+InitPlan 1 (returns $0)
+    ->  Seq Scan on t3 @"lt#0"  (cost=0.00..1.04 rows=1 width=0)
+        Filter: (id > 1)
+->  Nested Loop  (cost=1.04..3.13 rows=3 width=532)
+        ->  Seq Scan on t2  (cost=0.00..1.04 rows=1 width=8)
+            Filter: (id > 10)
+        ->  Seq Scan on t1 @"lt#1"  (cost=0.00..1.03 rows=3 width=524)
+(9 rows)
+
+lightdb@postgres=# explain select * from t1 ,(select * from t2 where id >10) as tt where exists (select /*+ /*seqscan(t1)*/*/* from t3 where id>1);;
+LOG:  lt_hint_plan:
+used hint:
+not used hint:
+SeqScan(t1@lt#0)
+duplication hint:
+error hint:
+
+                            QUERY PLAN                               
+------------------------------------------------------------------------
+Result  (cost=1.04..3.13 rows=3 width=532)
+One-Time Filter: $0
+InitPlan 1 (returns $0)
+    ->  Seq Scan on t3 @"lt#0"  (cost=0.00..1.04 rows=1 width=0)
+        Filter: (id > 1)
+->  Nested Loop  (cost=1.04..3.13 rows=3 width=532)
+        ->  Seq Scan on t2  (cost=0.00..1.04 rows=1 width=8)
+            Filter: (id > 10)
+        ->  Seq Scan on t1 @"lt#1"  (cost=0.00..1.03 rows=3 width=524)
+(9 rows)
+
+lightdb@postgres=# 
+</programlisting>
+            </para>
+        </sect3>
+    </sect2>
+
+    <sect2>
+        <title>Functional limitations</title>
+
+        <sect3>
+            <title>Influences of some of planner GUC parameters</title>
+
+            <para>
+                The planner does not try to consider joining order for FROM clause entries more than from_collapse_limit. lt_hint_plan cannot
+                affect joining order as expected for the case.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Hints trying to enforce unexecutable plans</title>
+
+            <para>
+                Planner chooses any executable plans when the enforced plan cannot be executed.
+            </para>
+
+            <itemizedlist>
+                <listitem>
+                    <para>
+                        FULL OUTER JOIN to use nested loop
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        To use indexes that does not have columns used in quals
+                    </para>
+                </listitem>
+
+                <listitem>
+                    <para>
+                        To do TID scans for queries without ctid conditions
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </sect3>
+
+        <sect3>
+            <title>Queries in ECPG</title>
+
+            <para>
+                ECPG removes comments in queries written as embedded SQLs so hints cannot be passed
+                form those queries. The only exception is that EXECUTE command passes given string
+                unmodifed. Please consider hint tables in the case.
+            </para>
+        </sect3>
+
+        <sect3>
+            <title>Work with lt_stat_statements</title>
+
+            <para>
+                lt_stat_statements generates a query id ignoring comments. As the result the identical
+                queires with different hints are summerized as the same query.
+            </para>
+        </sect3>
+    </sect2>
+
+    <sect2>
+        <title>Hint list</title>
+
+        <para>
+            The available hints are listed below.
+        </para>
+
+        <table>
+            <title>Hints list</title>
+            <tgroup cols="3">
+                <colspec colname="c1" colnum="1" colwidth="1*"/>
+                <colspec colname="c2" colnum="2" colwidth="1*"/>
+                <colspec colname="c3" colnum="3" colwidth="1*"/>
+                <thead>
+                    <row>
+                        <entry>Group</entry>
+                        <entry>Format</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+
+                <tbody>
+                    <row>
+                        <entry morerows="10"><emphasis role="bold">Scan method</emphasis></entry>
+                        <entry>SeqScan(table) full(table)</entry>
+                        <entry>Forces sequential scan on the table</entry>
+                    </row>
+
+                    <row>
+                        <entry>TidScan(table)</entry>
+                        <entry>Forces TID scan on the table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>IndexScan(table[ index...]) index(table[ index...])</entry>
+                        <entry>Forces index scan on the table. Restricts to specified indexes if any.</entry>
+                    </row>
+
+                    <row>
+                        <entry>IndexOnlyScan(table[ index...])</entry>
+                        <entry>
+                            Forces index only scan on the table. Rstricts to specfied indexes if any. Index scan may
+                            be used if index only scan is not available.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry>BitmapScan(table[ index...])</entry>
+                        <entry>	Forces bitmap scan on the table. Restoricts to specfied indexes if any.</entry>
+                    </row>
+
+                    <row>
+                        <entry>
+                            IndexScanRegexp(table[ POSIX Regexp...])
+                            IndexOnlyScanRegexp(table[ POSIX Regexp...])
+                            BitmapScanRegexp(table[ POSIX Regexp...])
+                        </entry>
+                        <entry>
+                            Forces index scan or index only scan or bitmap scan on the table.
+                            Restricts to indexes that matches the specified POSIX regular expression pattern
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry>NoSeqScan(table)</entry>
+                        <entry>Forces not to do sequential scan on the table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoTidScan(table)</entry>
+                        <entry>Forces not to do TID scan on the table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoIndexScan(table)</entry>
+                        <entry>Forces not to do index scan and index only scan on the table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoIndexOnlyScan(table)</entry>
+                        <entry>Forces not to do index only scan on the table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoBitmapScan(table)</entry>
+                        <entry>Forces not to do bitmap scan on the table.</entry>
+                    </row>
+
+                    <row>
+                        <entry morerows="5"><emphasis role="bold">Join method</emphasis></entry>
+                        <entry>NestLoop(table table[ table...]) use_nl(table table[ table...])</entry>
+                        <entry>Forces nested loop for the joins consist of the specifiled tables.</entry>
+                    </row>
+
+                    <row>
+                        <entry>HashJoin(table table[ table...]) use_hash(table table[ table...])</entry>
+                        <entry>Forces hash join for the joins consist of the specifiled tables.</entry>
+                    </row>
+
+                    <row>
+                        <entry>MergeJoin(table table[ table...]) use_merge(table table[ table...])</entry>
+                        <entry>Forces merge join for the joins consist of the specifiled tables.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoNestLoop(table table[ table...]) no_use_nl(table table[ table...])</entry>
+                        <entry>Forces not to do nested loop for the joins consist of the specifiled tables.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoHashJoin(table table[ table...]) no_use_hash(table table[ table...])</entry>
+                        <entry>Forces not to do hash join for the joins consist of the specifiled tables.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoMergeJoin(table table[ table...]) no_use_merge(table table[ table...])</entry>
+                        <entry>	Forces not to do merge join for the joins consist of the specifiled tables.</entry>
+                    </row>
+
+                    <row>
+                        <entry morerows="5"><emphasis role="bold">Join method(oracle mode)</emphasis></entry>
+                        <entry>NestLoop(table [ table...]) use_nl(table[ table...])</entry>
+                        <entry>Forces nested loop for the joins that the specifiled table is the inner table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>HashJoin(table[ table...]) use_hash(table[ table...])</entry>
+                        <entry>Forces hash join for the joins that the specifiled table is the inner table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>MergeJoin(table[ table...]) use_merge(table[ table...])</entry>
+                        <entry>Forces merge join for the joins that the specifiled table is the inner table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoNestLoop(table[ table...]) no_use_nl(table[ table...])</entry>
+                        <entry>Forces not to do nested loop for the joins that the specifiled table is the inner table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoHashJoin(table[ table...]) no_use_hash(table[ table...])</entry>
+                        <entry>Forces not to do hash join for the joins that the specifiled table is the inner table.</entry>
+                    </row>
+
+                    <row>
+                        <entry>NoMergeJoin(table[ table...]) no_use_merge(table[ table...])</entry>
+                        <entry>	Forces not to do merge join for the joins that the specifiled table is the inner table.</entry>
+                    </row>
+                    
+                    <row>
+                        <entry morerows="3"><emphasis role="bold">Join order</emphasis></entry>
+                        <entry>
+                            Leading(table table[ table...])
+                            Ordered(table table[ table...])
+                        </entry>
+                        <entry>Forces join order and directions as specified.</entry>
+                    </row>
+
+                    <row>
+                        <entry>
+                            Leading([join pair])
+                            Ordered([join pair])
+                        </entry>
+                        <entry>
+                            Forces join order and directions as specified. A join pair is a pair of tables and/or other
+                            join pairs enclosed by parentheses, which can make a nested structure.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry>
+                            Ordered
+                            Leading
+                        </entry>
+                        <entry>
+                            Forces to join tables in the order in which they appear in the FROM clause.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry>
+                            Leading(table)
+                            Ordered(table)
+                        </entry>
+                        <entry>
+                            Forces to join tables using the specified table as the first table of the join execution plan.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry><emphasis role="bold">Row number correction</emphasis></entry>
+                        <entry>
+                            Rows(table [ table...] correction)
+                            cardinality(table [ table...] correction)
+                            </entry>
+                        <entry>
+                        	Corrects row number of a result of the joins consist of the specfied tables or a table or a result of subquery. The available
+                        	correction methods are absolute (#[n] or [n]), addition (+[n]), subtract (-[n]) and multiplication
+                        	(*[n]). [n] should be a string that strtod() can read.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry morerows="1"><emphasis role="bold">Parallel query configuration</emphasis></entry>
+                        <entry>
+                        Parallel(table [# of workers] [soft|hard])
+                        </entry>
+                        <entry>
+                        	Enforce or inhibit parallel execution of specfied table. [# of workers] is the desired number of
+                        	parallel workers, where zero means inhibiting parallel execution. If the third parameter is soft
+                            , it just changes max_parallel_workers_per_gather and leave everything else to planner.
+                        	Hard(default) means enforcing the specified number of workers.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry>
+                        Parallel([# of workers] [soft|hard])
+                        </entry>
+                        <entry>
+                        	Enforce or inhibit parallel execution of tables at current query block. [# of workers] is the desired number of
+                        	parallel workers, where zero means inhibiting parallel execution. If the second parameter is soft
+                            , it just changes max_parallel_workers_per_gather and leave everything else to planner.
+                        	Hard(default) means enforcing the specified number of workers.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry><emphasis role="bold">GUC</emphasis></entry>
+                        <entry>Set(GUC-param value)</entry>
+                        <entry>Set the GUC parameter to the value while planner is running.</entry>
+                    </row>
+
+                    <row>
+                        <entry><emphasis role="bold">Query block name</emphasis></entry>
+                        <entry>qb_name(name)</entry>
+                        <entry>Set the query block name, then tables in this query block can be hint in outer query block.
+                               can't use for GUC.
+                        </entry>
+                    </row>
+
+                    <row>
+                        <entry><emphasis role="bold">No merge</emphasis></entry>
+                        <entry>no_merge[(sub query name)] no_merge(@queryblock_name)</entry>
+                        <entry>Forces not to pull up subquery. Priority is higher than Join method and Join order</entry>
+                    </row>
+
+                    <row>
+                        <entry morerows="1"><emphasis role="bold">Group by method</emphasis></entry>
+                        <entry>
+                            use_hash_aggregation
+                        </entry>
+                        <entry>Forces hash aggregation method for group by.</entry>
+                    </row>
+                    <row>
+                        <entry>
+                            no_use_hash_aggregation
+                        </entry>
+                        <entry>Forces not to use hash method for group by, then use sort method.</entry>
+                    </row>
+
+                    <row>
+                        <entry morerows="4"><emphasis role="bold">Semijoin(specail join)</emphasis></entry>
+                        <entry>
+                            semijoin
+                        </entry>
+                        <entry>Forces to transforms a correlated EXISTS subquery into a semi-join to access the specified table.</entry>
+                    </row>
+                    <row>
+                        <entry>
+                            hash_sj
+                        </entry>
+                        <entry>Forces to transforms a correlated EXISTS subquery into a hash semi-join to access the specified table.</entry>
+                    </row>
+                    <row>
+                        <entry>
+                            nl_sj
+                        </entry>
+                        <entry>Forces to transforms a correlated EXISTS subquery into a nestloop semi-join to access the specified table.</entry>
+                    </row>
+                    <row>
+                        <entry>
+                            merge_sj
+                        </entry>
+                        <entry>Forces to transforms a correlated EXISTS subquery into a merge semi-join to access the specified table.</entry>
+                    </row>
+                    <row>
+                        <entry>
+                            no_semijoin
+                        </entry>
+                        <entry>Forces not to use semi-join if possible, rather than not to pull up sublink </entry>
+                    </row>
+
+                    <row>
+                        <entry morerows="2"><emphasis role="bold">Antijoin(specail join)</emphasis></entry>
+                        <entry>
+                            hash_aj
+                        </entry>
+                        <entry>Forces to transforms a correlated NOT EXISTS subquery into a hash anti-join to access the specified table.</entry>
+                    </row>
+                    <row>
+                        <entry>
+                            nl_aj
+                        </entry>
+                        <entry>Forces to transforms a correlated NOT EXISTS subquery into a nestloop anti-join to access the specified table.</entry>
+                    </row>
+                    <row>
+                        <entry>
+                            merge_aj
+                        </entry>
+                        <entry>Forces to transforms a correlated NOT EXISTS subquery into a merge anti-join to access the specified table.</entry>
+                    </row>
+
+                    <row>
+                        <entry><emphasis role="bold">Swap_join_inputs</emphasis></entry>
+                        <entry>swap_join_input(table)</entry>
+                        <entry>Forces to use the table as outer table when hashjoin</entry>
+                    </row>
+                
+                    <row>
+                        <entry><emphasis role="bold">Ordered predicates</emphasis></entry>
+                        <entry>ordered_predicates</entry>
+                        <entry>Forces the optimizer to preserve the order of predicate evaluation</entry>
+                    </row>
+
+                    <row>
+                        <entry><emphasis role="bold">Unnest</emphasis></entry>
+                        <entry>unnest</entry>
+                        <entry>Pull up sublink is an RBO, so only syntax is supported</entry>
+                    </row>
+
+                    <row>
+                        <entry><emphasis role="bold">No unnest</emphasis></entry>
+                        <entry>no_unnest</entry>
+                        <entry>Forces the optimizer to not pull up sublink</entry>
+                    </row>
+
+                    <row>
+                        <entry><emphasis role="bold">Pq_distribute</emphasis></entry>
+                        <entry>pq_distribute(inner_table outer_distribution inner_distribution)</entry>
+                        <entry>
+                            The pq_distribute hint instructs the optimizer how to execute parallel join,
+                            inner_table is the inner table of the join, outer_distribution is the distribution for the outer table and 
+                            inner_distribution is the distribution for the inner table. Now only 'none broadcast' and 'hash hash' is supported,
+                            and only 'none broadcast' can work.
+                        </entry>
+                    </row>
+
+                </tbody>
+            </tgroup>
+        </table>
+    </sect2>
+</sect1>
