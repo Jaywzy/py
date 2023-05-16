@@ -28,17 +28,26 @@ def __getClipboard():
     return d
 
 
+def __findEndTips(d):
+    scrollJS = "document.getElementsByClassName('NewPageWithSidebarLayout_scrollSection__hOt1S')[0].scrollTop = 0"
+    d.execute_script(scrollJS)
+    d.find_element(By.XPATH, "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']")
+
+
 async def translate(str = None):
     inputArea = driver.find_element(By.CLASS_NAME, "ChatMessageInputView_textInput__Aervw")
     inputArea.clear()
     print('translate source: ')
     print(__getClipboard())
     if str == None:
-        inputArea.send_keys(Keys.CONTROL, "V", Keys.ENTER)
+        ''' 代码块形式提交原文 '''
+        inputArea.send_keys("```", Keys.SHIFT, Keys.ENTER)
+        inputArea.send_keys(Keys.CONTROL, "V", Keys.SHIFT, Keys.ENTER)
+        inputArea.send_keys("```", Keys.ENTER)
     else:
         inputArea.send_keys(str, Keys.ENTER)
     try:
-        endTipBtns = WebDriverWait(driver, timeout=60, poll_frequency=1).until(lambda d: d.find_element(By.XPATH, "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']"))
+        WebDriverWait(driver, timeout=90, poll_frequency=1).until(__findEndTips)
         try:
             copyBtn = driver.find_element(By.XPATH, "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']")
             copyBtn.click()
