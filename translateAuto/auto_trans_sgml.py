@@ -15,7 +15,7 @@ skip_sgmls = ('postgres.sgml','legal.sgml','bookindex.sgml','errcodes-table.sgml
 COMMENT_NOTE_START=r'<!--==========================orignal english content=========================='
 COMMENT_NOTE_END=r'____________________________________________________________________________-->'
 CN_TAGS=('title','para','simpara','indexterm','term','titleabbrev','row','bookinfo','remark',
-    'programlisting','screen','literallayout','refmeta','refnamediv','indexentry','biblioentry',
+    'literallayout','refmeta','refnamediv','indexentry','biblioentry',
     'cmdsynopsis','synopsis')
 
 opentag_pattern = re.compile(r'^<[a-zA-Z][a-zA-Z0-9_]*(\s+[a-zA-Z][a-zA-Z0-9_]*\s*=\s*(?P<qt>[\'"])[^\'"]*(?P=qt))*\s*>')
