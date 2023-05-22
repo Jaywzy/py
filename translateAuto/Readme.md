@@ -11,13 +11,13 @@
 - 运行`python poeBot.py 'login'`，手动登录一次，生成cookie文件，以后脚本会自动登录
 - 考虑bot答案的不可控，也可以直接使用我建好的bot，那么就不用替换常量了，但仍需手动登录一次获取cookie
 
-------
+
 
 ## 使用方法：
 - 将需要翻译的sgml文件放入sgml文件夹中
 - 执行命令: `python .\auto_trans_sgml.py .\sgml\ .\sgml\ .\sgml-cn\`
 
-------
+
 
 ## 可能碰到的问题
 - bot答案不符合预期
