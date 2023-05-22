@@ -13,7 +13,7 @@ options = webdriver.ChromeOptions()
 options.add_experimental_option('detach', True)  # 不自动关闭浏览器
 # options.add_argument('--start-maximized')       # 浏览器窗口最大化
 driver = webdriver.Chrome(options = options)
-
+BOT_URL = "https://poe.com/LightDBDocBoy"
 last = 0
 timeoutTimes = 0
 
@@ -32,9 +32,13 @@ def __getClipboard():
     return d
 
 
-def __findEndTips(d):
+def __scrollBottom():
     scrollJS = "document.getElementsByClassName('PageWithSidebarLayout_scrollSection__IRP9Y')[0].scrollTop = 0"
-    d.execute_script(scrollJS)
+    driver.execute_script(scrollJS)
+
+
+def __findEndTips(d):
+    __scrollBottom()
     return d.find_element(By.XPATH, "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']")
 
 
@@ -42,7 +46,6 @@ async def translate(str = None):
     global last, timeoutTimes, driver
     '''
     每10秒一次请求, 避免过快
-    '''
     now = int(time.time())
     if last == 0:
         last = now
@@ -55,6 +58,8 @@ async def translate(str = None):
             print('last spend:', spend, 's, wait 3 s')
             time.sleep(3)
         last = int(time.time())
+    '''
+    time.sleep(2)
     inputArea = driver.find_element(By.CLASS_NAME, "ChatMessageInputView_textInput__Aervw")
     inputArea.clear()
     print('-------------------- Source: --------------------')
@@ -79,10 +84,10 @@ async def translate(str = None):
             # print('copyBtn:', copyBtn)
             copyBtn.click()
             time.sleep(1)
-            d = __getClipboard()
+            res = __getClipboard()
             print('===== Result: =====')
-            print(d)
-            return d
+            print(res)
+            return res
         except:
             print('Copy Fail')
             return await translate("不对，翻译的结果要用代码块")
@@ -96,8 +101,7 @@ async def translate(str = None):
             driver.close()
             driver = webdriver.Chrome(options = options)
             await getLightDBDocBoy()
-            scrollJS = "document.getElementsByClassName('PageWithSidebarLayout_scrollSection__IRP9Y')[0].scrollTop = 0"
-            driver.execute_script(scrollJS)
+            __scrollBottom()
             return await translate()
         else:
             timeoutTimes += 1
@@ -112,7 +116,7 @@ async def translate(str = None):
     打开bot网址后看到提示, 需要手动登录, 登录完成后输入任意键退出即可
 '''
 async def getLightDBDocBoy():
-    driver.get("https://poe.com/LightDBDocBoy")
+    driver.get(BOT_URL)
     print('sys.argv: ', sys.argv)
     if len(sys.argv) == 1 or len(sys.argv) == 4:
         with open('cookies.txt', 'r', encoding='utf8') as f:
@@ -129,7 +133,7 @@ async def getLightDBDocBoy():
                 'Secure': False
             }
         driver.add_cookie(cookie_dict)
-        driver.get("https://poe.com/LightDBDocBoy")
+        driver.get(BOT_URL)
         # 触发清除按钮
         driver.find_element(By.CLASS_NAME, "ChatMessageInputView_paintbrushWraper__DHMNW").click()
         print('LightDBDocBoy ready!')
