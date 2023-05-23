@@ -39,7 +39,7 @@ def __scrollBottom():
 
 def __findEndTips(d):
     __scrollBottom()
-    return d.find_element(By.XPATH, "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/section[@class='ChatMessageFeedbackButtons_feedbackButtonsContainer__0Xd3I']")
+    return d.find_element(By.XPATH, "//body/div/div/div/section/div[2]/div/div/div/div[last()]/section[1]")
 
 
 async def translate(str = None):
@@ -60,7 +60,7 @@ async def translate(str = None):
         last = int(time.time())
     '''
     time.sleep(2)
-    inputArea = driver.find_element(By.CLASS_NAME, "ChatMessageInputView_textInput__Aervw")
+    inputArea = driver.find_element(By.XPATH, "//footer/div/div//textarea")
     inputArea.clear()
     print('-------------------- Source: --------------------')
     try:
@@ -80,7 +80,7 @@ async def translate(str = None):
         WebDriverWait(driver, timeout=60, poll_frequency=2).until(__findEndTips)
         # print('__findEndTips: True')
         try:
-            copyBtn = driver.find_element(By.XPATH, "//div[@class='ChatMessagesView_messagePair__CsQMW'][last()]/div[@class='ChatMessage_messageRow__7yIr2'][2]//*[@class='Button_buttonBase__0QP_m Button_flat__1hj0f MarkdownCodeBlock_copyButton__nm6Dw']")
+            copyBtn = driver.find_element(By.XPATH, "//body/div/div/div/section/div[2]/div/div/div/div[last()]/div[2]//button[text()=' Copy']")
             # print('copyBtn:', copyBtn)
             copyBtn.click()
             time.sleep(1)
@@ -135,7 +135,7 @@ async def getLightDBDocBoy():
         driver.add_cookie(cookie_dict)
         driver.get(BOT_URL)
         # 触发清除按钮
-        driver.find_element(By.CLASS_NAME, "ChatMessageInputView_paintbrushWraper__DHMNW").click()
+        driver.find_element(By.XPATH, "//footer/div/button").click()
         print('LightDBDocBoy ready!')
     elif len(sys.argv) == 2 and sys.argv[1] == 'login':
         input("等待登录, 登录成功后输入任意内容保存cookies文件")
