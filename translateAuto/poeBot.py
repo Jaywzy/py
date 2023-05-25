@@ -16,6 +16,7 @@ driver = webdriver.Chrome(options = options)
 BOT_URL = "https://poe.com/LightDBDocBoy"
 last = 0
 timeoutTimes = 0
+copyFailTimes = 0
 
 
 def setClipboard(data):
@@ -42,8 +43,17 @@ def __findEndTips(d):
     return d.find_element(By.XPATH, "//body/div/div/div/section/div[2]/div/div/div/div[last()]/section[1]")
 
 
+async def __reconnectBot():
+    global driver
+    driver.close()
+    driver = webdriver.Chrome(options = options)
+    await getLightDBDocBoy()
+    __scrollBottom()
+    return await translate()
+
+
 async def translate(str = None):
-    global last, timeoutTimes, driver
+    global last, timeoutTimes, copyFailTimes
     '''
     每10秒一次请求, 避免过快
     now = int(time.time())
@@ -85,12 +95,31 @@ async def translate(str = None):
             copyBtn.click()
             time.sleep(1)
             res = __getClipboard()
-            print('===== Result: =====')
+            copyFailTimes = 0
+            print('======== Result: ========')
             print(res)
             return res
         except:
             print('Copy Fail')
-            return await translate("不对，翻译的结果要用代码块")
+            copyFailTimes += 1
+            if (copyFailTimes > 1):
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                print("'r' --> 重启浏览器，重新连接")
+                print("'m' --> 手动提供翻译结果，选择后直接使用剪切板内容作为结果")
+                print("输入其他任意值继续翻译")
+                opt = input('翻译结果异常，请选择处理：')
+                if opt == 'r':
+                    return await __reconnectBot()
+                elif opt == 'm':
+                    res = __getClipboard()
+                    copyFailTimes = 0
+                    print('======== Result: ========')
+                    print(res)
+                    return res
+                else:
+                    return await translate()
+            else:
+                return await translate("不对，翻译的结果要用代码块")
     except:
         '''
         翻译的bot用一段时间会出现频繁超时的情况, 如果超时3次则关闭浏览器重新打开一个
@@ -98,11 +127,7 @@ async def translate(str = None):
         if timeoutTimes > 2:
             print('Reconnect bot ......')
             timeoutTimes = 0
-            driver.close()
-            driver = webdriver.Chrome(options = options)
-            await getLightDBDocBoy()
-            __scrollBottom()
-            return await translate()
+            return await __reconnectBot()
         else:
             timeoutTimes += 1
         print('__findEndTips: False')
