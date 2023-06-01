@@ -127,9 +127,9 @@ async def translate(str = None):
             print('Copy Fail')
             copyFailTimes += 1
             '''
-            有的模型总是不返回代码块, 如果累计超过3次则手动处理异常(暂停教育一下bot)
+            有的模型总是不返回代码块, 如果累计超过5次则手动处理异常(暂停教育一下bot)
             '''
-            if (copyFailTimes > 2):
+            if (copyFailTimes > 4):
                 res = await __resolveError('缺失代码块')
                 copyFailTimes = 0
                 return res
