@@ -33,6 +33,13 @@ def __getClipboard():
     return d
 
 
+def __getClipboardAsResult():
+    res = __getClipboard()
+    print('======== Result: ========')
+    print(res)
+    return res
+
+
 def __scrollBottom():
     scrollJS = "document.getElementsByClassName('PageWithSidebarLayout_scrollSection__IRP9Y')[0].scrollTop = 0"
     driver.execute_script(scrollJS)
@@ -45,11 +52,30 @@ def __findEndTips(d):
 
 async def __reconnectBot():
     global driver
+    print('Reconnect bot ......')
     driver.close()
     driver = webdriver.Chrome(options = options)
     await getLightDBDocBoy()
     __scrollBottom()
     return await translate()
+
+
+async def __resolveError(errMsg):
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print("翻译结果异常[%s]，请选择处理：" % errMsg)
+    print("   r    --> 重启浏览器，重新连接")
+    print("   m    --> 手动提供翻译结果，选择后直接使用剪切板内容作为结果")
+    print("   b    --> 让bot用代码块")
+    print(" 其他值 --> 重新发送文本继续翻译")
+    opt = input('你的选择：')
+    if opt == 'r':
+        return await __reconnectBot()
+    elif opt == 'm':
+        return __getClipboardAsResult()
+    elif opt == 'b':
+        return await translate("用代码块")
+    else:
+        return await translate()
 
 
 async def translate(str = None):
@@ -94,40 +120,29 @@ async def translate(str = None):
             # print('copyBtn:', copyBtn)
             copyBtn.click()
             time.sleep(1)
-            res = __getClipboard()
+            res = __getClipboardAsResult()
             copyFailTimes = 0
-            print('======== Result: ========')
-            print(res)
             return res
         except:
             print('Copy Fail')
             copyFailTimes += 1
-            if (copyFailTimes > 1):
-                print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-                print("'r' --> 重启浏览器，重新连接")
-                print("'m' --> 手动提供翻译结果，选择后直接使用剪切板内容作为结果")
-                print("输入其他任意值继续翻译")
-                opt = input('翻译结果异常，请选择处理：')
-                if opt == 'r':
-                    return await __reconnectBot()
-                elif opt == 'm':
-                    res = __getClipboard()
-                    copyFailTimes = 0
-                    print('======== Result: ========')
-                    print(res)
-                    return res
-                else:
-                    return await translate()
+            '''
+            有的模型总是不返回代码块, 如果累计超过3次则手动处理异常(暂停教育一下bot)
+            '''
+            if (copyFailTimes > 2):
+                res = await __resolveError('缺失代码块')
+                copyFailTimes = 0
+                return res
             else:
                 return await translate("不对，翻译的结果要用代码块")
     except:
         '''
-        翻译的bot用一段时间会出现频繁超时的情况, 如果超时3次则关闭浏览器重新打开一个
+        翻译的bot用一段时间会出现频繁超时的情况, 如果超时3次则手动处理异常
         '''
         if timeoutTimes > 2:
-            print('Reconnect bot ......')
+            res = await __resolveError('超时')
             timeoutTimes = 0
-            return await __reconnectBot()
+            return res
         else:
             timeoutTimes += 1
         print('__findEndTips: False')
