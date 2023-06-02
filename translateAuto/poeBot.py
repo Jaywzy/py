@@ -185,11 +185,8 @@ async def getLightDBDocBoy():
             f.write(jsonCookies)
         print('cookies保存成功, 窗口自动关闭!')
         driver.close()
-    # test code below
-    # d = __getClipboard()
-    # print('translate source: ', d)
-    # translate()
 
 
-# if __name__ == "__main__":
-#     getLightDBDocBoy()
+if __name__ == "__main__":
+    print('poeBot.py run _main_')
+    getLightDBDocBoy()
