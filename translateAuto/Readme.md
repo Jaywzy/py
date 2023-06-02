@@ -16,6 +16,7 @@
 ## 使用方法：
 - 将需要翻译的sgml文件放入sgml文件夹中（ps:可以放文件夹，是递归处理的）
 - 执行命令: `python .\auto_trans_sgml.py .\sgml\ .\sgml\ .\sgml-cn\` （具体参数的含义可以看auto_trans_sgml.py文件最下面）
+- 翻译好文件在sgml-cn中
 
 
 
